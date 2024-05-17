@@ -1,27 +1,41 @@
 %{
+#include "table_symboles.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "y.tab.h"
+
 
 void yyerror(const char *msg) {
     fprintf(stderr, "Erreur de syntaxe : %s\n", msg);
-}        
+}
+
+LinkedList symbol_table[SIZE];
 %}
 
-%token IDENTIFIER CONSTANT SIZEOF
-%token PTR_OP LE_OP GE_OP EQ_OP NE_OP
-%token AND_OP OR_OP
-%token EXTERN
-%token INT VOID
-%token STRUCT 
-%token IF ELSE WHILE FOR RETURN
+%union {
+    int intval;
+    char* id;
+    SymboleType symtype;
+}
+
+%token <id> IDENTIFIER CONSTANT
+%token SIZEOF PTR_OP LE_OP GE_OP EQ_OP NE_OP
+%token AND_OP OR_OP EXTERN INT VOID STRUCT IF ELSE WHILE FOR RETURN
+
+%type <symtype> type_specifier declaration_specifiers struct_specifier
+%type <id> declarator direct_declarator
 
 %start program
-%%
 
+%%
 primary_expression
-        : IDENTIFIER
+        : IDENTIFIER {
+            Symbole* sym = search_symbol(symbol_table, $1);
+            if (sym == NULL) {
+                fprintf(stderr, "Erreur : Identifiant non déclaré %s\n", $1);
+                YYERROR;
+            }
+        }
         | CONSTANT
         | '(' expression ')'
         ;
@@ -93,25 +107,36 @@ expression
         ;
 
 declaration
-        : declaration_specifiers declarator ';'
+        : declaration_specifiers declarator ';' {
+            Symbole* sym = search_symbol(symbol_table, $2);
+            if (sym != NULL) {
+                fprintf(stderr, "Erreur : Identifiant déjà déclaré %s\n", $2);
+                YYERROR;
+            } else {
+                Symbole new_sym;
+                new_sym.name = $2;
+                new_sym.type = $1;
+                add_symbol(&symbol_table[hash($2)], &new_sym, $1);
+            }
+        }
         | struct_specifier ';'
         ;
 
 declaration_specifiers
-        : EXTERN type_specifier
-        | type_specifier
+        : EXTERN type_specifier { $$ = $2; }
+        | type_specifier { $$ = $1; }
         ;
 
 type_specifier
-        : VOID
-        | INT
-        | struct_specifier
+        : VOID { $$ = TYPE_VOID; }
+        | INT { $$ = TYPE_INT; }
+        | struct_specifier { $$ = TYPE_STRUCT; }
         ;
 
 struct_specifier
-        : STRUCT IDENTIFIER '{' struct_declaration_list '}'
-        | STRUCT '{' struct_declaration_list '}'
-        | STRUCT IDENTIFIER
+        : STRUCT IDENTIFIER '{' struct_declaration_list '}' { $$ = TYPE_STRUCT; }
+        | STRUCT '{' struct_declaration_list '}' { $$ = TYPE_STRUCT; }
+        | STRUCT IDENTIFIER { $$ = TYPE_STRUCT; }
         ;
 
 struct_declaration_list
@@ -124,15 +149,15 @@ struct_declaration
         ;
 
 declarator
-        : '*' direct_declarator
-        | direct_declarator
+        : '*' direct_declarator { $$ = $2; }
+        | direct_declarator { $$ = $1; }
         ;
 
 direct_declarator
-        : IDENTIFIER
-        | '(' declarator ')'
-        | direct_declarator '(' parameter_list ')'
-        | direct_declarator '(' ')'
+        : IDENTIFIER { $$ = $1; }
+        | '(' declarator ')' { $$ = $2; }
+        | direct_declarator '(' parameter_list ')' { $$ = $1; }
+        | direct_declarator '(' ')' { $$ = $1; }
         ;
 
 parameter_list
@@ -149,7 +174,7 @@ statement
         | expression_statement
         | selection_statement
         | iteration_statement
-        | jump_statement 
+        | jump_statement
         ;
 
 compound_statement
@@ -206,6 +231,7 @@ function_definition
 %%
 
 int main() {
+    initialize_symbol_table();
     yyparse();
     return 0;
 }

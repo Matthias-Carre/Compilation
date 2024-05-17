@@ -162,8 +162,27 @@ extern FILE *yyin, *yyout;
 #define EOB_ACT_END_OF_FILE 1
 #define EOB_ACT_LAST_MATCH 2
     
-    #define YY_LESS_LINENO(n)
-    #define YY_LINENO_REWIND_TO(ptr)
+    /* Note: We specifically omit the test for yy_rule_can_match_eol because it requires
+     *       access to the local variable yy_act. Since yyless() is a macro, it would break
+     *       existing scanners that call yyless() from OUTSIDE yylex.
+     *       One obvious solution it to make yy_act a global. I tried that, and saw
+     *       a 5% performance hit in a non-yylineno scanner, because yy_act is
+     *       normally declared as a register variable-- so it is not worth it.
+     */
+    #define  YY_LESS_LINENO(n) \
+            do { \
+                int yyl;\
+                for ( yyl = n; yyl < yyleng; ++yyl )\
+                    if ( yytext[yyl] == '\n' )\
+                        --yylineno;\
+            }while(0)
+    #define YY_LINENO_REWIND_TO(dst) \
+            do {\
+                const char *p;\
+                for ( p = yy_cp-1; p >= (dst); --p)\
+                    if ( *p == '\n' )\
+                        --yylineno;\
+            }while(0)
     
 /* Return all but the first "n" matched characters back to the input stream. */
 #define yyless(n) \
@@ -331,14 +350,11 @@ FILE *yyin = NULL, *yyout = NULL;
 
 typedef int yy_state_type;
 
+#define YY_FLEX_LEX_COMPAT
 extern int yylineno;
 int yylineno = 1;
 
-extern char *yytext;
-#ifdef yytext_ptr
-#undef yytext_ptr
-#endif
-#define yytext_ptr yytext
+extern char yytext[];
 
 static yy_state_type yy_get_previous_state ( void );
 static yy_state_type yy_try_NUL_trans ( yy_state_type current_state  );
@@ -353,6 +369,9 @@ static void yynoreturn yy_fatal_error ( const char* msg  );
 	yyleng = (int) (yy_cp - yy_bp); \
 	(yy_hold_char) = *yy_cp; \
 	*yy_cp = '\0'; \
+	if ( yyleng >= YYLMAX ) \
+		YY_FATAL_ERROR( "token too large, exceeds YYLMAX" ); \
+	yy_flex_strncpy( yytext, (yytext_ptr), yyleng + 1 ); \
 	(yy_c_buf_p) = yy_cp;
 #define YY_NUM_RULES 32
 #define YY_END_OF_BUFFER 33
@@ -473,6 +492,12 @@ static const flex_int16_t yy_chk[121] =
        74,   74,   74,   74,   74,   74,   74,   74,   74,   74
     } ;
 
+/* Table of booleans, true if rule could match eol. */
+static const flex_int32_t yy_rule_can_match_eol[33] =
+    {   0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0,     };
+
 static yy_state_type yy_last_accepting_state;
 static char *yy_last_accepting_cpos;
 
@@ -486,20 +511,26 @@ int yy_flex_debug = 0;
 #define yymore() yymore_used_but_not_detected
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
-char *yytext;
+#ifndef YYLMAX
+#define YYLMAX 8192
+#endif
+
+char yytext[YYLMAX];
+char *yytext_ptr;
 #line 1 "ANSI-proj.l"
 #line 3 "ANSI-proj.l"
  #include <stdio.h>
  #include <stdlib.h>
  #include "y.tab.h"
+#include "table_symboles.h"
 
  #define TOKEN_EOF 0
  extern int yylineno;
  int yylex(void);
  int yyerror(char* s);
 
-#line 502 "lex.yy.c"
-#line 503 "lex.yy.c"
+#line 533 "lex.yy.c"
+#line 534 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -716,9 +747,9 @@ YY_DECL
 		}
 
 	{
-#line 18 "ANSI-proj.l"
+#line 19 "ANSI-proj.l"
 
-#line 722 "lex.yy.c"
+#line 753 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -764,6 +795,16 @@ yy_find_action:
 
 		YY_DO_BEFORE_ACTION;
 
+		if ( yy_act != YY_END_OF_BUFFER && yy_rule_can_match_eol[yy_act] )
+			{
+			int yyl;
+			for ( yyl = 0; yyl < yyleng; ++yyl )
+				if ( yytext[yyl] == '\n' )
+					
+    yylineno++;
+;
+			}
+
 do_action:	/* This label is used only to access EOF actions. */
 
 		switch ( yy_act )
@@ -777,166 +818,166 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 19 "ANSI-proj.l"
+#line 20 "ANSI-proj.l"
 {printf("VOID\n");return VOID ;}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 20 "ANSI-proj.l"
+#line 21 "ANSI-proj.l"
 {printf("EXTERN\n");return EXTERN;}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 21 "ANSI-proj.l"
+#line 22 "ANSI-proj.l"
 {printf("INT\n");return INT;}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 22 "ANSI-proj.l"
+#line 23 "ANSI-proj.l"
 {printf("STRUCT\n");return STRUCT;}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 23 "ANSI-proj.l"
+#line 24 "ANSI-proj.l"
 {printf("SIZEOF\n");return SIZEOF;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 25 "ANSI-proj.l"
+#line 26 "ANSI-proj.l"
 {printf("IF\n");return IF;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 26 "ANSI-proj.l"
+#line 27 "ANSI-proj.l"
 {printf("ELSE\n");return ELSE;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 27 "ANSI-proj.l"
+#line 28 "ANSI-proj.l"
 {printf("WHILE\n");return WHILE;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 28 "ANSI-proj.l"
+#line 29 "ANSI-proj.l"
 {printf("FOR\n");return FOR;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 29 "ANSI-proj.l"
+#line 30 "ANSI-proj.l"
 {printf("RETURN\n");return RETURN;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 31 "ANSI-proj.l"
+#line 32 "ANSI-proj.l"
 {printf("+"); return '+' ;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 32 "ANSI-proj.l"
+#line 33 "ANSI-proj.l"
 {printf("-"); return '-' ;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 33 "ANSI-proj.l"
+#line 34 "ANSI-proj.l"
 {printf("*"); return '*' ;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 34 "ANSI-proj.l"
+#line 35 "ANSI-proj.l"
 {printf("/"); return '/' ;}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 36 "ANSI-proj.l"
+#line 37 "ANSI-proj.l"
 {printf(";"); return ';' ;}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 37 "ANSI-proj.l"
+#line 38 "ANSI-proj.l"
 {printf("("); return '(' ;}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 38 "ANSI-proj.l"
+#line 39 "ANSI-proj.l"
 {printf(")"); return ')' ;}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 40 "ANSI-proj.l"
+#line 41 "ANSI-proj.l"
 return '{';
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 41 "ANSI-proj.l"
+#line 42 "ANSI-proj.l"
 return '}';
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 42 "ANSI-proj.l"
+#line 43 "ANSI-proj.l"
 return AND_OP;
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 43 "ANSI-proj.l"
+#line 44 "ANSI-proj.l"
 return OR_OP;
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 45 "ANSI-proj.l"
+#line 46 "ANSI-proj.l"
 return LE_OP;
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 46 "ANSI-proj.l"
+#line 47 "ANSI-proj.l"
 return GE_OP;
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 47 "ANSI-proj.l"
+#line 48 "ANSI-proj.l"
 return EQ_OP;
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 48 "ANSI-proj.l"
+#line 49 "ANSI-proj.l"
 return NE_OP;
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 49 "ANSI-proj.l"
+#line 50 "ANSI-proj.l"
 return '>';
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 50 "ANSI-proj.l"
+#line 51 "ANSI-proj.l"
 return '<';
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 56 "ANSI-proj.l"
+#line 57 "ANSI-proj.l"
 printf("val");return CONSTANT ;
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 57 "ANSI-proj.l"
+#line 58 "ANSI-proj.l"
 printf("val");return IDENTIFIER ;
 	YY_BREAK
 case 30:
 /* rule 30 can match eol */
 YY_RULE_SETUP
-#line 58 "ANSI-proj.l"
+#line 59 "ANSI-proj.l"
 ;
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 60 "ANSI-proj.l"
+#line 61 "ANSI-proj.l"
 { fprintf (stderr,"erreur lexicale %s à la ligne %d.\n",yytext, yylineno);}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 62 "ANSI-proj.l"
+#line 63 "ANSI-proj.l"
 ECHO;
 	YY_BREAK
-#line 940 "lex.yy.c"
+#line 981 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1304,6 +1345,10 @@ static int yy_get_next_buffer (void)
 
 	*--yy_cp = (char) c;
 
+    if ( c == '\n' ){
+        --yylineno;
+    }
+
 	(yytext_ptr) = yy_bp;
 	(yy_hold_char) = *yy_cp;
 	(yy_c_buf_p) = yy_cp;
@@ -1380,6 +1425,11 @@ static int yy_get_next_buffer (void)
 	c = *(unsigned char *) (yy_c_buf_p);	/* cast for 8-bit char's */
 	*(yy_c_buf_p) = '\0';	/* preserve yytext */
 	(yy_hold_char) = *++(yy_c_buf_p);
+
+	if ( c == '\n' )
+		
+    yylineno++;
+;
 
 	return c;
 }
@@ -1847,6 +1897,9 @@ static int yy_init_globals (void)
      * This function is called from yylex_destroy(), so don't allocate here.
      */
 
+    /* We do not touch yylineno unless the option is enabled. */
+    yylineno =  1;
+    
     (yy_buffer_stack) = NULL;
     (yy_buffer_stack_top) = 0;
     (yy_buffer_stack_max) = 0;
@@ -1941,7 +1994,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 62 "ANSI-proj.l"
+#line 63 "ANSI-proj.l"
 
 int main(){
 	int token_courant=yylex();

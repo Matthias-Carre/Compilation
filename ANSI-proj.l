@@ -3,6 +3,7 @@
  #include <stdio.h>
  #include <stdlib.h>
  #include "y.tab.h"
+#include "table_symboles.h"
 
  #define TOKEN_EOF 0
  extern int yylineno;
