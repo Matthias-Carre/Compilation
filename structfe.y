@@ -15,12 +15,14 @@ LinkedList symbol_table[SIZE];
 %union {
     int intval;
     char* id;
-    SymboleType symtype;
+    struct Symbole* symtype;
+    struct Node* nnode;
+    struct LinkedList* ll;
 }
 
 %token <id> IDENTIFIER CONSTANT
 %token SIZEOF PTR_OP LE_OP GE_OP EQ_OP NE_OP
-%token AND_OP OR_OP EXTERN INT VOID STRUCT IF ELSE WHILE FOR RETURN
+%token AND_OP OR_OP EXTERN INT VOID STRUCT IF ELSE WHILE FOR RETURN 
 
 %type <symtype> type_specifier declaration_specifiers struct_specifier
 %type <id> declarator direct_declarator

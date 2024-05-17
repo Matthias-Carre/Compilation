@@ -17,7 +17,9 @@
 typedef union {
     int intval;
     char* id;
-    SymboleType symtype;
+    struct Symbole* symtype;
+    struct Node* nnode;
+    struct LinkedList* ll;
 } yy_parse_stype;
 #define YY_parse_STYPE yy_parse_stype
 #ifndef YY_USE_CLASS
