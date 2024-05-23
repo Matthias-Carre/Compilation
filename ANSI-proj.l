@@ -61,12 +61,14 @@ L	 [A-Za-z]
 .	 { fprintf (stderr,"erreur lexicale %s à la ligne %d.\n",yytext, yylineno);}
 
 %%
+/*
 int main(){
 	int token_courant=yylex();
-	/*printf("Codes des tokens retournés par yylex: ");*/
+	//printf("Codes des tokens retournés par yylex: ");
 	do {
-		/*printf("%d ", token_courant);*/
+		/printf("%d ", token_courant);
 		token_courant=yylex();
 	}while (token_courant !=TOKEN_EOF);
 	return(0);
 }
+*/
