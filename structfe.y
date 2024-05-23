@@ -8,6 +8,9 @@ void yyerror(const char *msg) {
     fprintf(stderr, "Erreur de syntaxe : %s\n", msg);
 }
 
+void initialize_symbol_table(LinkedList symbol_table[]);
+unsigned int hash(const char* key);
+
 LinkedList symbol_table[SIZE];
 %}
 
@@ -234,7 +237,7 @@ function_definition
 %%
 
 int main() {
-    initialize_table(symbol_table);
+    initialize_symbol_table(symbol_table);
     yyparse();
     return 0;
 }
