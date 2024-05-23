@@ -4,7 +4,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-
 void yyerror(const char *msg) {
     fprintf(stderr, "Erreur de syntaxe : %s\n", msg);
 }
@@ -15,7 +14,8 @@ LinkedList symbol_table[SIZE];
 %union {
     int intval;
     char* id;
-    struct Symbole* symtype;
+    SymboleType symtype; // Changed to SymboleType
+    struct Symbole* symptr; // Added for Symbole pointers
     struct Node* nnode;
     struct LinkedList* ll;
 }
@@ -30,6 +30,7 @@ LinkedList symbol_table[SIZE];
 %start program
 
 %%
+
 primary_expression
         : IDENTIFIER {
             Symbole* sym = search_symbol(symbol_table, $1);
@@ -118,7 +119,7 @@ declaration
                 Symbole new_sym;
                 new_sym.name = $2;
                 new_sym.type = $1;
-                add_symbol(&symbol_table[hash($2)], &new_sym, $1);
+                add_symbol(&symbol_table[hash($2)], &new_sym, sizeof(Symbole));
             }
         }
         | struct_specifier ';'
@@ -233,7 +234,7 @@ function_definition
 %%
 
 int main() {
-    initialize_symbol_table();
+    initialize_table(symbol_table);
     yyparse();
     return 0;
 }
