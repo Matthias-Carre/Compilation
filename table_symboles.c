@@ -1,4 +1,7 @@
 #include "table_symboles.h"
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 
 int fonction_hash(char* name) {
     int hash = 0;
@@ -28,7 +31,7 @@ void clear_table(LinkedList* table) {
 }
 
 Symbole* find_symbol(LinkedList* table, char* name) {
-    int index = hash_function(name);
+    int index = fonction_hash(name);
     Node* current = table[index].head;
     while (current != NULL) {
         if (strcmp(current->symbole.name, name) == 0) {
@@ -40,7 +43,7 @@ Symbole* find_symbol(LinkedList* table, char* name) {
 }
 
 void insert_symbol(LinkedList* table, char* name, SymboleType type) {
-    int index = hash_function(name);
+    int index = fonction_hash(name);
     Node* new_node = (Node*)malloc(sizeof(Node));
     new_node->symbole.name = strdup(name);
     new_node->symbole.type = type;

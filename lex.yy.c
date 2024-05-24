@@ -491,16 +491,17 @@ char *yytext;
 #line 3 "ANSI-proj.l"
  #include <stdio.h>
  #include <stdlib.h>
+ #include "table_symboles.h"
  #include "y.tab.h"
-#include "table_symboles.h"
+
 
  #define TOKEN_EOF 0
  extern int yylineno;
  int yylex(void);
  int yyerror(char* s);
 
-#line 503 "lex.yy.c"
 #line 504 "lex.yy.c"
+#line 505 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -717,9 +718,9 @@ YY_DECL
 		}
 
 	{
-#line 19 "ANSI-proj.l"
+#line 20 "ANSI-proj.l"
 
-#line 723 "lex.yy.c"
+#line 724 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -778,166 +779,166 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 20 "ANSI-proj.l"
+#line 21 "ANSI-proj.l"
 {printf("VOID\n");return VOID ;}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 21 "ANSI-proj.l"
+#line 22 "ANSI-proj.l"
 {printf("EXTERN\n");return EXTERN;}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 22 "ANSI-proj.l"
+#line 23 "ANSI-proj.l"
 {printf("INT\n");return INT;}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 23 "ANSI-proj.l"
+#line 24 "ANSI-proj.l"
 {printf("STRUCT\n");return STRUCT;}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 24 "ANSI-proj.l"
+#line 25 "ANSI-proj.l"
 {printf("SIZEOF\n");return SIZEOF;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 26 "ANSI-proj.l"
+#line 27 "ANSI-proj.l"
 {printf("IF\n");return IF;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 27 "ANSI-proj.l"
+#line 28 "ANSI-proj.l"
 {printf("ELSE\n");return ELSE;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 28 "ANSI-proj.l"
+#line 29 "ANSI-proj.l"
 {printf("WHILE\n");return WHILE;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 29 "ANSI-proj.l"
+#line 30 "ANSI-proj.l"
 {printf("FOR\n");return FOR;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 30 "ANSI-proj.l"
+#line 31 "ANSI-proj.l"
 {printf("RETURN\n");return RETURN;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 32 "ANSI-proj.l"
+#line 33 "ANSI-proj.l"
 {printf("+"); return '+' ;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 33 "ANSI-proj.l"
+#line 34 "ANSI-proj.l"
 {printf("-"); return '-' ;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 34 "ANSI-proj.l"
+#line 35 "ANSI-proj.l"
 {printf("*"); return '*' ;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 35 "ANSI-proj.l"
+#line 36 "ANSI-proj.l"
 {printf("/"); return '/' ;}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 37 "ANSI-proj.l"
+#line 38 "ANSI-proj.l"
 {printf(";"); return ';' ;}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 38 "ANSI-proj.l"
+#line 39 "ANSI-proj.l"
 {printf("("); return '(' ;}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 39 "ANSI-proj.l"
+#line 40 "ANSI-proj.l"
 {printf(")"); return ')' ;}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 41 "ANSI-proj.l"
+#line 42 "ANSI-proj.l"
 return '{';
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 42 "ANSI-proj.l"
+#line 43 "ANSI-proj.l"
 return '}';
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 43 "ANSI-proj.l"
+#line 44 "ANSI-proj.l"
 return AND_OP;
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 44 "ANSI-proj.l"
+#line 45 "ANSI-proj.l"
 return OR_OP;
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 46 "ANSI-proj.l"
+#line 47 "ANSI-proj.l"
 return LE_OP;
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 47 "ANSI-proj.l"
+#line 48 "ANSI-proj.l"
 return GE_OP;
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 48 "ANSI-proj.l"
+#line 49 "ANSI-proj.l"
 return EQ_OP;
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 49 "ANSI-proj.l"
+#line 50 "ANSI-proj.l"
 return NE_OP;
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 50 "ANSI-proj.l"
+#line 51 "ANSI-proj.l"
 return '>';
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 51 "ANSI-proj.l"
+#line 52 "ANSI-proj.l"
 return '<';
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 57 "ANSI-proj.l"
+#line 58 "ANSI-proj.l"
 printf("val");return CONSTANT ;
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 58 "ANSI-proj.l"
+#line 59 "ANSI-proj.l"
 printf("val");return IDENTIFIER ;
 	YY_BREAK
 case 30:
 /* rule 30 can match eol */
 YY_RULE_SETUP
-#line 59 "ANSI-proj.l"
+#line 60 "ANSI-proj.l"
 ;
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 61 "ANSI-proj.l"
+#line 62 "ANSI-proj.l"
 { fprintf (stderr,"erreur lexicale %s à la ligne %d.\n",yytext, yylineno);}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 63 "ANSI-proj.l"
+#line 64 "ANSI-proj.l"
 ECHO;
 	YY_BREAK
-#line 941 "lex.yy.c"
+#line 942 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1942,7 +1943,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 63 "ANSI-proj.l"
+#line 64 "ANSI-proj.l"
 
 /*
 int main(){

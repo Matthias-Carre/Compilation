@@ -31,11 +31,4 @@ typedef struct {
 
 LinkedList symbol_table[SIZE];
 
-Node* create_node(char* name, SymboleType type);
-void delete_node(Node* node);
-void add_symbol(LinkedList* list, Symbole* symbole, SymboleType type);
-Symbole* search_symbol(LinkedList* table, char* name);
-void modify_symbol(LinkedList* table, char* name, SymboleType type);
-void initialize_symbol_table();
-
 #endif

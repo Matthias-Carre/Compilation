@@ -1,4 +1,5 @@
 %{
+#include "table_symboles.c"
 #include "table_symboles.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -10,7 +11,7 @@ void yyerror(const char *msg) {
 
 void initialize_symbol_table(LinkedList symbol_table[]);
 unsigned int hash(const char* key);
-
+SymboleType s;
 LinkedList symbol_table[SIZE];
 %}
 
