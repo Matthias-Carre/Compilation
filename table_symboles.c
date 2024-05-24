@@ -4,13 +4,41 @@
 #include <string.h>
 
 LinkedList symbol_table[SIZE];
+Tas tas;
 
-int hash_function(char* name) {
+int isEmpty(Tas t){
+    if(t.length == 0){
+        return 1;
+    }
+    return 0;
+}
+
+void addinTas(Tas t,LinkedList ts){
+    t.length++;
+    t.list[t.length]=&ts;
+}
+
+void popTas(Tas t){
+    t.length--;
+}
+
+LinkedList getTopTas(Tas t){
+    t.length--;
+    return *t.list[t.length-1];
+}
+
+int fonction_hash(char* name) {
     int hash = 0;
     for (int i = 0; name[i] != '\0'; i++) {
         hash += name[i];
     }
     return hash % SIZE;
+}
+
+void initialize_tas(Tas *t){
+    for(int i=0;i<MAX;i++){
+        t->list[i]=NULL;
+    }
 }
 
 void initialize_table(LinkedList* table) {
@@ -72,7 +100,7 @@ void print_symbol_table(LinkedList* table) {
     for (int i = 0; i < SIZE; i++) {
         Node* current = table[i].head;
         while (current != NULL) {
-            printf("table[%d]\t| %15s | %15d |\n", i, current->symbole.name, current->symbole.type);
+            printf("table[%d]\t| %15s | %15s |\n", i, current->symbole.name, TypesNames[current->symbole.type]);
             current = current->next;
         }
     }

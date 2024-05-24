@@ -6,6 +6,7 @@
 #include <string.h>
 
 #define SIZE 201
+#define MAX 100
 
 typedef enum {
     TYPE_ERROR,
@@ -13,6 +14,7 @@ typedef enum {
     TYPE_VOID,
     TYPE_STRUCT
 } SymboleType;
+const char* TypesNames[] = {"TYPE_ERROR","TYPE_INT","TYPE_VOID","TYPE_STRUCT"};
 
 typedef struct {
     char* name;
@@ -31,12 +33,22 @@ typedef struct {
 
 extern LinkedList symbol_table[SIZE];
 
+typedef struct {
+    LinkedList *list[MAX];
+    int length;
+}Tas;
+
 Node* create_node(char* name, SymboleType type);
 void delete_node(Node* node);
 void insert_symbol(LinkedList* table, char* name, SymboleType type);
 Symbole* find_symbol(LinkedList* table, char* name);
 void update_symbol(LinkedList* table, char* name, SymboleType type);
 void initialize_table(LinkedList* table);
-int hash_function(char* name);
+int fonction_hash(char* name);
 
+int isEmpty(Tas t);
+void addinTas(Tas t,LinkedList ts);
+void popTas(Tas t);
+LinkedList getTopTas(Tas t);
+void initialize_tas(Tas *t);
 #endif
