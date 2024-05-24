@@ -1,5 +1,4 @@
 %{
-#include "table_symboles.c"
 #include "table_symboles.h"
 #include <stdio.h>
 #include <stdlib.h>
