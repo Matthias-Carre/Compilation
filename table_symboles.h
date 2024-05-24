@@ -29,13 +29,14 @@ typedef struct {
     int length;
 } LinkedList;
 
-LinkedList symbol_table[SIZE];
+extern LinkedList symbol_table[SIZE]; // extern declaration
 
 Node* create_node(char* name, SymboleType type);
 void delete_node(Node* node);
-void add_symbol(LinkedList* list, Symbole* symbole, SymboleType type);
-Symbole* search_symbol(LinkedList* table, char* name);
-void modify_symbol(LinkedList* table, char* name, SymboleType type);
-void initialize_symbol_table();
+void insert_symbol(LinkedList* table, char* name, SymboleType type);
+Symbole* find_symbol(LinkedList* table, char* name);
+void update_symbol(LinkedList* table, char* name, SymboleType type);
+void initialize_table(LinkedList* table);
+int hash_function(char* name);
 
 #endif
