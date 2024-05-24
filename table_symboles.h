@@ -29,7 +29,7 @@ typedef struct {
     int length;
 } LinkedList;
 
-extern LinkedList symbol_table[SIZE]; // extern declaration
+extern LinkedList symbol_table[SIZE];
 
 Node* create_node(char* name, SymboleType type);
 void delete_node(Node* node);
