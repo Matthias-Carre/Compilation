@@ -8,7 +8,6 @@ void yyerror(const char *msg) {
     fprintf(stderr, "Erreur de syntaxe : %s\n", msg);
 }
 
-// The symbol_table is now declared in the header and defined in the .c file
 extern LinkedList symbol_table[SIZE];
 
 %}

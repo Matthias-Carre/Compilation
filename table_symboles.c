@@ -1,6 +1,6 @@
 #include "table_symboles.h"
 
-LinkedList symbol_table[SIZE]; // Define symbol_table here
+LinkedList symbol_table[SIZE];
 
 int hash_function(char* name) {
     int hash = 0;
