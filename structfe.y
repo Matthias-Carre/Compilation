@@ -9,17 +9,22 @@ void yyerror(const char *msg) {
     fprintf(stderr, "Erreur de syntaxe : %s\n", msg);
 }
 
+<<<<<<< HEAD
 void initialize_symbol_table(LinkedList symbol_table[]);
 unsigned int hash(const char* key);
 SymboleType s;
 LinkedList symbol_table[SIZE];
+=======
+extern LinkedList symbol_table[SIZE];
+
+>>>>>>> 87bfb970d61963b778ea9f2ae29729efd2803f94
 %}
 
 %union {
     int intval;
     char* id;
-    SymboleType symtype; // Changed to SymboleType
-    struct Symbole* symptr; // Added for Symbole pointers
+    SymboleType symtype;
+    struct Symbole* symptr;
     struct Node* nnode;
     struct LinkedList* ll;
 }
@@ -37,7 +42,7 @@ LinkedList symbol_table[SIZE];
 
 primary_expression
         : IDENTIFIER {
-            Symbole* sym = search_symbol(symbol_table, $1);
+            Symbole* sym = find_symbol(symbol_table, $1);
             if (sym == NULL) {
                 fprintf(stderr, "Erreur : Identifiant non déclaré %s\n", $1);
                 YYERROR;
@@ -115,7 +120,7 @@ expression
 
 declaration
         : declaration_specifiers declarator ';' {
-            Symbole* sym = search_symbol(symbol_table, $2);
+            Symbole* sym = find_symbol(symbol_table, $2);
             if (sym != NULL) {
                 fprintf(stderr, "Erreur : Identifiant déjà déclaré %s\n", $2);
                 YYERROR;
@@ -123,7 +128,7 @@ declaration
                 Symbole new_sym;
                 new_sym.name = $2;
                 new_sym.type = $1;
-                add_symbol(&symbol_table[hash($2)], &new_sym, sizeof(Symbole));
+                insert_symbol(symbol_table, $2, $1);
             }
         }
         | struct_specifier ';'
@@ -238,7 +243,7 @@ function_definition
 %%
 
 int main() {
-    initialize_symbol_table(symbol_table);
+    initialize_table(symbol_table);
     yyparse();
     return 0;
 }

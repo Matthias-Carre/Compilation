@@ -5,7 +5,6 @@
  #include "table_symboles.h"
  #include "y.tab.h"
 
-
  #define TOKEN_EOF 0
  extern int yylineno;
  int yylex(void);

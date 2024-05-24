@@ -3,7 +3,9 @@
 #include <stdio.h>
 #include <string.h>
 
-int fonction_hash(char* name) {
+LinkedList symbol_table[SIZE];
+
+int hash_function(char* name) {
     int hash = 0;
     for (int i = 0; name[i] != '\0'; i++) {
         hash += name[i];
