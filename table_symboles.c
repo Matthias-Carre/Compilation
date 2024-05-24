@@ -1,30 +1,30 @@
 #include "table_symboles.h"
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
 
 LinkedList symbol_table[SIZE];
 Tas tas;
 
-int isEmpty(Tas t){
-    if(t.length == 0){
-        return 1;
+const char* TypesNames[] = {
+    "TYPE_ERROR",
+    "TYPE_INT",
+    "TYPE_VOID",
+    "TYPE_STRUCT"
+};
+
+Node* create_node(char* name, SymboleType type) {
+    Node* new_node = (Node*)malloc(sizeof(Node));
+    if (new_node != NULL) {
+        new_node->symbole.name = strdup(name);
+        new_node->symbole.type = type;
+        new_node->next = NULL;
     }
-    return 0;
+    return new_node;
 }
 
-void addinTas(Tas t,LinkedList ts){
-    t.length++;
-    t.list[t.length]=&ts;
-}
-
-void popTas(Tas t){
-    t.length--;
-}
-
-LinkedList getTopTas(Tas t){
-    t.length--;
-    return *t.list[t.length-1];
+void delete_node(Node* node) {
+    if (node != NULL) {
+        free(node->symbole.name);
+        free(node);
+    }
 }
 
 int fonction_hash(char* name) {
@@ -35,15 +35,10 @@ int fonction_hash(char* name) {
     return hash % SIZE;
 }
 
-void initialize_tas(Tas *t){
-    for(int i=0;i<MAX;i++){
-        t->list[i]=NULL;
-    }
-}
-
 void initialize_table(LinkedList* table) {
     for (int i = 0; i < SIZE; i++) {
         table[i].head = NULL;
+        table[i].length = 0;
     }
 }
 
@@ -53,8 +48,7 @@ void clear_table(LinkedList* table) {
         while (current != NULL) {
             Node* temp = current;
             current = current->next;
-            free(temp->symbole.name);
-            free(temp);
+            delete_node(temp);
         }
         table[i].head = NULL;
     }
@@ -74,16 +68,11 @@ Symbole* find_symbol(LinkedList* table, char* name) {
 
 void insert_symbol(LinkedList* table, char* name, SymboleType type) {
     int index = fonction_hash(name);
-    Node* new_node = (Node*)malloc(sizeof(Node));
-    new_node->symbole.name = strdup(name);
-    new_node->symbole.type = type;
-    new_node->next = NULL;
-
-    if (table[index].head == NULL) {
-        table[index].head = new_node;
-    } else {
+    Node* new_node = create_node(name, type);
+    if (new_node != NULL) {
         new_node->next = table[index].head;
         table[index].head = new_node;
+        table[index].length++;
     }
 }
 
@@ -104,4 +93,28 @@ void print_symbol_table(LinkedList* table) {
             current = current->next;
         }
     }
+}
+
+int isEmpty(Tas t) {
+    return t.length == 0;
+}
+
+void addinTas(Tas t, LinkedList ts) {
+    t.length++;
+    t.list[t.length] = &ts;
+}
+
+void popTas(Tas t) {
+    t.length--;
+}
+
+LinkedList getTopTas(Tas t) {
+    return *(t.list[t.length - 1]);
+}
+
+void initialize_tas(Tas* t) {
+    for (int i = 0; i < MAX; i++) {
+        t->list[i] = NULL;
+    }
+    t->length = 0;
 }

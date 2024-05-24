@@ -1,5 +1,4 @@
 %{
-#include "table_symboles.c"
 #include "table_symboles.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -9,15 +8,9 @@ void yyerror(const char *msg) {
     fprintf(stderr, "Erreur de syntaxe : %s\n", msg);
 }
 
-<<<<<<< HEAD
-void initialize_symbol_table(LinkedList symbol_table[]);
-unsigned int hash(const char* key);
-SymboleType s;
-LinkedList symbol_table[SIZE];
-=======
+// The symbol_table is now declared in the header and defined in the .c file
 extern LinkedList symbol_table[SIZE];
 
->>>>>>> 87bfb970d61963b778ea9f2ae29729efd2803f94
 %}
 
 %union {
