@@ -57,8 +57,8 @@ L	 [A-Za-z]
 
 
 "/*"([^*]|\*+[^*/])*\*+"/"			 {printf("commentaire\n");}
-{C}+	 	 		 {printf("const\n");return CONSTANT ;}
-{L}({L}|{C}|"_")*	 {printf("val\n");return IDENTIFIER ;}
+{C}+	 	 		 {printf("const\n");yylval.id=strdup(yytext); return CONSTANT ;}
+{L}({L}|{C}|"_")*	 {printf("val\n");yylval.id=strdup(yytext);  return IDENTIFIER ;}
 \n					 {printf("Ligne act: %d\n",yylineno++);}
 [ \t\r\v\f]+ 	 	 ;
 

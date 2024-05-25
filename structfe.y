@@ -31,12 +31,11 @@ void yyerror(const char *msg);
 primary_expression
         : IDENTIFIER {
                 printf("ff");
-                /*
+        
             Symbole* sym = find_symbol(symbol_table, $1);
             if (sym == NULL) {
                 fprintf(stderr, "Erreur : Identifiant non déclaré %s\n", $1);
-                YYERROR;
-            }*/
+            }
         }
         | CONSTANT {
                 printf("cons reconue\n");
@@ -113,8 +112,8 @@ expression
         ;
 
 declaration
-        : declaration_specifiers declarator ';' {printf("INFO YACC type:, var:\n");
-                
+        : declaration_specifiers declarator ';' {
+                printf("Var: et Valeur:%c/%s/%d\n",$2,$2,$2);
                 /*
             Symbole* sym = find_symbol(symbol_table, $2);
             if (sym != NULL) {
@@ -158,11 +157,11 @@ struct_declaration
 
 declarator
         : '*' direct_declarator { $$ = $2; }
-        | direct_declarator { $$ = $1; }
+        | direct_declarator { $$ = $1;printf("Val directedecla : %s\n",$1); }
         ;
 
 direct_declarator
-        : IDENTIFIER { $$ = $1; }
+        : IDENTIFIER {printf("IDENT:%s\n",$1); $$ = $1; }
         | '(' declarator ')' { $$ = $2; }
         | direct_declarator '(' parameter_list ')' {printf("FRANCOIS A RAISON"); $$ = $1; }
         | direct_declarator '(' ')' { $$ = $1; }
