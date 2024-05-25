@@ -34,7 +34,8 @@ typedef struct {
     int length;
 } LinkedList;
 
-LinkedList symbol_table[SIZE];
+LinkedList symbol_table;
+LinkedList symbol_table2;
 
 
 //definition de la pile d'execution
@@ -139,7 +140,6 @@ void print_symbol_table(LinkedList* table) {
     for (int i = 0; i < SIZE; i++) {
         Node* current = table[i].head;
         while (current != NULL) {
-            printf("TAB:%s\n",current->symbole.name);
             printf("table[%d]\t| %15s | %15s |\n", i, current->symbole.name, TypesNames[current->symbole.type]);
             current = current->next;
         }
@@ -147,52 +147,40 @@ void print_symbol_table(LinkedList* table) {
 }
 
 
+void copyLinkedList(LinkedList* table,LinkedList* newll){
 
-
-LinkedList* copyLinkedList(LinkedList* l,LinkedList* newll){
-
-    initialize_table(newll);
-    for(int i=0;i<SIZE;i++){
-        
-        Node* current = l[i].head;
-        Node* newcurrent= newll[i].head;
-        while(current != NULL){
+    for (int i = 0; i < SIZE; i++) {
+        Node* current = table[i].head;
+        while (current != NULL) {
             insert_symbol(newll,current->symbole.name,current->symbole.type);
-            printf("TAB:%s\n",current->symbole.name);
             current = current->next;
         }
     }
-    return newll;
 }
 
 int main(void){
+    symbol_table;
+    symbol_table2;
     LinkedList L;
-    Tas t;
-    initialize_tas(&t);
     initialize_table(&L);
-    
-    SymboleType st;
-    st=TYPE_INT;
 
-    insert_symbol(&L,"Bi",st);
+    insert_symbol(&L,"Bi",TYPE_ERROR);
     insert_symbol(&L,"Zon",TYPE_STRUCT);
     insert_symbol(&L,"Fu",TYPE_VOID);
     insert_symbol(&L,"T",TYPE_ERROR);
 
+    printf("TAB DE BASE (L):\n");
     print_symbol_table(&L);
+    printf("ll:\n");
+    print_symbol_table(&symbol_table);
+    copyLinkedList(&L,&symbol_table);
     print_symbol_table(&L);
-    
+    print_symbol_table(&symbol_table);
 
-
-    addinTas(t,L);
-
-
-    LinkedList ll;
-    initialize_table(&ll);
-    copyLinkedList(&L,&ll);
-    print_symbol_table(&ll);
+    update_symbol(&L,"Bi",TYPE_INT);
+    printf("apres edit :\n");
     print_symbol_table(&L);
-
+    print_symbol_table(&symbol_table);
     return(0);
 }
 
