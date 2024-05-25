@@ -662,13 +662,13 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    33,    33,    42,    45,    49,    50,    51,    52,    53,
-      57,    58,    62,    63,    64,    68,    69,    70,    74,    75,
-      76,    80,    81,    84,    88,    89,    90,    91,    92,    96,
-      97,    98,   102,   103,   107,   108,   112,   113,   117,   131,
-     135,   136,   140,   141,   142,   146,   147,   148,   152,   153,
-     157,   161,   162,   166,   167,   168,   169,   173,   174,   178,
-     182,   183,   184,   185,   186,   190,   191,   192,   193,   197,
+       0,    32,    32,    41,    44,    48,    49,    50,    51,    52,
+      56,    57,    61,    62,    63,    67,    68,    69,    73,    74,
+      75,    79,    80,    83,    87,    88,    89,    90,    91,    95,
+      96,    97,   101,   102,   106,   107,   111,   112,   116,   130,
+     134,   135,   139,   140,   141,   145,   146,   147,   151,   152,
+     156,   160,   161,   165,   166,   167,   168,   172,   173,   177,
+     181,   182,   183,   184,   185,   190,   191,   192,   193,   197,
      198,   202,   203,   207,   208,   212,   213,   217,   218,   222,
      223,   227,   228,   232,   233,   237
 };
@@ -1359,7 +1359,7 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* primary_expression: IDENTIFIER  */
-#line 33 "structfe.y"
+#line 32 "structfe.y"
                      {
                 printf("ff");
                 /*
@@ -1373,7 +1373,7 @@ yyreduce:
     break;
 
   case 3: /* primary_expression: CONSTANT  */
-#line 42 "structfe.y"
+#line 41 "structfe.y"
                    {
                 printf("cons reconue\n");
         }
@@ -1381,15 +1381,15 @@ yyreduce:
     break;
 
   case 22: /* additive_expression: additive_expression '+' multiplicative_expression  */
-#line 81 "structfe.y"
+#line 80 "structfe.y"
                                                             {
-                printf("ON EST ICI YOUHOU!");
+                
         }
 #line 1389 "y.tab.c"
     break;
 
   case 38: /* declaration: declaration_specifiers declarator ';'  */
-#line 117 "structfe.y"
+#line 116 "structfe.y"
                                                 {printf("INFO YACC type:, var:\n");
                 
                 /*
@@ -1408,85 +1408,85 @@ yyreduce:
     break;
 
   case 40: /* declaration_specifiers: EXTERN type_specifier  */
-#line 135 "structfe.y"
-                                { (yyval.symtype) = (yyvsp[0].symtype); }
+#line 134 "structfe.y"
+                                {printf("Extern \n");(yyval.symtype) = (yyvsp[0].symtype); }
 #line 1414 "y.tab.c"
     break;
 
   case 41: /* declaration_specifiers: type_specifier  */
-#line 136 "structfe.y"
+#line 135 "structfe.y"
                          { (yyval.symtype) = (yyvsp[0].symtype); }
 #line 1420 "y.tab.c"
     break;
 
   case 42: /* type_specifier: VOID  */
-#line 140 "structfe.y"
+#line 139 "structfe.y"
                { (yyval.symtype) = TYPE_VOID; }
 #line 1426 "y.tab.c"
     break;
 
   case 43: /* type_specifier: INT  */
-#line 141 "structfe.y"
-              { (yyval.symtype) = TYPE_INT; }
+#line 140 "structfe.y"
+              { printf("Int\n");(yyval.symtype) = TYPE_INT; }
 #line 1432 "y.tab.c"
     break;
 
   case 44: /* type_specifier: struct_specifier  */
-#line 142 "structfe.y"
+#line 141 "structfe.y"
                            { (yyval.symtype) = TYPE_STRUCT; }
 #line 1438 "y.tab.c"
     break;
 
   case 45: /* struct_specifier: STRUCT IDENTIFIER '{' struct_declaration_list '}'  */
-#line 146 "structfe.y"
+#line 145 "structfe.y"
                                                             { (yyval.symtype) = TYPE_STRUCT; }
 #line 1444 "y.tab.c"
     break;
 
   case 46: /* struct_specifier: STRUCT '{' struct_declaration_list '}'  */
-#line 147 "structfe.y"
+#line 146 "structfe.y"
                                                  { (yyval.symtype) = TYPE_STRUCT; }
 #line 1450 "y.tab.c"
     break;
 
   case 47: /* struct_specifier: STRUCT IDENTIFIER  */
-#line 148 "structfe.y"
+#line 147 "structfe.y"
                             { (yyval.symtype) = TYPE_STRUCT; }
 #line 1456 "y.tab.c"
     break;
 
   case 51: /* declarator: '*' direct_declarator  */
-#line 161 "structfe.y"
+#line 160 "structfe.y"
                                 { (yyval.id) = (yyvsp[0].id); }
 #line 1462 "y.tab.c"
     break;
 
   case 52: /* declarator: direct_declarator  */
-#line 162 "structfe.y"
+#line 161 "structfe.y"
                             { (yyval.id) = (yyvsp[0].id); }
 #line 1468 "y.tab.c"
     break;
 
   case 53: /* direct_declarator: IDENTIFIER  */
-#line 166 "structfe.y"
+#line 165 "structfe.y"
                      { (yyval.id) = (yyvsp[0].id); }
 #line 1474 "y.tab.c"
     break;
 
   case 54: /* direct_declarator: '(' declarator ')'  */
-#line 167 "structfe.y"
+#line 166 "structfe.y"
                              { (yyval.id) = (yyvsp[-1].id); }
 #line 1480 "y.tab.c"
     break;
 
   case 55: /* direct_declarator: direct_declarator '(' parameter_list ')'  */
-#line 168 "structfe.y"
-                                                   { (yyval.id) = (yyvsp[-3].id); }
+#line 167 "structfe.y"
+                                                   {printf("FRANCOIS A RAISON"); (yyval.id) = (yyvsp[-3].id); }
 #line 1486 "y.tab.c"
     break;
 
   case 56: /* direct_declarator: direct_declarator '(' ')'  */
-#line 169 "structfe.y"
+#line 168 "structfe.y"
                                     { (yyval.id) = (yyvsp[-2].id); }
 #line 1492 "y.tab.c"
     break;

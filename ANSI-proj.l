@@ -17,7 +17,7 @@ L	 [A-Za-z]
 
 
 %%
-"printd"	 {}//return PRINTD;}
+
 "void"       {return VOID ;}
 "extern"     {return EXTERN;}
 "int"        {return INT;}

@@ -20,8 +20,7 @@ void yyerror(const char *msg);
 
 %token <id> IDENTIFIER CONSTANT
 %token SIZEOF PTR_OP LE_OP GE_OP EQ_OP NE_OP
-%token AND_OP OR_OP EXTERN INT VOID STRUCT IF ELSE WHILE FOR RETURN PRINTD 
-
+%token AND_OP OR_OP EXTERN INT VOID STRUCT IF ELSE WHILE FOR RETURN PRINTD
 %type <symtype> type_specifier declaration_specifiers struct_specifier
 %type <id> declarator direct_declarator
 
@@ -79,7 +78,7 @@ multiplicative_expression
 additive_expression
         : multiplicative_expression
         | additive_expression '+' multiplicative_expression {
-                printf("ON EST ICI YOUHOU!");
+                
         }
         | additive_expression '-' multiplicative_expression
         ;
@@ -132,13 +131,13 @@ declaration
         ;
 
 declaration_specifiers
-        : EXTERN type_specifier { $$ = $2; }
+        : EXTERN type_specifier {printf("Extern \n");$$ = $2; }
         | type_specifier { $$ = $1; }
         ;
 
 type_specifier
         : VOID { $$ = TYPE_VOID; }
-        | INT { $$ = TYPE_INT; }
+        | INT { printf("Int\n");$$ = TYPE_INT; }
         | struct_specifier { $$ = TYPE_STRUCT; }
         ;
 
@@ -165,7 +164,7 @@ declarator
 direct_declarator
         : IDENTIFIER { $$ = $1; }
         | '(' declarator ')' { $$ = $2; }
-        | direct_declarator '(' parameter_list ')' { $$ = $1; }
+        | direct_declarator '(' parameter_list ')' {printf("FRANCOIS A RAISON"); $$ = $1; }
         | direct_declarator '(' ')' { $$ = $1; }
         ;
 
@@ -185,6 +184,7 @@ statement
         | iteration_statement
         | jump_statement
         ;
+
 
 compound_statement
         : '{' '}'
