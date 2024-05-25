@@ -17,48 +17,52 @@ L	 [A-Za-z]
 
 
 %%
-"void"       {printf("VOID\n");return VOID ;}
-"extern"     {printf("EXTERN\n");return EXTERN;}
-"int"        {printf("INT\n");return INT;}
-"struct"     {printf("STRUCT\n");return STRUCT;}
-"sizeof"     {printf("SIZEOF\n");return SIZEOF;}
+"printd"	 {}//return PRINTD;}
+"void"       {return VOID ;}
+"extern"     {return EXTERN;}
+"int"        {return INT;}
+"struct"     {return STRUCT;}
+"sizeof"     {return SIZEOF;}
 
-"if"         {printf("IF\n");return IF;}
-"else"       {printf("ELSE\n");return ELSE;}
-"while"      {printf("WHILE\n");return WHILE;}
-"for"        {printf("FOR\n");return FOR;}
-"return"     {printf("RETURN\n");return RETURN;}
+"if"         {return IF;}
+"else"       {return ELSE;}
+"while"      {return WHILE;}
+"for"        {return FOR;}
+"return"     {return RETURN;}
 
-"+"		   {printf("+"); return '+' ;}
-"-"		   {printf("-"); return '-' ;}
-"*"		   {printf("*"); return '*' ;}
-"/"		   {printf("/"); return '/' ;}
+"+"		    {return '+' ;}
+"-"		    {return '-' ;}
+"*"		    {return '*' ;}
+"/"		    {return '/' ;}
 
-";"		   {printf(";"); return ';' ;}
-"("		   {printf("("); return '(' ;}
-")"	 	   {printf(")"); return ')' ;}
+";"		    {return ';' ;}
+"("		    {return '(' ;}
+")"	 	    {return ')' ;}
 
-"{"         return '{';
-"}"         return '}';
-"%%"		return AND_OP;
-"||"		return OR_OP;
+"{"         {return '{';}
+"}"         {return '}';}
+"&&"		{return AND_OP;}
+"||"		{return OR_OP;}
 
-"<="		return LE_OP;
-">="		return GE_OP;
-"=="		return EQ_OP;
-"!="		return NE_OP;
-">"		return '>';
-"<"		return '<';
+"<="		{return LE_OP;}
+">="		{return GE_OP;}
+"=="		{return EQ_OP;}
+"!="		{return NE_OP;}
+">"			{return '>';}
+"<"			{return '<';}
+"="			{return '=';}
+"&"			{return '&';}
 
 
 
 
+"/*"([^*]|\*+[^*/])*\*+"/"			 {printf("commentaire\n");}
+{C}+	 	 		 {printf("const\n");return CONSTANT ;}
+{L}({L}|{C}|"_")*	 {printf("val\n");return IDENTIFIER ;}
+\n					 {printf("Ligne act: %d\n",yylineno++);}
+[ \t\r\v\f]+ 	 	 ;
 
-{C}+	 	 printf("val");return CONSTANT ;
-{L}({L}|{C})*	 printf("val");return IDENTIFIER ;
-[ \t\n] 	 ;
-
-.	 { fprintf (stderr,"erreur lexicale %s à la ligne %d.\n",yytext, yylineno);}
+.	 {fprintf (stderr,"erreur lexicale %c à la ligne %d .\n",yytext[0], yylineno);}
 
 %%
 /*

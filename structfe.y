@@ -4,9 +4,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-void yyerror(const char *msg) {
-    fprintf(stderr, "Erreur de syntaxe : %s\n", msg);
-}
+extern int yylineno;
+void yyerror(const char *msg);
 %}
 
 
@@ -21,7 +20,7 @@ void yyerror(const char *msg) {
 
 %token <id> IDENTIFIER CONSTANT
 %token SIZEOF PTR_OP LE_OP GE_OP EQ_OP NE_OP
-%token AND_OP OR_OP EXTERN INT VOID STRUCT IF ELSE WHILE FOR RETURN 
+%token AND_OP OR_OP EXTERN INT VOID STRUCT IF ELSE WHILE FOR RETURN PRINTD 
 
 %type <symtype> type_specifier declaration_specifiers struct_specifier
 %type <id> declarator direct_declarator
@@ -32,13 +31,17 @@ void yyerror(const char *msg) {
 
 primary_expression
         : IDENTIFIER {
+                printf("ff");
+                /*
             Symbole* sym = find_symbol(symbol_table, $1);
             if (sym == NULL) {
                 fprintf(stderr, "Erreur : Identifiant non déclaré %s\n", $1);
                 YYERROR;
-            }
+            }*/
         }
-        | CONSTANT
+        | CONSTANT {
+                printf("cons reconue\n");
+        }
         | '(' expression ')'
         ;
 
@@ -75,7 +78,9 @@ multiplicative_expression
 
 additive_expression
         : multiplicative_expression
-        | additive_expression '+' multiplicative_expression
+        | additive_expression '+' multiplicative_expression {
+                printf("ON EST ICI YOUHOU!");
+        }
         | additive_expression '-' multiplicative_expression
         ;
 
@@ -109,7 +114,9 @@ expression
         ;
 
 declaration
-        : declaration_specifiers declarator ';' {
+        : declaration_specifiers declarator ';' {printf("INFO YACC type:, var:\n");
+                
+                /*
             Symbole* sym = find_symbol(symbol_table, $2);
             if (sym != NULL) {
                 fprintf(stderr, "Erreur : Identifiant déjà déclaré %s\n", $2);
@@ -119,7 +126,7 @@ declaration
                 new_sym.name = $2;
                 new_sym.type = $1;
                 insert_symbol(symbol_table, $2, $1);
-            }
+            }*/
         }
         | struct_specifier ';'
         ;
@@ -231,7 +238,9 @@ function_definition
         ;
 
 %%
-
+void yyerror(const char *msg) {
+    fprintf(stderr, "Erreur de syntaxe : %s a la ligne: %d ???\n", msg,yylineno);
+}
 int main() {
     initialize_table(symbol_table);
     yyparse();
