@@ -139,6 +139,7 @@ void print_symbol_table(LinkedList* table) {
     for (int i = 0; i < SIZE; i++) {
         Node* current = table[i].head;
         while (current != NULL) {
+            printf("TAB:%s\n",current->symbole.name);
             printf("table[%d]\t| %15s | %15s |\n", i, current->symbole.name, TypesNames[current->symbole.type]);
             current = current->next;
         }
@@ -148,9 +149,8 @@ void print_symbol_table(LinkedList* table) {
 
 
 
-LinkedList* copyLinkedList(LinkedList* l){
-    printf("TESTESEEZT");
-    LinkedList* newll;
+LinkedList* copyLinkedList(LinkedList* l,LinkedList* newll){
+
     initialize_table(newll);
     for(int i=0;i<SIZE;i++){
         
@@ -158,6 +158,8 @@ LinkedList* copyLinkedList(LinkedList* l){
         Node* newcurrent= newll[i].head;
         while(current != NULL){
             insert_symbol(newll,current->symbole.name,current->symbole.type);
+            printf("TAB:%s\n",current->symbole.name);
+            current = current->next;
         }
     }
     return newll;
@@ -171,23 +173,25 @@ int main(void){
     
     SymboleType st;
     st=TYPE_INT;
-    //printf("Info: %d",st);
+
     insert_symbol(&L,"Bi",st);
     insert_symbol(&L,"Zon",TYPE_STRUCT);
     insert_symbol(&L,"Fu",TYPE_VOID);
     insert_symbol(&L,"T",TYPE_ERROR);
-    //print_symbol_table(&L);
-    Symbole *s = find_symbol(&L,"Fu");
-    printf("Le symbloeleeeee trouvé:%s et type: %d",s->name,s->type);
+
+    print_symbol_table(&L);
+    print_symbol_table(&L);
+    
+
 
     addinTas(t,L);
 
-    LinkedList test = getTopTas(t);
-    
-    print_symbol_table(&test);
 
-    LinkedList *ll = copyLinkedList(&L);
-    print_symbol_table(ll);
+    LinkedList ll;
+    initialize_table(&ll);
+    copyLinkedList(&L,&ll);
+    print_symbol_table(&ll);
+    print_symbol_table(&L);
 
     return(0);
 }
