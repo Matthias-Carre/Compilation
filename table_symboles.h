@@ -48,6 +48,8 @@ Symbole* find_symbol(LinkedList* table, char* name);
 void update_symbol(LinkedList* table, char* name, SymboleType type);
 void initialize_table(LinkedList* table);
 int fonction_hash(char* name);
+void print_symbol_table(LinkedList* table);
+
 
 int isEmpty(Tas t);
 void addinTas(Tas t, LinkedList ts);

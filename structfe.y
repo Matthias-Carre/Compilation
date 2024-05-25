@@ -113,7 +113,12 @@ expression
 
 declaration
         : declaration_specifiers declarator ';' {
-                printf("Var: et Valeur:%c/%s/%d\n",$2,$2,$2);
+                printf("Var:%s et Valeur:\n",$2);
+                insert_symbol(symbol_table,$2,TYPE_INT);
+                printf("LA TABLE:");
+                print_symbol_table(symbol_table);
+                
+                
                 /*
             Symbole* sym = find_symbol(symbol_table, $2);
             if (sym != NULL) {
