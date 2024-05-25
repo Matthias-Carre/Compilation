@@ -114,7 +114,7 @@ expression
 declaration
         : declaration_specifiers declarator ';' {
                 printf("Var:%s et Valeur:\n",$2);
-                insert_symbol(symbol_table,$2,TYPE_INT);
+                insert_symbol(symbol_table,$2,$1);
                 printf("LA TABLE:");
                 print_symbol_table(symbol_table);
                 
@@ -191,11 +191,25 @@ statement
 
 
 compound_statement
-        : '{' '}'
-        | '{' statement_list '}'
-        | '{' declaration_list '}'
-        | '{' declaration_list statement_list '}'
+        : open_accol close_accol
+        | open_accol statement_list close_accol{
+                printf("on decale\n");
+        }
+        | open_accol declaration_list close_accol{
+                printf("on decale2\n");
+        }
+        | open_accol declaration_list statement_list close_accol{
+                printf("on decale3\n");
+        }
         ;
+
+open_accol
+        :'{'{
+                printf("ouverture\n\n");
+        }
+
+close_accol
+        :'}'
 
 declaration_list
         : declaration
@@ -247,6 +261,8 @@ void yyerror(const char *msg) {
 }
 int main() {
     initialize_table(symbol_table);
+    initialize_tas(&tas);
+    addinTas(tas,*symbol_table);
     yyparse();
     return 0;
 }
