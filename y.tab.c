@@ -1723,7 +1723,7 @@ void yyerror(const char *msg) {
 int main() {
     initialize_table(symbol_table);
     initialize_tas(&tas);
-    addinTas(tas,*symbol_table);
+    addinTas(&tas,symbol_table);
     yyparse();
     return 0;
 }

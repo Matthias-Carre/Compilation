@@ -205,19 +205,7 @@ int main(void) {
     insert_symbol(L, "T", TYPE_ERROR);
     insert_symbol(symbol_table, "ah", TYPE_INT);
 
-    printf("TAB DE BASE (L):\n");
-    print_symbol_table(L);
-    print_symbol_table(symbol_table);
-    printf("===========\n");
-
-    LinkedList* copied_L = copyLinkedList(L);
-    addinTas(&tas, copied_L);
-
-    LinkedList* copied_symbol_table = copyLinkedList(symbol_table);
-    addinTas(&tas, copied_symbol_table);
-
-    LinkedList* copied_L2 = copyLinkedList(L);
-    addinTas(&tas, copied_L);
+    addinTas(&tas,L);
 
     expandTas(&tas);
 

@@ -49,12 +49,16 @@ void update_symbol(LinkedList* table, char* name, SymboleType type);
 void initialize_table(LinkedList* table);
 int fonction_hash(char* name);
 void print_symbol_table(LinkedList* table);
-
+void insert_symbol_toptas(Tas t,char* name,SymboleType type);
+void printLLfromTas(Tas *t);
+LinkedList* copyLinkedList(LinkedList* table);
+void copyAndUpdateTableInTas(Tas* t, char* new_symbol_name, SymboleType new_symbol_type);
+void expandTas(Tas* t);
 
 int isEmpty(Tas t);
-void addinTas(Tas t, LinkedList ts);
-void popTas(Tas t);
-LinkedList getTopTas(Tas t);
+void addinTas(Tas* t, LinkedList* ts);
+void popTas(Tas* t);
+LinkedList * getTopTas(Tas *t);
 void initialize_tas(Tas* t);
 
 #endif
