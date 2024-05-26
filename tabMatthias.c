@@ -172,6 +172,26 @@ void copyAndUpdateTableInTas(Tas* t, char* new_symbol_name, SymboleType new_symb
     }
 }
 
+void expandTas(Tas* t) {
+    if (t->length > 0 && t->length < MAX) {
+        LinkedList* top_table = getTopTas(t);
+        if (top_table != NULL) {
+            for (int i = t->length; i > 0; i--) {
+                t->list[i] = t->list[i - 1];
+            }
+            t->length++;
+            t->list[0] = copyLinkedList(top_table);
+        } else {
+            printf("Tas vide\n");
+        }
+    } else {
+        printf("Tas plein\n");
+    }
+}
+
+
+
+
 int main(void) {
     initialize_tas(&tas);
     LinkedList L[SIZE];
@@ -195,6 +215,11 @@ int main(void) {
 
     LinkedList* copied_symbol_table = copyLinkedList(symbol_table);
     addinTas(&tas, copied_symbol_table);
+
+    LinkedList* copied_L2 = copyLinkedList(L);
+    addinTas(&tas, copied_L);
+
+    expandTas(&tas);
 
     printf("val de top0:\n");
     printLLfromTas(&tas);
