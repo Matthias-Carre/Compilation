@@ -181,14 +181,14 @@ int main(void){
     insert_symbol(&L,"Zon",TYPE_STRUCT);
     insert_symbol(&L,"Fu",TYPE_VOID);
     insert_symbol(&L,"T",TYPE_ERROR);
-
+    insert_symbol(&symbol_table,"ah",TYPE_INT);
     printf("TAB DE BASE (L):\n");
     print_symbol_table(&L);
     print_symbol_table(&symbol_table);
     printf("===========\n");
 
     addinTas(&tas,&L);
-    addinTas(&tas,&symbol_table);
+
     printf("val de top0:%s\n",&tas.list[0]);  
     printLLfromTas(&tas);
 
