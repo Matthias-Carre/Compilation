@@ -174,7 +174,7 @@ int main(void) {
     print_symbol_table(ll);
 
     print_symbol_table(symbol_table);
-
+    
 
 
     clear_table(ll);

@@ -147,40 +147,47 @@ void print_symbol_table(LinkedList* table) {
 }
 
 
-void copyLinkedList(LinkedList* table,LinkedList* newll){
 
+LinkedList* copyLinkedList(LinkedList* l) {
+    LinkedList* newll = (LinkedList*)malloc(SIZE * sizeof(LinkedList));
+    initialize_table(newll);
     for (int i = 0; i < SIZE; i++) {
-        Node* current = table[i].head;
+        Node* current = l[i].head;
         while (current != NULL) {
-            insert_symbol(newll,current->symbole.name,current->symbole.type);
+            insert_symbol(newll, current->symbole.name, current->symbole.type);
             current = current->next;
         }
     }
+    return newll;
 }
 
-int main(void){
-    symbol_table;
-    symbol_table2;
-    LinkedList L;
-    initialize_table(&L);
+int main(void) {
+    initialize_tas(&tas);
+    initialize_table(symbol_table);
 
-    insert_symbol(&L,"Bi",TYPE_ERROR);
-    insert_symbol(&L,"Zon",TYPE_STRUCT);
-    insert_symbol(&L,"Fu",TYPE_VOID);
-    insert_symbol(&L,"T",TYPE_ERROR);
+    insert_symbol(symbol_table, "Bi", TYPE_INT);
+    insert_symbol(symbol_table, "Zon", TYPE_STRUCT);
+    insert_symbol(symbol_table, "Fu", TYPE_VOID);
+    insert_symbol(symbol_table, "T", TYPE_ERROR);
 
-    printf("TAB DE BASE (L):\n");
-    print_symbol_table(&L);
-    printf("ll:\n");
-    print_symbol_table(&symbol_table);
-    copyLinkedList(&L,&symbol_table);
-    print_symbol_table(&L);
-    print_symbol_table(&symbol_table);
+    LinkedList* test = getTopTas(&tas);
+    if (test != NULL) {
+        print_symbol_table(test);
+    } else {
+        printf("Pile vide\n");
+    }
+    LinkedList* ll = copyLinkedList(symbol_table);
+    print_symbol_table(ll);
+    update_symbol(ll, "Bi", "TE", TYPE_INT);
+    print_symbol_table(ll);
+    print_symbol_table(ll);
 
-    update_symbol(&L,"Bi",TYPE_INT);
-    printf("apres edit :\n");
-    print_symbol_table(&L);
-    print_symbol_table(&symbol_table);
-    return(0);
+    print_symbol_table(symbol_table);
+    
+
+
+    clear_table(ll);
+    free(ll);
+
+    return 0;
 }
-
