@@ -32,10 +32,8 @@ primary_expression
         : IDENTIFIER {
                 printf("ff");
         
-            Symbole* sym = find_symbol(symbol_table, $1);
-            if (sym == NULL) {
-                fprintf(stderr, "Erreur : Identifiant non déclaré %s\n", $1);
-            }
+            //Symbole* sym = find_symbol(symbol_table, $1);
+        
         }
         | CONSTANT {
                 printf("cons reconue\n");
@@ -113,10 +111,9 @@ expression
 
 declaration
         : declaration_specifiers declarator ';' {
-                printf("Var:%s et Valeur:\n",$2);
-                insert_symbol(symbol_table,$2,$1);
-                printf("LA TABLE:");
-                print_symbol_table(symbol_table);
+                insert_symbol_toptas(tas,$2,$1);
+
+                printLLfromTas(&tas);                
                 
                 
                 /*
@@ -204,12 +201,17 @@ compound_statement
         ;
 
 open_accol
-        :'{'{
+        :'{'{   
+                printf("ICI LA OP8U");
+                expandTas(&tas);
                 printf("ouverture\n\n");
         }
 
 close_accol
-        :'}'
+        :'}'{
+                printf("MAIS NON");
+                //popTas(&tas);
+        }
 
 declaration_list
         : declaration
@@ -260,9 +262,14 @@ void yyerror(const char *msg) {
     fprintf(stderr, "Erreur de syntaxe : %s a la ligne: %d ???\n", msg,yylineno);
 }
 int main() {
-    initialize_table(symbol_table);
-    initialize_tas(&tas);
-    addinTas(&tas,symbol_table);
-    yyparse();
-    return 0;
+
+        initialize_tas(&tas);
+        initialize_table(symbol_table);
+        addinTas(&tas,symbol_table);
+
+
+
+
+        yyparse();
+        return 0;
 }

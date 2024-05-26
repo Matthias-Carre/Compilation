@@ -662,17 +662,17 @@ static const yytype_int8 yytranslate[] =
 
 #if YYDEBUG
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
-static const yytype_uint8 yyrline[] =
+static const yytype_int16 yyrline[] =
 {
-       0,    32,    32,    40,    43,    47,    48,    49,    50,    51,
-      55,    56,    60,    61,    62,    66,    67,    68,    72,    73,
-      74,    78,    79,    82,    86,    87,    88,    89,    90,    94,
-      95,    96,   100,   101,   105,   106,   110,   111,   115,   134,
-     138,   139,   143,   144,   145,   149,   150,   151,   155,   156,
-     160,   164,   165,   169,   170,   171,   172,   176,   177,   181,
-     185,   186,   187,   188,   189,   194,   195,   198,   201,   207,
-     212,   215,   216,   220,   221,   225,   226,   230,   231,   235,
-     236,   240,   241,   245,   246,   250,   251,   255
+       0,    32,    32,    38,    41,    45,    46,    47,    48,    49,
+      53,    54,    58,    59,    60,    64,    65,    66,    70,    71,
+      72,    76,    77,    80,    84,    85,    86,    87,    88,    92,
+      93,    94,    98,    99,   103,   104,   108,   109,   113,   133,
+     137,   138,   142,   143,   144,   148,   149,   150,   154,   155,
+     159,   163,   164,   168,   169,   170,   171,   175,   176,   180,
+     184,   185,   186,   187,   188,   193,   194,   197,   200,   206,
+     213,   219,   220,   224,   225,   229,   230,   234,   235,   239,
+     240,   244,   245,   249,   250,   254,   255,   259
 };
 #endif
 
@@ -1357,37 +1357,36 @@ yyreduce:
                      {
                 printf("ff");
         
-            Symbole* sym = find_symbol(symbol_table, (yyvsp[0].id));
-            if (sym == NULL) {
-                fprintf(stderr, "Erreur : Identifiant non déclaré %s\n", (yyvsp[0].id));
-            }
+            //Symbole* sym = find_symbol(symbol_table, $1);
+        
         }
-#line 1366 "y.tab.c"
+#line 1364 "y.tab.c"
     break;
 
   case 3: /* primary_expression: CONSTANT  */
-#line 40 "structfe.y"
+#line 38 "structfe.y"
                    {
                 printf("cons reconue\n");
         }
-#line 1374 "y.tab.c"
+#line 1372 "y.tab.c"
     break;
 
   case 22: /* additive_expression: additive_expression '+' multiplicative_expression  */
-#line 79 "structfe.y"
+#line 77 "structfe.y"
                                                             {
                 
         }
-#line 1382 "y.tab.c"
+#line 1380 "y.tab.c"
     break;
 
   case 38: /* declaration: declaration_specifiers declarator ';'  */
-#line 115 "structfe.y"
+#line 113 "structfe.y"
                                                 {
-                printf("Var:%s et Valeur:\n",(yyvsp[-1].id));
-                insert_symbol(symbol_table,(yyvsp[-1].id),(yyvsp[-2].symtype));
-                printf("LA TABLE:");
-                print_symbol_table(symbol_table);
+                printf("la ICI\n");
+                printLLfromTas(&tas);
+                insert_symbol_toptas(tas,(yyvsp[-1].id),(yyvsp[-2].symtype));
+                printf("IVI");
+                printLLfromTas(&tas);                
                 
                 
                 /*
@@ -1402,127 +1401,138 @@ yyreduce:
                 insert_symbol(symbol_table, $2, $1);
             }*/
         }
-#line 1406 "y.tab.c"
+#line 1405 "y.tab.c"
     break;
 
   case 40: /* declaration_specifiers: EXTERN type_specifier  */
-#line 138 "structfe.y"
+#line 137 "structfe.y"
                                 {printf("Extern \n");(yyval.symtype) = (yyvsp[0].symtype); }
-#line 1412 "y.tab.c"
+#line 1411 "y.tab.c"
     break;
 
   case 41: /* declaration_specifiers: type_specifier  */
-#line 139 "structfe.y"
+#line 138 "structfe.y"
                          { (yyval.symtype) = (yyvsp[0].symtype); }
-#line 1418 "y.tab.c"
+#line 1417 "y.tab.c"
     break;
 
   case 42: /* type_specifier: VOID  */
-#line 143 "structfe.y"
+#line 142 "structfe.y"
                { (yyval.symtype) = TYPE_VOID; }
-#line 1424 "y.tab.c"
+#line 1423 "y.tab.c"
     break;
 
   case 43: /* type_specifier: INT  */
-#line 144 "structfe.y"
+#line 143 "structfe.y"
               { printf("Int\n");(yyval.symtype) = TYPE_INT; }
-#line 1430 "y.tab.c"
+#line 1429 "y.tab.c"
     break;
 
   case 44: /* type_specifier: struct_specifier  */
-#line 145 "structfe.y"
+#line 144 "structfe.y"
                            { (yyval.symtype) = TYPE_STRUCT; }
-#line 1436 "y.tab.c"
+#line 1435 "y.tab.c"
     break;
 
   case 45: /* struct_specifier: STRUCT IDENTIFIER '{' struct_declaration_list '}'  */
-#line 149 "structfe.y"
+#line 148 "structfe.y"
                                                             { (yyval.symtype) = TYPE_STRUCT; }
-#line 1442 "y.tab.c"
+#line 1441 "y.tab.c"
     break;
 
   case 46: /* struct_specifier: STRUCT '{' struct_declaration_list '}'  */
-#line 150 "structfe.y"
+#line 149 "structfe.y"
                                                  { (yyval.symtype) = TYPE_STRUCT; }
-#line 1448 "y.tab.c"
+#line 1447 "y.tab.c"
     break;
 
   case 47: /* struct_specifier: STRUCT IDENTIFIER  */
-#line 151 "structfe.y"
+#line 150 "structfe.y"
                             { (yyval.symtype) = TYPE_STRUCT; }
-#line 1454 "y.tab.c"
+#line 1453 "y.tab.c"
     break;
 
   case 51: /* declarator: '*' direct_declarator  */
-#line 164 "structfe.y"
+#line 163 "structfe.y"
                                 { (yyval.id) = (yyvsp[0].id); }
-#line 1460 "y.tab.c"
+#line 1459 "y.tab.c"
     break;
 
   case 52: /* declarator: direct_declarator  */
-#line 165 "structfe.y"
+#line 164 "structfe.y"
                             { (yyval.id) = (yyvsp[0].id);printf("Val directedecla : %s\n",(yyvsp[0].id)); }
-#line 1466 "y.tab.c"
+#line 1465 "y.tab.c"
     break;
 
   case 53: /* direct_declarator: IDENTIFIER  */
-#line 169 "structfe.y"
+#line 168 "structfe.y"
                      {printf("IDENT:%s\n",(yyvsp[0].id)); (yyval.id) = (yyvsp[0].id); }
-#line 1472 "y.tab.c"
+#line 1471 "y.tab.c"
     break;
 
   case 54: /* direct_declarator: '(' declarator ')'  */
-#line 170 "structfe.y"
+#line 169 "structfe.y"
                              { (yyval.id) = (yyvsp[-1].id); }
-#line 1478 "y.tab.c"
+#line 1477 "y.tab.c"
     break;
 
   case 55: /* direct_declarator: direct_declarator '(' parameter_list ')'  */
-#line 171 "structfe.y"
+#line 170 "structfe.y"
                                                    {printf("FRANCOIS A RAISON"); (yyval.id) = (yyvsp[-3].id); }
-#line 1484 "y.tab.c"
+#line 1483 "y.tab.c"
     break;
 
   case 56: /* direct_declarator: direct_declarator '(' ')'  */
-#line 172 "structfe.y"
+#line 171 "structfe.y"
                                     { (yyval.id) = (yyvsp[-2].id); }
-#line 1490 "y.tab.c"
+#line 1489 "y.tab.c"
     break;
 
   case 66: /* compound_statement: open_accol statement_list close_accol  */
-#line 195 "structfe.y"
+#line 194 "structfe.y"
                                                {
                 printf("on decale\n");
         }
-#line 1498 "y.tab.c"
+#line 1497 "y.tab.c"
     break;
 
   case 67: /* compound_statement: open_accol declaration_list close_accol  */
-#line 198 "structfe.y"
+#line 197 "structfe.y"
                                                  {
                 printf("on decale2\n");
         }
-#line 1506 "y.tab.c"
+#line 1505 "y.tab.c"
     break;
 
   case 68: /* compound_statement: open_accol declaration_list statement_list close_accol  */
-#line 201 "structfe.y"
+#line 200 "structfe.y"
                                                                 {
                 printf("on decale3\n");
         }
-#line 1514 "y.tab.c"
+#line 1513 "y.tab.c"
     break;
 
   case 69: /* open_accol: '{'  */
-#line 207 "structfe.y"
-            {
+#line 206 "structfe.y"
+            {   
+                printf("ICI LA OP8U");
+                expandTas(&tas);
                 printf("ouverture\n\n");
         }
-#line 1522 "y.tab.c"
+#line 1523 "y.tab.c"
+    break;
+
+  case 70: /* close_accol: '}'  */
+#line 213 "structfe.y"
+            {
+                printf("MAIS NON");
+                //popTas(&tas);
+        }
+#line 1532 "y.tab.c"
     break;
 
 
-#line 1526 "y.tab.c"
+#line 1536 "y.tab.c"
 
       default: break;
     }
@@ -1715,15 +1725,20 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 258 "structfe.y"
+#line 262 "structfe.y"
 
 void yyerror(const char *msg) {
     fprintf(stderr, "Erreur de syntaxe : %s a la ligne: %d ???\n", msg,yylineno);
 }
 int main() {
-    initialize_table(symbol_table);
-    initialize_tas(&tas);
-    addinTas(&tas,symbol_table);
-    yyparse();
-    return 0;
+
+        initialize_tas(&tas);
+        initialize_table(symbol_table);
+        addinTas(&tas,symbol_table);
+
+
+
+
+        yyparse();
+        return 0;
 }

@@ -51,8 +51,14 @@ void initialize_tas(Tas* t) {
 }
 
 void addinTas(Tas* t, LinkedList* ts) {
-    t->length++;
-    t->list[t->length] = ts;
+    if (t->length < MAX) {
+        t->list[t->length] = ts;
+        t->length++;
+        print_symbol_table(t->list[t->length - 1]);
+
+    } else {
+        //tas plein
+    }
 }
 
 int isEmpty(Tas t) {
@@ -99,16 +105,33 @@ Symbole* find_symbol(LinkedList* table, char* name) {
 
 void insert_symbol(LinkedList* table, char* name, SymboleType type) {
     int index = fonction_hash(name);
-    Node* new_node = create_node(name, type);
-    if (new_node != NULL) {
-        new_node->next = table[index].head;
-        table[index].head = new_node;
-        table[index].length++;
+    printf("apres hash\n");
+    Node* new_node = (Node*)malloc(sizeof(Node));
+    printf("apres maloc\n");
+    new_node->symbole.name = strdup(name);
+    printf("apres strdup\n");
+    new_node->symbole.type = type;
+    printf("apres 1\n");
+    printf("Test des Var:\n");
+    printf("%s\n",new_node->symbole.name);
+    printf("index:%d\n",table);
+    new_node->next = table[index].head;
+    printf("apres 2\n");
+    table[index].head = new_node;
+    printf("apres 3\n");
+    table[index].length++;
+    printf("apres 4\n");
+}
+void add_symbol(LinkedList* tab,char* name,SymboleType st){
+    if(find_symbol(tab,name)==NULL){
+        insert_symbol(tab,name,st);
+    }else{
+        update_symbol(tab,name,st);
     }
 }
 void insert_symbol_toptas(Tas t,char* name,SymboleType type){
     LinkedList* ll = getTopTas(&t);
-    insert_symbol(ll,name,type);
+    add_symbol(ll,name,type);
 }
 
 void update_symbol(LinkedList *table, char *name, SymboleType type)
@@ -119,16 +142,6 @@ void update_symbol(LinkedList *table, char *name, SymboleType type)
         symbol->type = type;
     }
 }
-
-void printLLfromTas(Tas *t)
-{
-    for (int i = 0; i < t->length; i++)
-    {
-        printf("Table Des Symboles n°%d\n", i);
-        print_symbol_table(t->list[i]);
-    }
-}
-
 void print_symbol_table(LinkedList* table) {
     printf("\n%15s | %15s | %15s |\n", "TABLE", "NOM", "TYPE");
 
@@ -140,6 +153,16 @@ void print_symbol_table(LinkedList* table) {
         }
     }
 }
+void printLLfromTas(Tas *t)
+{
+    for (int i = 0; i < t->length; i++)
+    {
+        printf("Table Des Symboles n°%d\n", i);
+        print_symbol_table(t->list[i]);
+    }
+}
+
+
 LinkedList* copyLinkedList(LinkedList* table) {
     LinkedList* newll = (LinkedList*)malloc(sizeof(LinkedList) * SIZE);
     initialize_table(newll);

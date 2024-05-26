@@ -54,7 +54,7 @@ void printLLfromTas(Tas *t);
 LinkedList* copyLinkedList(LinkedList* table);
 void copyAndUpdateTableInTas(Tas* t, char* new_symbol_name, SymboleType new_symbol_type);
 void expandTas(Tas* t);
-
+void add_symbol(LinkedList* tab,char* name,SymboleType st);
 int isEmpty(Tas t);
 void addinTas(Tas* t, LinkedList* ts);
 void popTas(Tas* t);

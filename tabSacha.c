@@ -50,7 +50,6 @@ void print_symbol_table(LinkedList* table) {
         }
     }
 }
-
 void addinTas(Tas* t, LinkedList* ts) {
     if (t->length < MAX) {
         t->list[t->length] = ts;
@@ -61,20 +60,17 @@ void addinTas(Tas* t, LinkedList* ts) {
         //tas plein
     }
 }
-
 void popTas(Tas* t) {
     if (t->length > 0) {
         t->length--;
     }
 }
-
 LinkedList* getTopTas(Tas* t) {
     if (t->length > 0) {
         return t->list[t->length - 1];
     }
     return NULL;
 }
-
 int fonction_hash(char* name) {
     int hash = 0;
     for (int i = 0; name[i] != '\0'; i++) {
@@ -82,7 +78,13 @@ int fonction_hash(char* name) {
     }
     return hash % SIZE;
 }
-
+add_symbol(LinkedList* tab,char* name,SymboleType st){
+    if(find_symbol(tab,name)==NULL){
+        insert_symbol(tab,name,st);
+    }else{
+        update_symbol(tab,name,st);
+    }
+}
 void initialize_tas(Tas* t) {
     t->length = 0;
     for (int i = 0; i < MAX; i++) {
@@ -134,7 +136,7 @@ void insert_symbol(LinkedList* table, char* name, SymboleType type) {
 }
 void insert_symbol_toptas(Tas t,char* name,SymboleType type){
     LinkedList* ll = getTopTas(&t);
-    insert_symbol(ll,name,type);
+    add_symbol(ll,name,type);
 }
 
 void update_symbol(LinkedList* table, char* name, SymboleType type) {
