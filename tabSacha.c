@@ -53,19 +53,37 @@ int isEmpty(Tas t){
     return 0;
 }
 
-void addinTas(Tas t,LinkedList ts){
-    t.length++;
-    t.list[t.length]=&ts;
+void print_symbol_table(LinkedList* table) {
+    printf("\n%15s | %15s | %15s |\n", "TABLE", "NOM", "TYPE");
+
+    for (int i = 0; i < SIZE; i++) {
+        Node* current = table[i].head;
+        while (current != NULL) {
+            printf("table[%d]\t| %15s | %15s |\n", i, current->symbole.name, TypesNames[current->symbole.type]);
+            current = current->next;
+        }
+    }
+}
+void addinTas(Tas* t,LinkedList* ts){
+    t->length =t->length+1;
+    printf("VAL DE LENGTH:%d\n",t->length);
+    t->list[t->length-1]=ts;
+    printf("Geulle du tas ajouté:");
+    print_symbol_table(t->list[t->length-1]);
+    printf("Voila\n");
+    }
+
+void popTas(Tas* t){
+    t->length--;
 }
 
-void popTas(Tas t){
-    t.length--;
+LinkedList getTopTas(Tas *t){
+    printf("VAL DU TAILLE TAS:%d\n",t->length);
+    printf("TEST:%d\n",t->length);
+    return *t->list[t->length-1];
 }
 
-LinkedList getTopTas(Tas t){
-    t.length--;
-    return *t.list[t.length-1];
-}
+
 
 int fonction_hash(char* name) {
     int hash = 0;
@@ -134,60 +152,47 @@ void update_symbol(LinkedList* table, char* name, SymboleType type) {
     }
 }
 
-void print_symbol_table(LinkedList* table) {
-    printf("\n%15s | %15s | %15s |\n", "TABLE", "NOM", "TYPE");
+void printLLfromTas(Tas *t){
+    for(int i=0;i<t->length;i++){
+        printf("Table Des Symboles n°%d\n",i);
+        print_symbol_table(t->list[i]);
+    }
+}
+
+void copyLinkedList(LinkedList* table,LinkedList* newll){
 
     for (int i = 0; i < SIZE; i++) {
         Node* current = table[i].head;
         while (current != NULL) {
-            printf("table[%d]\t| %15s | %15s |\n", i, current->symbole.name, TypesNames[current->symbole.type]);
+            insert_symbol(newll,current->symbole.name,current->symbole.type);
             current = current->next;
         }
     }
 }
 
-
-
-LinkedList* copyLinkedList(LinkedList* l) {
-    LinkedList* newll = (LinkedList*)malloc(SIZE * sizeof(LinkedList));
-    initialize_table(newll);
-    for (int i = 0; i < SIZE; i++) {
-        Node* current = l[i].head;
-        while (current != NULL) {
-            insert_symbol(newll, current->symbole.name, current->symbole.type);
-            current = current->next;
-        }
-    }
-    return newll;
-}
-
-int main(void) {
+int main(void){
+    symbol_table;
+    symbol_table2;
+    LinkedList L;
+    initialize_table(&L);
     initialize_tas(&tas);
-    initialize_table(symbol_table);
 
-    insert_symbol(symbol_table, "Bi", TYPE_INT);
-    insert_symbol(symbol_table, "Zon", TYPE_STRUCT);
-    insert_symbol(symbol_table, "Fu", TYPE_VOID);
-    insert_symbol(symbol_table, "T", TYPE_ERROR);
+    insert_symbol(&L,"Bi",TYPE_ERROR);
+    insert_symbol(&L,"Zon",TYPE_STRUCT);
+    insert_symbol(&L,"Fu",TYPE_VOID);
+    insert_symbol(&L,"T",TYPE_ERROR);
 
-    LinkedList* test = getTopTas(&tas);
-    if (test != NULL) {
-        print_symbol_table(test);
-    } else {
-        printf("Pile vide\n");
-    }
-    LinkedList* ll = copyLinkedList(symbol_table);
-    print_symbol_table(ll);
-    update_symbol(ll, "Bi", "TE", TYPE_INT);
-    print_symbol_table(ll);
-    print_symbol_table(ll);
+    printf("TAB DE BASE (L):\n");
+    print_symbol_table(&L);
+    print_symbol_table(&symbol_table);
+    printf("===========\n");
 
-    print_symbol_table(symbol_table);
-    
+    addinTas(&tas,&L);
+    addinTas(&tas,&symbol_table);
+    printf("val de top0:%s\n",&tas.list[0]);  
+    printLLfromTas(&tas);
 
 
-    clear_table(ll);
-    free(ll);
-
-    return 0;
+    return(0);
 }
+
