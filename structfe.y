@@ -6,8 +6,11 @@
 
 extern int yylineno;
 void yyerror(const char *msg);
-%}
 
+const char* TypesNames[] = {"TYPE_ERROR", "TYPE_INT", "TYPE_VOID", "TYPE_STRUCT"};
+extern int yylval; // Définition de yylval
+
+%}
 
 %union {
     int intval;
@@ -20,8 +23,9 @@ void yyerror(const char *msg);
 
 %token <id> IDENTIFIER CONSTANT
 %token SIZEOF PTR_OP LE_OP GE_OP EQ_OP NE_OP
-%token AND_OP OR_OP EXTERN INT VOID STRUCT IF ELSE WHILE FOR RETURN PRINTD
-%type <symtype> type_specifier declaration_specifiers struct_specifier
+%token AND_OP OR_OP EXTERN INT VOID STRUCT IF ELSE WHILE FOR RETURN
+%type <symtype> type_specifier declaration_specifiers struct_specifier additive_expression multiplicative_expression primary_expression expression argument_expression_list
+%type <symtype> logical_or_expression logical_and_expression equality_expression relational_expression unary_expression postfix_expression 
 %type <id> declarator direct_declarator
 
 %start program
@@ -30,34 +34,59 @@ void yyerror(const char *msg);
 
 primary_expression
         : IDENTIFIER {
-                printf("ff");
-        
-            //Symbole* sym = find_symbol(symbol_table, $1);
-        
+                Symbole* sym = find_symbol(getTopTas(&tas), $1);
+                if (sym) {
+                    $$ = sym->type;
+                } else {
+                    fprintf(stderr, "Erreur: Identifiant %s non déclaré à la ligne %d\n", $1, yylineno);
+                    YYERROR;
+                }
         }
         | CONSTANT {
-                printf("cons reconue\n");
+                $$ = TYPE_INT;
         }
-        | '(' expression ')'
+        | '(' expression ')' {
+                $$ = $2;
+        }
         ;
 
 postfix_expression
-        : primary_expression
-        | postfix_expression '(' ')'
-        | postfix_expression '(' argument_expression_list ')'
-        | postfix_expression '.' IDENTIFIER
-        | postfix_expression PTR_OP IDENTIFIER
+        : primary_expression {
+                $$ = $1;
+        }
+        | postfix_expression '(' ')' {
+                $$ = $1;
+        }
+        | postfix_expression '(' argument_expression_list ')' {
+                $$ = $1;
+        }
+        | postfix_expression '.' IDENTIFIER {
+                $$ = TYPE_INT;
+        }
+        | postfix_expression PTR_OP IDENTIFIER {
+                $$ = TYPE_INT;
+        }
         ;
 
 argument_expression_list
-        : expression
-        | argument_expression_list ',' expression
+        : expression {
+                $$ = $1;
+        }
+        | argument_expression_list ',' expression {
+                $$ = $1;
+        }
         ;
 
 unary_expression
-        : postfix_expression
-        | unary_operator unary_expression
-        | SIZEOF unary_expression
+        : postfix_expression {
+                $$ = $1;
+        }
+        | unary_operator unary_expression {
+                $$ = $2;
+        }
+        | SIZEOF unary_expression {
+                $$ = TYPE_INT;
+        }
         ;
 
 unary_operator
@@ -67,85 +96,178 @@ unary_operator
         ;
 
 multiplicative_expression
-        : unary_expression
-        | multiplicative_expression '*' unary_expression
-        | multiplicative_expression '/' unary_expression
+        : unary_expression {
+                $$ = $1;
+        }
+        | multiplicative_expression '*' unary_expression {
+                if ($1 != TYPE_INT || $3 != TYPE_INT) {
+                    fprintf(stderr, "Erreur: Opération '*' entre types incompatibles à la ligne %d\n", yylineno);
+                    YYERROR;
+                }
+                $$ = TYPE_INT;
+        }
+        | multiplicative_expression '/' unary_expression {
+                if ($1 != TYPE_INT || $3 != TYPE_INT) {
+                    fprintf(stderr, "Erreur: Opération '/' entre types incompatibles à la ligne %d\n", yylineno);
+                    YYERROR;
+                }
+                $$ = TYPE_INT;
+        }
         ;
 
 additive_expression
-        : multiplicative_expression
-        | additive_expression '+' multiplicative_expression {
-                
+        : multiplicative_expression {
+                $$ = $1;
         }
-        | additive_expression '-' multiplicative_expression
+        | additive_expression '+' multiplicative_expression {
+                if ($1 != TYPE_INT || $3 != TYPE_INT) {
+                    fprintf(stderr, "Erreur: Opération '+' entre types incompatibles à la ligne %d\n", yylineno);
+                    YYERROR;
+                }
+                $$ = TYPE_INT;
+        }
+        | additive_expression '-' multiplicative_expression {
+                if ($1 != TYPE_INT || $3 != TYPE_INT) {
+                    fprintf(stderr, "Erreur: Opération '-' entre types incompatibles à la ligne %d\n", yylineno);
+                    YYERROR;
+                }
+                $$ = TYPE_INT;
+        }
         ;
 
 relational_expression
-        : additive_expression
-        | relational_expression '<' additive_expression
-        | relational_expression '>' additive_expression
-        | relational_expression LE_OP additive_expression
-        | relational_expression GE_OP additive_expression
+        : additive_expression {
+                $$ = $1;
+        }
+        | relational_expression '<' additive_expression {
+                if ($1 != TYPE_INT || $3 != TYPE_INT) {
+                    fprintf(stderr, "Erreur: Opération '<' entre types incompatibles à la ligne %d\n", yylineno);
+                    YYERROR;
+                }
+                $$ = TYPE_INT;
+        }
+        | relational_expression '>' additive_expression {
+                if ($1 != TYPE_INT || $3 != TYPE_INT) {
+                    fprintf(stderr, "Erreur: Opération '>' entre types incompatibles à la ligne %d\n", yylineno);
+                    YYERROR;
+                }
+                $$ = TYPE_INT;
+        }
+        | relational_expression LE_OP additive_expression {
+                if ($1 != TYPE_INT || $3 != TYPE_INT) {
+                    fprintf(stderr, "Erreur: Opération '<=' entre types incompatibles à la ligne %d\n", yylineno);
+                    YYERROR;
+                }
+                $$ = TYPE_INT;
+        }
+        | relational_expression GE_OP additive_expression {
+                if ($1 != TYPE_INT || $3 != TYPE_INT) {
+                    fprintf(stderr, "Erreur: Opération '>=' entre types incompatibles à la ligne %d\n", yylineno);
+                    YYERROR;
+                }
+                $$ = TYPE_INT;
+        }
         ;
 
 equality_expression
-        : relational_expression
-        | equality_expression EQ_OP relational_expression
-        | equality_expression NE_OP relational_expression
+        : relational_expression {
+                $$ = $1;
+        }
+        | equality_expression EQ_OP relational_expression {
+                if ($1 != TYPE_INT || $3 != TYPE_INT) {
+                    fprintf(stderr, "Erreur: Opération '==' entre types incompatibles à la ligne %d\n", yylineno);
+                    YYERROR;
+                }
+                $$ = TYPE_INT;
+        }
+        | equality_expression NE_OP relational_expression {
+                if ($1 != TYPE_INT || $3 != TYPE_INT) {
+                    fprintf(stderr, "Erreur: Opération '!=' entre types incompatibles à la ligne %d\n", yylineno);
+                    YYERROR;
+                }
+                $$ = TYPE_INT;
+        }
         ;
 
 logical_and_expression
-        : equality_expression
-        | logical_and_expression AND_OP equality_expression
+        : equality_expression {
+                $$ = $1;
+        }
+        | logical_and_expression AND_OP equality_expression {
+                if ($1 != TYPE_INT || $3 != TYPE_INT) {
+                    fprintf(stderr, "Erreur: Opération '&&' entre types incompatibles à la ligne %d\n", yylineno);
+                    YYERROR;
+                }
+                $$ = TYPE_INT;
+        }
         ;
 
 logical_or_expression
-        : logical_and_expression
-        | logical_or_expression OR_OP logical_and_expression
+        : logical_and_expression {
+                $$ = $1;
+        }
+        | logical_or_expression OR_OP logical_and_expression {
+                if                 ($1 != TYPE_INT || $3 != TYPE_INT) {
+                    fprintf(stderr, "Erreur: Opération '||' entre types incompatibles à la ligne %d\n", yylineno);
+                    YYERROR;
+                }
+                $$ = TYPE_INT;
+        }
         ;
 
 expression
-        : logical_or_expression
-        | unary_expression '=' expression
+        : logical_or_expression {
+                $$ = $1;
+        }
+        | unary_expression '=' expression {
+                if ($1 != TYPE_INT || $3 != TYPE_INT) {
+                    fprintf(stderr, "Erreur: Assignation entre types incompatibles à la ligne %d\n", yylineno);
+                    YYERROR;
+                }
+                $$ = $1;
+        }
         ;
 
 declaration
         : declaration_specifiers declarator ';' {
-                insert_symbol_toptas(tas,$2,$1);
-
-                printLLfromTas(&tas);                
-                
-                
-                /*
-            Symbole* sym = find_symbol(symbol_table, $2);
-            if (sym != NULL) {
-                fprintf(stderr, "Erreur : Identifiant déjà déclaré %s\n", $2);
-                YYERROR;
-            } else {
-                Symbole new_sym;
-                new_sym.name = $2;
-                new_sym.type = $1;
-                insert_symbol(symbol_table, $2, $1);
-            }*/
+                insert_symbol_toptas(tas, $2, $1);
         }
-        | struct_specifier ';'
+        | struct_specifier ';' {
+                // À implémenter si nécessaire
+        }
         ;
 
 declaration_specifiers
-        : EXTERN type_specifier {printf("Extern \n");$$ = $2; }
-        | type_specifier { $$ = $1; }
+        : EXTERN type_specifier {
+                $$ = $2;
+        }
+        | type_specifier {
+                $$ = $1;
+        }
         ;
 
 type_specifier
-        : VOID { $$ = TYPE_VOID; }
-        | INT { printf("Int\n");$$ = TYPE_INT; }
-        | struct_specifier { $$ = TYPE_STRUCT; }
+        : VOID {
+                $$ = TYPE_VOID;
+        }
+        | INT {
+                $$ = TYPE_INT;
+        }
+        | struct_specifier {
+                $$ = TYPE_STRUCT;
+        }
         ;
 
 struct_specifier
-        : STRUCT IDENTIFIER '{' struct_declaration_list '}' { $$ = TYPE_STRUCT; }
-        | STRUCT '{' struct_declaration_list '}' { $$ = TYPE_STRUCT; }
-        | STRUCT IDENTIFIER { $$ = TYPE_STRUCT; }
+        : STRUCT IDENTIFIER '{' struct_declaration_list '}' {
+                $$ = TYPE_STRUCT;
+        }
+        | STRUCT '{' struct_declaration_list '}' {
+                $$ = TYPE_STRUCT;
+        }
+        | STRUCT IDENTIFIER {
+                $$ = TYPE_STRUCT;
+        }
         ;
 
 struct_declaration_list
@@ -158,15 +280,27 @@ struct_declaration
         ;
 
 declarator
-        : '*' direct_declarator { $$ = $2; }
-        | direct_declarator { $$ = $1;printf("Val directedecla : %s\n",$1); }
+        : '*' direct_declarator {
+                $$ = $2;
+        }
+        | direct_declarator {
+                $$ = $1;
+        }
         ;
 
 direct_declarator
-        : IDENTIFIER {printf("IDENT:%s\n",$1); $$ = $1; }
-        | '(' declarator ')' { $$ = $2; }
-        | direct_declarator '(' parameter_list ')' {printf("FRANCOIS A RAISON"); $$ = $1; }
-        | direct_declarator '(' ')' { $$ = $1; }
+        : IDENTIFIER {
+                $$ = $1;
+        }
+        | '(' declarator ')' {
+                $$ = $2;
+        }
+        | direct_declarator '(' parameter_list ')' {
+                $$ = $1;
+        }
+        | direct_declarator '(' ')' {
+                $$ = $1;
+        }
         ;
 
 parameter_list
@@ -186,32 +320,12 @@ statement
         | jump_statement
         ;
 
-
 compound_statement
-        : open_accol close_accol
-        | open_accol statement_list close_accol{
-                printf("on decale\n");
-        }
-        | open_accol declaration_list close_accol{
-                printf("on decale2\n");
-        }
-        | open_accol declaration_list statement_list close_accol{
-                printf("on decale3\n");
-        }
+        : '{' '}'
+        | '{' statement_list '}'
+        | '{' declaration_list '}'
+        | '{' declaration_list statement_list '}'
         ;
-
-open_accol
-        :'{'{   
-                printf("ICI LA OP8U");
-                expandTas(&tas);
-                printf("ouverture\n\n");
-        }
-
-close_accol
-        :'}'{
-                printf("MAIS NON");
-                //popTas(&tas);
-        }
 
 declaration_list
         : declaration
@@ -259,17 +373,15 @@ function_definition
 
 %%
 void yyerror(const char *msg) {
-    fprintf(stderr, "Erreur de syntaxe : %s a la ligne: %d ???\n", msg,yylineno);
+    fprintf(stderr, "Erreur de syntaxe : %s à la ligne: %d ???\n", msg, yylineno);
 }
+
 int main() {
+    initialize_tas(&tas);
+    initialize_table(symbol_table);
+    addinTas(&tas, symbol_table);
 
-        initialize_tas(&tas);
-        initialize_table(symbol_table);
-        addinTas(&tas,symbol_table);
-
-
-
-
-        yyparse();
-        return 0;
+    yyparse();
+    return 0;
 }
+
