@@ -27,7 +27,7 @@ int yylex(void);
         Element* elem;
 }
 
-//%token <id> IDENTIFIER CONSTANT
+%token <id> IDENTIFIER CONSTANT
 //%token SIZEOF PTR_OP LE_OP GE_OP EQ_OP NE_OP
 //%token AND_OP OR_OP EXTERN INT VOID STRUCT IF ELSE WHILE FOR RETURN
 //%type <symtype> type_specifier declaration_specifiers struct_specifier additive_expression multiplicative_expression primary_expression expression argument_expression_list
@@ -36,8 +36,8 @@ int yylex(void);
 
 %token <elem> SIZEOF PTR_OP LE_OP GE_OP EQ_OP NE_OP 
 %token <elem> AND_OP OR_OP EXTERN INT VOID STRUCT IF ELSE WHILE FOR RETURN
-%token <integer> CONSTANT
-%token <elem> IDENTIFIER
+//%token <integer> CONSTANT
+//%token <elem> IDENTIFIER
 
 %type <elem> type_specifier declaration_specifiers struct_specifier additive_expression multiplicative_expression primary_expression expression argument_expression_list
 %type <elem> logical_or_expression logical_and_expression equality_expression relational_expression unary_expression postfix_expression
@@ -95,6 +95,8 @@ postfix_expression
                 $$ = $1;
         }
         | postfix_expression '.' IDENTIFIER {
+                printf("ycc ident\n");
+                printf("ycc valeur ident L99:%s\n",$3);
                 $$->type=TYPE_INT;
         }
         | postfix_expression PTR_OP IDENTIFIER {
@@ -265,7 +267,7 @@ expression
 
 declaration
         : declaration_specifiers declarator ';' {
-                
+                printf("yacc L270:%s %s\n",$1->code, $2->code );
                 insert_symbol_toptas(tas, $2->code, $1->type);
         }
         | struct_specifier ';' {
@@ -290,15 +292,13 @@ type_specifier
                 $$=e;
         }
         | INT {
-                printf("test122\n");
                 Element * e = malloc(sizeof(Element));
                 e->type = TYPE_INT;
                 e->code = "int";
-                printf("test1\n");
                 $$ = e;
-                printf("C'est bon\n");
         }
         | struct_specifier {
+
                 $$->type = TYPE_STRUCT;
         }
         ;
@@ -346,15 +346,12 @@ declarator
 
 direct_declarator
         : IDENTIFIER {
-                printf("yacc decla");
                 Element * e = malloc(sizeof(Element));
+
                 e->type=TYPE_INT;
-
-                char * tmp;
-                sprintf(tmp,"$i",$1);
+                char tmp[10];
+                sprintf(tmp,"%d",$1);
                 e->code=strdup(tmp);
-                free(tmp);
-
                 e->code=tmp;
                 $$=e;
         }

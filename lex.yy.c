@@ -942,7 +942,7 @@ YY_RULE_SETUP
 case 32:
 YY_RULE_SETUP
 #line 61 "ANSI-proj.l"
-{printf("test lex:%s,et yytext:\n",yylval);yylval = strdup(yytext);printf("lex"); return IDENTIFIER ;}
+{/*yylval.id = strdup(yytext);*/printf("Lex ident\n"); return IDENTIFIER ;}
 	YY_BREAK
 case 33:
 /* rule 33 can match eol */

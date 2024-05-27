@@ -58,7 +58,7 @@ L	 [A-Za-z]
 
 "/*"([^*]|\*+[^*/])*\*+"/"			 {printf("commentaire\n");}
 {C}+	 	 		 {printf("const\n");/*yylval.id=strdup(yytext)*/; return CONSTANT ;}
-{L}({L}|{C}|"_")*	 {printf("test lex:%s,et yytext:\n",yylval);yylval = strdup(yytext);printf("lex"); return IDENTIFIER ;}
+{L}({L}|{C}|"_")*	 {/*yylval.id = strdup(yytext);*/printf("Lex ident\n"); return IDENTIFIER ;}
 \n					 {printf("Ligne act: %d\n",yylineno++);}
 [ \t\r\v\f]+ 	 	 ;
 
