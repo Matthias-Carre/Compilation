@@ -64,5 +64,6 @@ void addinTas(Tas* t, LinkedList* ts);
 void popTas(Tas* t);
 LinkedList * getTopTas(Tas *t);
 void initialize_tas(Tas* t);
+char* concat(char * a,char * b);
 
 #endif

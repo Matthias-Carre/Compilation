@@ -196,4 +196,18 @@ void expandTas(Tas* t) {
 }
 
 
+char* concat(char * a,char * b){
+    size_t la = strlen(a);
+    size_t lb = strlen(b);
 
+    char* res = malloc(la+lb+1);
+    for(int i=0;i<la;i++){
+        res[i]=a[i];
+    }
+
+    for(int i=0;i<lb;i++){
+        res[i+la]=b[i];
+    }
+
+    return res;
+}

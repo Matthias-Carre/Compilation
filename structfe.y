@@ -41,7 +41,7 @@ char * typesNames[]={"error","int","void","struct"};
 
 %type <elem> type_specifier declaration_specifiers struct_specifier additive_expression multiplicative_expression primary_expression expression argument_expression_list
 %type <elem> logical_or_expression logical_and_expression equality_expression relational_expression unary_expression postfix_expression
-%type <elem> open_accol close_accol declarator direct_declarator struct_declaration parameter_declaration
+%type <elem> open_accol close_accol declarator direct_declarator struct_declaration parameter_declaration 
 %type <elem> iteration_statement expression_statement statement compound_statement selection_statement jump_statement
 %type <id> unary_operator 
 %nonassoc THEN
@@ -74,6 +74,7 @@ primary_expression
         }
         | '(' expression ')' {
                 $$ = $2;
+                $$->code=concat("(",concat($2->code,")"));
         }
         ;
 
@@ -85,6 +86,8 @@ postfix_expression
                 $$ = $1;
         }
         | postfix_expression '(' argument_expression_list ')' {
+
+                printf("Yacc code 3adrs:%s(%s)\n",$1->code,$3->code);
                 $$ = $1;
         }
         | postfix_expression '.' IDENTIFIER {
@@ -109,8 +112,10 @@ unary_expression
                 $$ = $1;
         }
         | unary_operator unary_expression {
-
+                char * res=concat($1,$2->code);
                 $$ = $2;
+
+                $$->code=res;
         }
         | SIZEOF unary_expression {
                 $$->type = TYPE_INT;
@@ -153,6 +158,7 @@ additive_expression
                     YYERROR;
                 }
                 $$->type = TYPE_INT;
+                $$->code = concat($1->code,concat("+",$3->code));
         }
         | additive_expression '-' multiplicative_expression {
                 if ($1->type != TYPE_INT || $3->type != TYPE_INT) {
@@ -252,7 +258,7 @@ expression
                     fprintf(stderr, "Erreur: Assignation entre types incompatibles à la ligne %d\n", yylineno);
                     YYERROR;
                 }
-               printf("yacc code 3adrs:%s = %s;\n",$1->code,$3->code);
+                printf("yacc code 3adrs:%s = %s;\n",$1->code,$3->code);
                 $$ = $1;
         }
         ;
@@ -329,8 +335,9 @@ struct_declaration
         ;
 
 declarator
-        : '*' direct_declarator {
+        : '*' direct_declarator {//pointeur
                 $$ = $2;
+                $$->code=concat("*",$2->code);
         }
         | direct_declarator {
                 $$ = $1;
@@ -347,9 +354,11 @@ direct_declarator
 
         }
         | '(' declarator ')' {
+                printf("Yacc L356 \n");
                 $$ = $2;
         }
         | direct_declarator '(' parameter_list ')' {
+                printf("Yacc L356\n");
                 $$ = $1;
         }
         | direct_declarator '(' ')' {

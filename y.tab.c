@@ -674,15 +674,15 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,    55,    55,    69,    75,    81,    84,    87,    90,    93,
-      99,   102,   108,   111,   115,   121,   122,   123,   127,   130,
-     137,   147,   150,   157,   167,   170,   177,   184,   191,   201,
-     204,   211,   221,   224,   234,   237,   247,   250,   261,   265,
-     271,   274,   280,   286,   293,   300,   306,   312,   321,   322,
-     326,   332,   335,   341,   349,   352,   355,   362,   365,   369,
-     376,   377,   378,   379,   380,   384,   385,   387,   389,   394,
-     400,   406,   407,   411,   412,   416,   419,   423,   424,   428,
-     429,   441,   444,   450,   451,   455,   456,   460
+       0,    55,    55,    69,    75,    82,    85,    88,    93,    96,
+     102,   105,   111,   114,   120,   126,   127,   128,   132,   135,
+     142,   152,   155,   163,   173,   176,   183,   190,   197,   207,
+     210,   217,   227,   230,   240,   243,   253,   256,   267,   271,
+     277,   280,   286,   292,   299,   306,   312,   318,   327,   328,
+     332,   338,   342,   348,   356,   360,   364,   371,   374,   378,
+     385,   386,   387,   388,   389,   393,   394,   396,   398,   403,
+     409,   415,   416,   420,   421,   425,   428,   432,   433,   437,
+     438,   450,   453,   459,   460,   464,   465,   469
 };
 #endif
 
@@ -1396,119 +1396,124 @@ yyreduce:
 #line 75 "structfe.y"
                              {
                 (yyval.elem) = (yyvsp[-1].elem);
+                (yyval.elem)->code=concat("(",concat((yyvsp[-1].elem)->code,")"));
         }
-#line 1401 "y.tab.c"
+#line 1402 "y.tab.c"
     break;
 
   case 5: /* postfix_expression: primary_expression  */
-#line 81 "structfe.y"
+#line 82 "structfe.y"
                              {
                 (yyval.elem) = (yyvsp[0].elem);
         }
-#line 1409 "y.tab.c"
+#line 1410 "y.tab.c"
     break;
 
   case 6: /* postfix_expression: postfix_expression '(' ')'  */
-#line 84 "structfe.y"
+#line 85 "structfe.y"
                                      {
                 (yyval.elem) = (yyvsp[-2].elem);
         }
-#line 1417 "y.tab.c"
+#line 1418 "y.tab.c"
     break;
 
   case 7: /* postfix_expression: postfix_expression '(' argument_expression_list ')'  */
-#line 87 "structfe.y"
+#line 88 "structfe.y"
                                                               {
+
+                printf("Yacc code 3adrs:%s(%s)\n",(yyvsp[-3].elem)->code,(yyvsp[-1].elem)->code);
                 (yyval.elem) = (yyvsp[-3].elem);
         }
-#line 1425 "y.tab.c"
+#line 1428 "y.tab.c"
     break;
 
   case 8: /* postfix_expression: postfix_expression '.' IDENTIFIER  */
-#line 90 "structfe.y"
+#line 93 "structfe.y"
                                             {
                 (yyval.elem)->type=TYPE_INT;
         }
-#line 1433 "y.tab.c"
+#line 1436 "y.tab.c"
     break;
 
   case 9: /* postfix_expression: postfix_expression PTR_OP IDENTIFIER  */
-#line 93 "structfe.y"
+#line 96 "structfe.y"
                                                {
                 (yyval.elem)->type=TYPE_INT;
         }
-#line 1441 "y.tab.c"
+#line 1444 "y.tab.c"
     break;
 
   case 10: /* argument_expression_list: expression  */
-#line 99 "structfe.y"
+#line 102 "structfe.y"
                      {
                 (yyval.elem) = (yyvsp[0].elem);
         }
-#line 1449 "y.tab.c"
+#line 1452 "y.tab.c"
     break;
 
   case 11: /* argument_expression_list: argument_expression_list ',' expression  */
-#line 102 "structfe.y"
+#line 105 "structfe.y"
                                                   {
                 (yyval.elem) = (yyvsp[-2].elem);
         }
-#line 1457 "y.tab.c"
+#line 1460 "y.tab.c"
     break;
 
   case 12: /* unary_expression: postfix_expression  */
-#line 108 "structfe.y"
+#line 111 "structfe.y"
                              {
                 (yyval.elem) = (yyvsp[0].elem);
         }
-#line 1465 "y.tab.c"
+#line 1468 "y.tab.c"
     break;
 
   case 13: /* unary_expression: unary_operator unary_expression  */
-#line 111 "structfe.y"
+#line 114 "structfe.y"
                                           {
-
+                char * res=concat((yyvsp[-1].id),(yyvsp[0].elem)->code);
                 (yyval.elem) = (yyvsp[0].elem);
+
+                (yyval.elem)->code=res;
         }
-#line 1474 "y.tab.c"
+#line 1479 "y.tab.c"
     break;
 
   case 14: /* unary_expression: SIZEOF unary_expression  */
-#line 115 "structfe.y"
+#line 120 "structfe.y"
                                   {
                 (yyval.elem)->type = TYPE_INT;
         }
-#line 1482 "y.tab.c"
+#line 1487 "y.tab.c"
     break;
 
   case 15: /* unary_operator: '&'  */
-#line 121 "structfe.y"
+#line 126 "structfe.y"
              {(yyval.id) = "&";}
-#line 1488 "y.tab.c"
+#line 1493 "y.tab.c"
     break;
 
   case 16: /* unary_operator: '*'  */
-#line 122 "structfe.y"
+#line 127 "structfe.y"
              {(yyval.id) = "*";}
-#line 1494 "y.tab.c"
+#line 1499 "y.tab.c"
     break;
 
   case 17: /* unary_operator: '-'  */
-#line 123 "structfe.y"
+#line 128 "structfe.y"
              {(yyval.id) = "-";}
-#line 1500 "y.tab.c"
+#line 1505 "y.tab.c"
     break;
 
   case 18: /* multiplicative_expression: unary_expression  */
-#line 127 "structfe.y"
+#line 132 "structfe.y"
                            {
                 (yyval.elem) = (yyvsp[0].elem);
         }
-#line 1508 "y.tab.c"
+#line 1513 "y.tab.c"
     break;
 
   case 19: /* multiplicative_expression: multiplicative_expression '*' unary_expression  */
-#line 130 "structfe.y"
+#line 135 "structfe.y"
                                                          {
                 if ((yyvsp[-2].elem)->type != TYPE_INT || (yyvsp[0].elem)->type != TYPE_INT) {
                     fprintf(stderr, "Erreur: Opération '*' entre types incompatibles à la ligne %d\n", yylineno);
@@ -1516,11 +1521,11 @@ yyreduce:
                 }
                 (yyval.elem)->type = TYPE_INT;
         }
-#line 1520 "y.tab.c"
+#line 1525 "y.tab.c"
     break;
 
   case 20: /* multiplicative_expression: multiplicative_expression '/' unary_expression  */
-#line 137 "structfe.y"
+#line 142 "structfe.y"
                                                          {
                 if ((yyvsp[-2].elem)->type != TYPE_INT || (yyvsp[0].elem)->type != TYPE_INT) {
                     fprintf(stderr, "Erreur: Opération '/' entre types incompatibles à la ligne %d\n", yylineno);
@@ -1528,31 +1533,32 @@ yyreduce:
                 }
                 (yyval.elem)->type = TYPE_INT;
         }
-#line 1532 "y.tab.c"
+#line 1537 "y.tab.c"
     break;
 
   case 21: /* additive_expression: multiplicative_expression  */
-#line 147 "structfe.y"
+#line 152 "structfe.y"
                                     {
                 (yyval.elem) = (yyvsp[0].elem);
         }
-#line 1540 "y.tab.c"
+#line 1545 "y.tab.c"
     break;
 
   case 22: /* additive_expression: additive_expression '+' multiplicative_expression  */
-#line 150 "structfe.y"
+#line 155 "structfe.y"
                                                             {
                 if ((yyvsp[-2].elem)->type != TYPE_INT || (yyvsp[0].elem)->type != TYPE_INT) {
                     fprintf(stderr, "Erreur: Opération '+' entre types incompatibles à la ligne %d\n", yylineno);
                     YYERROR;
                 }
                 (yyval.elem)->type = TYPE_INT;
+                (yyval.elem)->code = concat((yyvsp[-2].elem)->code,concat("+",(yyvsp[0].elem)->code));
         }
-#line 1552 "y.tab.c"
+#line 1558 "y.tab.c"
     break;
 
   case 23: /* additive_expression: additive_expression '-' multiplicative_expression  */
-#line 157 "structfe.y"
+#line 163 "structfe.y"
                                                             {
                 if ((yyvsp[-2].elem)->type != TYPE_INT || (yyvsp[0].elem)->type != TYPE_INT) {
                     fprintf(stderr, "Erreur: Opération '-' entre types incompatibles à la ligne %d\n", yylineno);
@@ -1560,19 +1566,19 @@ yyreduce:
                 }
                 (yyval.elem)->type = TYPE_INT;
         }
-#line 1564 "y.tab.c"
+#line 1570 "y.tab.c"
     break;
 
   case 24: /* relational_expression: additive_expression  */
-#line 167 "structfe.y"
+#line 173 "structfe.y"
                               {
                 (yyval.elem) = (yyvsp[0].elem);
         }
-#line 1572 "y.tab.c"
+#line 1578 "y.tab.c"
     break;
 
   case 25: /* relational_expression: relational_expression '<' additive_expression  */
-#line 170 "structfe.y"
+#line 176 "structfe.y"
                                                         {
                 if ((yyvsp[-2].elem)->type != TYPE_INT || (yyvsp[0].elem)->type != TYPE_INT) {
                     fprintf(stderr, "Erreur: Opération '<' entre types incompatibles à la ligne %d\n", yylineno);
@@ -1580,11 +1586,11 @@ yyreduce:
                 }
                 (yyval.elem)->type = TYPE_INT;
         }
-#line 1584 "y.tab.c"
+#line 1590 "y.tab.c"
     break;
 
   case 26: /* relational_expression: relational_expression '>' additive_expression  */
-#line 177 "structfe.y"
+#line 183 "structfe.y"
                                                         {
                 if ((yyvsp[-2].elem)->type != TYPE_INT || (yyvsp[0].elem)->type != TYPE_INT) {
                     fprintf(stderr, "Erreur: Opération '>' entre types incompatibles à la ligne %d\n", yylineno);
@@ -1592,11 +1598,11 @@ yyreduce:
                 }
                 (yyval.elem)->type = TYPE_INT;
         }
-#line 1596 "y.tab.c"
+#line 1602 "y.tab.c"
     break;
 
   case 27: /* relational_expression: relational_expression LE_OP additive_expression  */
-#line 184 "structfe.y"
+#line 190 "structfe.y"
                                                           {
                 if ((yyvsp[-2].elem)->type != TYPE_INT || (yyvsp[0].elem)->type != TYPE_INT) {
                     fprintf(stderr, "Erreur: Opération '<=' entre types incompatibles à la ligne %d\n", yylineno);
@@ -1604,11 +1610,11 @@ yyreduce:
                 }
                 (yyval.elem)->type = TYPE_INT;
         }
-#line 1608 "y.tab.c"
+#line 1614 "y.tab.c"
     break;
 
   case 28: /* relational_expression: relational_expression GE_OP additive_expression  */
-#line 191 "structfe.y"
+#line 197 "structfe.y"
                                                           {
                 if ((yyvsp[-2].elem)->type != TYPE_INT || (yyvsp[0].elem)->type != TYPE_INT) {
                     fprintf(stderr, "Erreur: Opération '>=' entre types incompatibles à la ligne %d\n", yylineno);
@@ -1616,19 +1622,19 @@ yyreduce:
                 }
                 (yyval.elem)->type = TYPE_INT;
         }
-#line 1620 "y.tab.c"
+#line 1626 "y.tab.c"
     break;
 
   case 29: /* equality_expression: relational_expression  */
-#line 201 "structfe.y"
+#line 207 "structfe.y"
                                 {
                 (yyval.elem) = (yyvsp[0].elem);
         }
-#line 1628 "y.tab.c"
+#line 1634 "y.tab.c"
     break;
 
   case 30: /* equality_expression: equality_expression EQ_OP relational_expression  */
-#line 204 "structfe.y"
+#line 210 "structfe.y"
                                                           {
                 if ((yyvsp[-2].elem)->type != TYPE_INT || (yyvsp[0].elem)->type != TYPE_INT) {
                     fprintf(stderr, "Erreur: Opération '==' entre types incompatibles à la ligne %d\n", yylineno);
@@ -1636,11 +1642,11 @@ yyreduce:
                 }
                 (yyval.elem)->type = TYPE_INT;
         }
-#line 1640 "y.tab.c"
+#line 1646 "y.tab.c"
     break;
 
   case 31: /* equality_expression: equality_expression NE_OP relational_expression  */
-#line 211 "structfe.y"
+#line 217 "structfe.y"
                                                           {
                 if ((yyvsp[-2].elem)->type != TYPE_INT || (yyvsp[0].elem)->type != TYPE_INT) {
                     fprintf(stderr, "Erreur: Opération '!=' entre types incompatibles à la ligne %d\n", yylineno);
@@ -1648,19 +1654,19 @@ yyreduce:
                 }
                 (yyval.elem)->type = TYPE_INT;
         }
-#line 1652 "y.tab.c"
+#line 1658 "y.tab.c"
     break;
 
   case 32: /* logical_and_expression: equality_expression  */
-#line 221 "structfe.y"
+#line 227 "structfe.y"
                               {
                 (yyval.elem) = (yyvsp[0].elem);
         }
-#line 1660 "y.tab.c"
+#line 1666 "y.tab.c"
     break;
 
   case 33: /* logical_and_expression: logical_and_expression AND_OP equality_expression  */
-#line 224 "structfe.y"
+#line 230 "structfe.y"
                                                             {
                 if ((yyvsp[-2].elem)->type != TYPE_INT || (yyvsp[0].elem)->type != TYPE_INT) {
                     fprintf(stderr, "Erreur: Opération '&&' entre types incompatibles à la ligne %d\n", yylineno);
@@ -1668,19 +1674,19 @@ yyreduce:
                 }
                 (yyval.elem)->type = TYPE_INT;
         }
-#line 1672 "y.tab.c"
+#line 1678 "y.tab.c"
     break;
 
   case 34: /* logical_or_expression: logical_and_expression  */
-#line 234 "structfe.y"
+#line 240 "structfe.y"
                                  {
                 (yyval.elem) = (yyvsp[0].elem);
         }
-#line 1680 "y.tab.c"
+#line 1686 "y.tab.c"
     break;
 
   case 35: /* logical_or_expression: logical_or_expression OR_OP logical_and_expression  */
-#line 237 "structfe.y"
+#line 243 "structfe.y"
                                                              {
                 if((yyvsp[-2].elem)->type != TYPE_INT || (yyvsp[0].elem)->type != TYPE_INT) {
                     fprintf(stderr, "Erreur: Opération '||' entre types incompatibles à la ligne %d\n", yylineno);
@@ -1688,76 +1694,76 @@ yyreduce:
                 }
                 (yyval.elem)->type = TYPE_INT;
         }
-#line 1692 "y.tab.c"
+#line 1698 "y.tab.c"
     break;
 
   case 36: /* expression: logical_or_expression  */
-#line 247 "structfe.y"
+#line 253 "structfe.y"
                                 {
                 (yyval.elem) = (yyvsp[0].elem);
         }
-#line 1700 "y.tab.c"
+#line 1706 "y.tab.c"
     break;
 
   case 37: /* expression: unary_expression '=' expression  */
-#line 250 "structfe.y"
+#line 256 "structfe.y"
                                           {
                 if ((yyvsp[-2].elem)->type != TYPE_INT || (yyvsp[0].elem)->type != TYPE_INT) {
                     fprintf(stderr, "Erreur: Assignation entre types incompatibles à la ligne %d\n", yylineno);
                     YYERROR;
                 }
-               printf("yacc code 3adrs:%s = %s;\n",(yyvsp[-2].elem)->code,(yyvsp[0].elem)->code);
+                printf("yacc code 3adrs:%s = %s;\n",(yyvsp[-2].elem)->code,(yyvsp[0].elem)->code);
                 (yyval.elem) = (yyvsp[-2].elem);
         }
-#line 1713 "y.tab.c"
+#line 1719 "y.tab.c"
     break;
 
   case 38: /* declaration: declaration_specifiers declarator ';'  */
-#line 261 "structfe.y"
+#line 267 "structfe.y"
                                                 {
                printf("yacc code 3adres:%s %s;\n",(yyvsp[-2].elem)->code,(yyvsp[-1].elem)->code);
                 insert_symbol_toptas(tas, (yyvsp[-1].elem)->code, (yyvsp[-2].elem)->type);
         }
-#line 1722 "y.tab.c"
+#line 1728 "y.tab.c"
     break;
 
   case 39: /* declaration: struct_specifier ';'  */
-#line 265 "structfe.y"
+#line 271 "structfe.y"
                                {
                 // À implémenter si nécessaire
         }
-#line 1730 "y.tab.c"
+#line 1736 "y.tab.c"
     break;
 
   case 40: /* declaration_specifiers: EXTERN type_specifier  */
-#line 271 "structfe.y"
+#line 277 "structfe.y"
                                 {
                 (yyval.elem) = (yyvsp[0].elem);
         }
-#line 1738 "y.tab.c"
+#line 1744 "y.tab.c"
     break;
 
   case 41: /* declaration_specifiers: type_specifier  */
-#line 274 "structfe.y"
+#line 280 "structfe.y"
                          {
                 (yyval.elem) = (yyvsp[0].elem);
         }
-#line 1746 "y.tab.c"
+#line 1752 "y.tab.c"
     break;
 
   case 42: /* type_specifier: VOID  */
-#line 280 "structfe.y"
+#line 286 "structfe.y"
                {
                 Element * e = malloc(sizeof(Element));
                 e->type=TYPE_VOID;
                 e->code="void";
                 (yyval.elem)=e;
         }
-#line 1757 "y.tab.c"
+#line 1763 "y.tab.c"
     break;
 
   case 43: /* type_specifier: INT  */
-#line 286 "structfe.y"
+#line 292 "structfe.y"
               {
                 
                 Element * e = malloc(sizeof(Element));
@@ -1765,77 +1771,78 @@ yyreduce:
                 e->code = "int";
                 (yyval.elem) = e;
         }
-#line 1769 "y.tab.c"
+#line 1775 "y.tab.c"
     break;
 
   case 44: /* type_specifier: struct_specifier  */
-#line 293 "structfe.y"
+#line 299 "structfe.y"
                            {
 
                 (yyval.elem)->type = TYPE_STRUCT;
         }
-#line 1778 "y.tab.c"
+#line 1784 "y.tab.c"
     break;
 
   case 45: /* struct_specifier: STRUCT IDENTIFIER '{' struct_declaration_list '}'  */
-#line 300 "structfe.y"
+#line 306 "structfe.y"
                                                             {
                 Element * e = malloc(sizeof(Element));
                 e->type=TYPE_STRUCT;
                 e->code="";
                 (yyval.elem)=e;
         }
-#line 1789 "y.tab.c"
+#line 1795 "y.tab.c"
     break;
 
   case 46: /* struct_specifier: STRUCT '{' struct_declaration_list '}'  */
-#line 306 "structfe.y"
+#line 312 "structfe.y"
                                                  {
                 Element * e = malloc(sizeof(Element));
                 e->type=TYPE_STRUCT;
                 e->code="";
                 (yyval.elem)=e;
         }
-#line 1800 "y.tab.c"
+#line 1806 "y.tab.c"
     break;
 
   case 47: /* struct_specifier: STRUCT IDENTIFIER  */
-#line 312 "structfe.y"
+#line 318 "structfe.y"
                             {
                 Element * e = malloc(sizeof(Element));
                 e->type=TYPE_STRUCT;
                 e->code="";
                 (yyval.elem)=e;
         }
-#line 1811 "y.tab.c"
+#line 1817 "y.tab.c"
     break;
 
   case 50: /* struct_declaration: type_specifier declarator ';'  */
-#line 326 "structfe.y"
+#line 332 "structfe.y"
                                        {
                 printf("yacctypesNamesCharde3adrs:~%s %s\n",(yyvsp[-2].elem)->code,(yyvsp[-1].elem)->code);
         }
-#line 1819 "y.tab.c"
+#line 1825 "y.tab.c"
     break;
 
   case 51: /* declarator: '*' direct_declarator  */
-#line 332 "structfe.y"
-                                {
+#line 338 "structfe.y"
+                                {//pointeur
                 (yyval.elem) = (yyvsp[0].elem);
+                (yyval.elem)->code=concat("*",(yyvsp[0].elem)->code);
         }
-#line 1827 "y.tab.c"
+#line 1834 "y.tab.c"
     break;
 
   case 52: /* declarator: direct_declarator  */
-#line 335 "structfe.y"
+#line 342 "structfe.y"
                             {
                 (yyval.elem) = (yyvsp[0].elem);
         }
-#line 1835 "y.tab.c"
+#line 1842 "y.tab.c"
     break;
 
   case 53: /* direct_declarator: IDENTIFIER  */
-#line 341 "structfe.y"
+#line 348 "structfe.y"
                      {
                 Element * e = malloc(sizeof(Element));
                 e->type=TYPE_INT;
@@ -1844,100 +1851,102 @@ yyreduce:
                 (yyval.elem)=e;
 
         }
-#line 1848 "y.tab.c"
+#line 1855 "y.tab.c"
     break;
 
   case 54: /* direct_declarator: '(' declarator ')'  */
-#line 349 "structfe.y"
+#line 356 "structfe.y"
                              {
+                printf("Yacc L356 \n");
                 (yyval.elem) = (yyvsp[-1].elem);
-        }
-#line 1856 "y.tab.c"
-    break;
-
-  case 55: /* direct_declarator: direct_declarator '(' parameter_list ')'  */
-#line 352 "structfe.y"
-                                                   {
-                (yyval.elem) = (yyvsp[-3].elem);
         }
 #line 1864 "y.tab.c"
     break;
 
-  case 56: /* direct_declarator: direct_declarator '(' ')'  */
-#line 355 "structfe.y"
-                                    {
-                printf("yacc code 3adrs:%s %s(){\n",typesNames[(yyvsp[-2].elem)->type],(yyvsp[-2].elem)->code);
-                (yyval.elem) = (yyvsp[-2].elem);
+  case 55: /* direct_declarator: direct_declarator '(' parameter_list ')'  */
+#line 360 "structfe.y"
+                                                   {
+                printf("Yacc L356\n");
+                (yyval.elem) = (yyvsp[-3].elem);
         }
 #line 1873 "y.tab.c"
     break;
 
-  case 57: /* parameter_list: parameter_declaration  */
-#line 362 "structfe.y"
-                               {
-
+  case 56: /* direct_declarator: direct_declarator '(' ')'  */
+#line 364 "structfe.y"
+                                    {
+                printf("yacc code 3adrs:%s %s(){\n",typesNames[(yyvsp[-2].elem)->type],(yyvsp[-2].elem)->code);
+                (yyval.elem) = (yyvsp[-2].elem);
         }
-#line 1881 "y.tab.c"
+#line 1882 "y.tab.c"
     break;
 
-  case 59: /* parameter_declaration: declaration_specifiers declarator  */
-#line 369 "structfe.y"
-                                           {
-                (yyval.elem)->type = (yyvsp[-1].elem)->type;
-                (yyval.elem)->code = (yyvsp[0].elem)->code;
+  case 57: /* parameter_list: parameter_declaration  */
+#line 371 "structfe.y"
+                               {
+
         }
 #line 1890 "y.tab.c"
     break;
 
+  case 59: /* parameter_declaration: declaration_specifiers declarator  */
+#line 378 "structfe.y"
+                                           {
+                (yyval.elem)->type = (yyvsp[-1].elem)->type;
+                (yyval.elem)->code = (yyvsp[0].elem)->code;
+        }
+#line 1899 "y.tab.c"
+    break;
+
   case 66: /* compound_statement: open_accol statement_list close_accol  */
-#line 385 "structfe.y"
+#line 394 "structfe.y"
                                                {
         }
-#line 1897 "y.tab.c"
+#line 1906 "y.tab.c"
     break;
 
   case 67: /* compound_statement: open_accol declaration_list close_accol  */
-#line 387 "structfe.y"
+#line 396 "structfe.y"
                                                  {
         }
-#line 1904 "y.tab.c"
+#line 1913 "y.tab.c"
     break;
 
   case 68: /* compound_statement: open_accol declaration_list statement_list close_accol  */
-#line 389 "structfe.y"
+#line 398 "structfe.y"
                                                                 {
-        }
-#line 1911 "y.tab.c"
-    break;
-
-  case 69: /* open_accol: '{'  */
-#line 394 "structfe.y"
-            {   
-                //printf("DANS LE YACC:ICI LA OP8U");
-                expandTas(&tas);        
         }
 #line 1920 "y.tab.c"
     break;
 
-  case 70: /* close_accol: '}'  */
-#line 400 "structfe.y"
-            {
-                printf("Yacc code 3adrs:}\n");
-                popTas(&tas);
+  case 69: /* open_accol: '{'  */
+#line 403 "structfe.y"
+            {   
+                //printf("DANS LE YACC:ICI LA OP8U");
+                expandTas(&tas);        
         }
 #line 1929 "y.tab.c"
     break;
 
+  case 70: /* close_accol: '}'  */
+#line 409 "structfe.y"
+            {
+                printf("Yacc code 3adrs:}\n");
+                popTas(&tas);
+        }
+#line 1938 "y.tab.c"
+    break;
+
   case 75: /* expression_statement: ';'  */
-#line 416 "structfe.y"
+#line 425 "structfe.y"
              {
                 (yyval.elem)=(yyval.elem);
         }
-#line 1937 "y.tab.c"
+#line 1946 "y.tab.c"
     break;
 
   case 80: /* iteration_statement: FOR '(' expression_statement expression_statement expression ')' statement  */
-#line 429 "structfe.y"
+#line 438 "structfe.y"
                                                                                     {
                 /*printf("Code 3adrs:%s\n","");
                //printf("Code 3adrs:%s\n","goto condX");
@@ -1947,34 +1956,34 @@ yyreduce:
                //printf("Code 3adrs:%s\n","condX:");
                //printf("Code 3adrs:if(%s) goto corpX\n","$4");*/
         }
-#line 1951 "y.tab.c"
+#line 1960 "y.tab.c"
     break;
 
   case 81: /* jump_statement: RETURN ';'  */
-#line 441 "structfe.y"
+#line 450 "structfe.y"
                     {
                printf("yacc code 3adrs:return;\n");
         }
-#line 1959 "y.tab.c"
+#line 1968 "y.tab.c"
     break;
 
   case 82: /* jump_statement: RETURN expression ';'  */
-#line 444 "structfe.y"
+#line 453 "structfe.y"
                                {
                printf("yacc code 3adrs:return %s;\n",(yyvsp[-1].elem)->code);
         }
-#line 1967 "y.tab.c"
+#line 1976 "y.tab.c"
     break;
 
   case 87: /* function_definition: declaration_specifiers declarator compound_statement  */
-#line 460 "structfe.y"
+#line 469 "structfe.y"
                                                               {
         }
-#line 1974 "y.tab.c"
+#line 1983 "y.tab.c"
     break;
 
 
-#line 1978 "y.tab.c"
+#line 1987 "y.tab.c"
 
       default: break;
     }
@@ -2167,7 +2176,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 464 "structfe.y"
+#line 473 "structfe.y"
 
 void yyerror(const char *msg) {
     fprintf(stderr, "Erreur de syntaxe : %s à la ligne: %d ???\n", msg, yylineno);
