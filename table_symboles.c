@@ -1,6 +1,6 @@
 #include "table_symboles.h"
 
-const char * typesNamesChar[]={"INT","VOID"};
+const char * typesNamesChar[]={"ERR","INT","VOID","Struct"};
 LinkedList symbol_table[SIZE];
 Tas tas;
 

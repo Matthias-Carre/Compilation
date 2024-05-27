@@ -7,7 +7,7 @@
 extern int yylineno;
 void yyerror(const char *msg);
 int yylex(void);
-
+char * typesNames[]={"error","int","void","struct"};
 
 //extern int yylval; // Définition de yylval
 
@@ -41,7 +41,7 @@ int yylex(void);
 
 %type <elem> type_specifier declaration_specifiers struct_specifier additive_expression multiplicative_expression primary_expression expression argument_expression_list
 %type <elem> logical_or_expression logical_and_expression equality_expression relational_expression unary_expression postfix_expression
-%type <elem> open_accol close_accol declarator direct_declarator
+%type <elem> open_accol close_accol declarator direct_declarator struct_declaration parameter_declaration
 %type <elem> iteration_statement expression_statement statement compound_statement selection_statement jump_statement
 %type <id> unary_operator 
 %nonassoc THEN
@@ -252,14 +252,14 @@ expression
                     fprintf(stderr, "Erreur: Assignation entre types incompatibles à la ligne %d\n", yylineno);
                     YYERROR;
                 }
-                printf("yacc code 3adrs:%s = %s;\n",$1->code,$3->code);
+               printf("yacc code 3adrs:%s = %s;\n",$1->code,$3->code);
                 $$ = $1;
         }
         ;
 
 declaration
         : declaration_specifiers declarator ';' {
-                printf("Yacc code 3adres:%s %s;\n",$1->code,$2->code);
+               printf("yacc code 3adres:%s %s;\n",$1->code,$2->code);
                 insert_symbol_toptas(tas, $2->code, $1->type);
         }
         | struct_specifier ';' {
@@ -279,11 +279,12 @@ declaration_specifiers
 type_specifier
         : VOID {
                 Element * e = malloc(sizeof(Element));
-                e->type=TYPE_INT;
+                e->type=TYPE_VOID;
                 e->code="void";
                 $$=e;
         }
         | INT {
+                
                 Element * e = malloc(sizeof(Element));
                 e->type = TYPE_INT;
                 e->code = "int";
@@ -323,7 +324,7 @@ struct_declaration_list
 
 struct_declaration
         : type_specifier declarator ';'{
-                printf("code3adrs:~%s %s\n",$1->code,$2->code);
+                printf("yacctypesNamesCharde3adrs:~%s %s\n",$1->code,$2->code);
         }
         ;
 
@@ -340,10 +341,10 @@ direct_declarator
         : IDENTIFIER {
                 Element * e = malloc(sizeof(Element));
                 e->type=TYPE_INT;
-  
+                
                 e->code=$1;
-
                 $$=e;
+
         }
         | '(' declarator ')' {
                 $$ = $2;
@@ -352,17 +353,23 @@ direct_declarator
                 $$ = $1;
         }
         | direct_declarator '(' ')' {
+                printf("yacc code 3adrs:%s %s(){\n",typesNames[$1->type],$1->code);
                 $$ = $1;
         }
         ;
 
 parameter_list
-        : parameter_declaration
+        : parameter_declaration{
+
+        }
         | parameter_list ',' parameter_declaration
         ;
 
 parameter_declaration
-        : declaration_specifiers declarator
+        : declaration_specifiers declarator{
+                $$->type = $1->type;
+                $$->code = $2->code;
+        }
         ;
 
 statement
@@ -386,11 +393,13 @@ compound_statement
 open_accol
         :'{'{   
                 //printf("DANS LE YACC:ICI LA OP8U");
-                expandTas(&tas);        }
+                expandTas(&tas);        
+        }
 
 close_accol
         :'}'{
-                //popTas(&tas);
+                printf("Yacc code 3adrs:}\n");
+                popTas(&tas);
         }
 
 declaration_list
@@ -419,18 +428,22 @@ iteration_statement
         : WHILE '(' expression ')' statement
         | FOR '(' expression_statement expression_statement expression ')' statement{
                 /*printf("Code 3adrs:%s\n","");
-                printf("Code 3adrs:%s\n","goto condX");
-                printf("Code 3adrs:%s\n","corpX:");
-                printf("Code 3adrs:%s\n","7");
-                printf("Code 3adrs:%s\n","5");
-                printf("Code 3adrs:%s\n","condX:");
-                printf("Code 3adrs:if(%s) goto corpX\n","$4");*/
+               //printf("Code 3adrs:%s\n","goto condX");
+               //printf("Code 3adrs:%s\n","corpX:");
+               //printf("Code 3adrs:%s\n","7");
+               //printf("Code 3adrs:%s\n","5");
+               //printf("Code 3adrs:%s\n","condX:");
+               //printf("Code 3adrs:if(%s) goto corpX\n","$4");*/
         }
         ;
 
 jump_statement
-        : RETURN ';'
-        | RETURN expression ';'
+        : RETURN ';'{
+               printf("yacc code 3adrs:return;\n");
+        }
+        | RETURN expression ';'{
+               printf("yacc code 3adrs:return %s;\n",$2->code);
+        }
         ;
 
 program
@@ -444,7 +457,8 @@ external_declaration
         ;
 
 function_definition
-        : declaration_specifiers declarator compound_statement
+        : declaration_specifiers declarator compound_statement{
+        }
         ;
 
 %%

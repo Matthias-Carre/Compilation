@@ -942,7 +942,7 @@ YY_RULE_SETUP
 case 32:
 YY_RULE_SETUP
 #line 61 "ANSI-proj.l"
-{yylval.id = strdup(yytext); return IDENTIFIER ;}
+{yylval.code = strdup(yytext); return IDENTIFIER ;}
 	YY_BREAK
 case 33:
 /* rule 33 can match eol */
