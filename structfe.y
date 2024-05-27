@@ -72,11 +72,9 @@ primary_expression
         | CONSTANT {
                 printf("OUIIII\n");
                 Element * e = malloc(sizeof(Element));
-                e->type=TYPE_INT;
-                char * tmp;
-                sprintf(tmp,"$i",$1);
-                e->code=strdup(tmp);
-                free(tmp);
+                e->type = TYPE_INT;
+                printf("yacc L76:%s\n",$1);
+                e->code = $1;
                 $$=e;
         }
         | '(' expression ')' {
@@ -257,10 +255,11 @@ expression
                 $$ = $1;
         }
         | unary_expression '=' expression {
-                /*if ($1->type != TYPE_INT || $3->type != TYPE_INT) {
+                if ($1->type != TYPE_INT || $3->type != TYPE_INT) {
                     fprintf(stderr, "Erreur: Assignation entre types incompatibles à la ligne %d\n", yylineno);
                     YYERROR;
-                }*/
+                }
+                printf("yacc code 3adrs:%s = %s;\n",$1->code,$3->code);
                 $$ = $1;
         }
         ;
@@ -347,12 +346,12 @@ declarator
 direct_declarator
         : IDENTIFIER {
                 Element * e = malloc(sizeof(Element));
-
                 e->type=TYPE_INT;
-                char tmp[10];
-                sprintf(tmp,"%d",$1);
-                e->code=strdup(tmp);
-                e->code=tmp;
+
+                printf("yacc 352: val de $1:%s\n",$1);
+  
+                e->code=$1;
+
                 $$=e;
         }
         | '(' declarator ')' {
