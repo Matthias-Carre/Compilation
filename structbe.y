@@ -2,12 +2,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "y.tab.h"
 
 void yyerror(const char *msg) {
     fprintf(stderr, "Erreur de syntaxe : %s\n", msg);
 }
-
 %}
 
 %token IDENTIFIER CONSTANT 
