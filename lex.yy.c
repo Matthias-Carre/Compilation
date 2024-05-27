@@ -948,7 +948,7 @@ case 33:
 /* rule 33 can match eol */
 YY_RULE_SETUP
 #line 62 "ANSI-proj.l"
-{}//printf("Ligne act: %d\n",yylineno++);}
+{printf("Ligne act: %d\n",yylineno++);}
 	YY_BREAK
 case 34:
 YY_RULE_SETUP

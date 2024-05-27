@@ -72,7 +72,8 @@ extern int yydebug;
     ELSE = 273,                    /* ELSE  */
     WHILE = 274,                   /* WHILE  */
     FOR = 275,                     /* FOR  */
-    RETURN = 276                   /* RETURN  */
+    RETURN = 276,                  /* RETURN  */
+    THEN = 277                     /* THEN  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -100,21 +101,23 @@ extern int yydebug;
 #define WHILE 274
 #define FOR 275
 #define RETURN 276
+#define THEN 277
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 15 "structfe.y"
+#line 16 "structfe.y"
 
     int intval;
     char* id;
     SymboleType symtype;
-    struct Symbole* symptr;
-    struct Node* nnode;
-    struct LinkedList* ll;
+    Symbole* symptr;
+    Node* nnode;
+    LinkedList* ll;
+    Element* elem;
 
-#line 118 "y.tab.h"
+#line 121 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

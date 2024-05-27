@@ -76,12 +76,13 @@
 
 extern int yylineno;
 void yyerror(const char *msg);
+int yylex(void);
 
 
 //extern int yylval; // Définition de yylval
 
 
-#line 85 "y.tab.c"
+#line 86 "y.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -143,7 +144,8 @@ extern int yydebug;
     ELSE = 273,                    /* ELSE  */
     WHILE = 274,                   /* WHILE  */
     FOR = 275,                     /* FOR  */
-    RETURN = 276                   /* RETURN  */
+    RETURN = 276,                  /* RETURN  */
+    THEN = 277                     /* THEN  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -171,21 +173,23 @@ extern int yydebug;
 #define WHILE 274
 #define FOR 275
 #define RETURN 276
+#define THEN 277
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 15 "structfe.y"
+#line 16 "structfe.y"
 
     int intval;
     char* id;
     SymboleType symtype;
-    struct Symbole* symptr;
-    struct Node* nnode;
-    struct LinkedList* ll;
+    Symbole* symptr;
+    Node* nnode;
+    LinkedList* ll;
+    Element* elem;
 
-#line 189 "y.tab.c"
+#line 193 "y.tab.c"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -227,57 +231,58 @@ enum yysymbol_kind_t
   YYSYMBOL_WHILE = 19,                     /* WHILE  */
   YYSYMBOL_FOR = 20,                       /* FOR  */
   YYSYMBOL_RETURN = 21,                    /* RETURN  */
-  YYSYMBOL_22_ = 22,                       /* '('  */
-  YYSYMBOL_23_ = 23,                       /* ')'  */
-  YYSYMBOL_24_ = 24,                       /* '.'  */
-  YYSYMBOL_25_ = 25,                       /* ','  */
-  YYSYMBOL_26_ = 26,                       /* '&'  */
-  YYSYMBOL_27_ = 27,                       /* '*'  */
-  YYSYMBOL_28_ = 28,                       /* '-'  */
-  YYSYMBOL_29_ = 29,                       /* '/'  */
-  YYSYMBOL_30_ = 30,                       /* '+'  */
-  YYSYMBOL_31_ = 31,                       /* '<'  */
-  YYSYMBOL_32_ = 32,                       /* '>'  */
-  YYSYMBOL_33_ = 33,                       /* '='  */
-  YYSYMBOL_34_ = 34,                       /* ';'  */
-  YYSYMBOL_35_ = 35,                       /* '{'  */
-  YYSYMBOL_36_ = 36,                       /* '}'  */
-  YYSYMBOL_YYACCEPT = 37,                  /* $accept  */
-  YYSYMBOL_primary_expression = 38,        /* primary_expression  */
-  YYSYMBOL_postfix_expression = 39,        /* postfix_expression  */
-  YYSYMBOL_argument_expression_list = 40,  /* argument_expression_list  */
-  YYSYMBOL_unary_expression = 41,          /* unary_expression  */
-  YYSYMBOL_unary_operator = 42,            /* unary_operator  */
-  YYSYMBOL_multiplicative_expression = 43, /* multiplicative_expression  */
-  YYSYMBOL_additive_expression = 44,       /* additive_expression  */
-  YYSYMBOL_relational_expression = 45,     /* relational_expression  */
-  YYSYMBOL_equality_expression = 46,       /* equality_expression  */
-  YYSYMBOL_logical_and_expression = 47,    /* logical_and_expression  */
-  YYSYMBOL_logical_or_expression = 48,     /* logical_or_expression  */
-  YYSYMBOL_expression = 49,                /* expression  */
-  YYSYMBOL_declaration = 50,               /* declaration  */
-  YYSYMBOL_declaration_specifiers = 51,    /* declaration_specifiers  */
-  YYSYMBOL_type_specifier = 52,            /* type_specifier  */
-  YYSYMBOL_struct_specifier = 53,          /* struct_specifier  */
-  YYSYMBOL_struct_declaration_list = 54,   /* struct_declaration_list  */
-  YYSYMBOL_struct_declaration = 55,        /* struct_declaration  */
-  YYSYMBOL_declarator = 56,                /* declarator  */
-  YYSYMBOL_direct_declarator = 57,         /* direct_declarator  */
-  YYSYMBOL_parameter_list = 58,            /* parameter_list  */
-  YYSYMBOL_parameter_declaration = 59,     /* parameter_declaration  */
-  YYSYMBOL_statement = 60,                 /* statement  */
-  YYSYMBOL_compound_statement = 61,        /* compound_statement  */
-  YYSYMBOL_open_accol = 62,                /* open_accol  */
-  YYSYMBOL_close_accol = 63,               /* close_accol  */
-  YYSYMBOL_declaration_list = 64,          /* declaration_list  */
-  YYSYMBOL_statement_list = 65,            /* statement_list  */
-  YYSYMBOL_expression_statement = 66,      /* expression_statement  */
-  YYSYMBOL_selection_statement = 67,       /* selection_statement  */
-  YYSYMBOL_iteration_statement = 68,       /* iteration_statement  */
-  YYSYMBOL_jump_statement = 69,            /* jump_statement  */
-  YYSYMBOL_program = 70,                   /* program  */
-  YYSYMBOL_external_declaration = 71,      /* external_declaration  */
-  YYSYMBOL_function_definition = 72        /* function_definition  */
+  YYSYMBOL_THEN = 22,                      /* THEN  */
+  YYSYMBOL_23_ = 23,                       /* '('  */
+  YYSYMBOL_24_ = 24,                       /* ')'  */
+  YYSYMBOL_25_ = 25,                       /* '.'  */
+  YYSYMBOL_26_ = 26,                       /* ','  */
+  YYSYMBOL_27_ = 27,                       /* '&'  */
+  YYSYMBOL_28_ = 28,                       /* '*'  */
+  YYSYMBOL_29_ = 29,                       /* '-'  */
+  YYSYMBOL_30_ = 30,                       /* '/'  */
+  YYSYMBOL_31_ = 31,                       /* '+'  */
+  YYSYMBOL_32_ = 32,                       /* '<'  */
+  YYSYMBOL_33_ = 33,                       /* '>'  */
+  YYSYMBOL_34_ = 34,                       /* '='  */
+  YYSYMBOL_35_ = 35,                       /* ';'  */
+  YYSYMBOL_36_ = 36,                       /* '{'  */
+  YYSYMBOL_37_ = 37,                       /* '}'  */
+  YYSYMBOL_YYACCEPT = 38,                  /* $accept  */
+  YYSYMBOL_primary_expression = 39,        /* primary_expression  */
+  YYSYMBOL_postfix_expression = 40,        /* postfix_expression  */
+  YYSYMBOL_argument_expression_list = 41,  /* argument_expression_list  */
+  YYSYMBOL_unary_expression = 42,          /* unary_expression  */
+  YYSYMBOL_unary_operator = 43,            /* unary_operator  */
+  YYSYMBOL_multiplicative_expression = 44, /* multiplicative_expression  */
+  YYSYMBOL_additive_expression = 45,       /* additive_expression  */
+  YYSYMBOL_relational_expression = 46,     /* relational_expression  */
+  YYSYMBOL_equality_expression = 47,       /* equality_expression  */
+  YYSYMBOL_logical_and_expression = 48,    /* logical_and_expression  */
+  YYSYMBOL_logical_or_expression = 49,     /* logical_or_expression  */
+  YYSYMBOL_expression = 50,                /* expression  */
+  YYSYMBOL_declaration = 51,               /* declaration  */
+  YYSYMBOL_declaration_specifiers = 52,    /* declaration_specifiers  */
+  YYSYMBOL_type_specifier = 53,            /* type_specifier  */
+  YYSYMBOL_struct_specifier = 54,          /* struct_specifier  */
+  YYSYMBOL_struct_declaration_list = 55,   /* struct_declaration_list  */
+  YYSYMBOL_struct_declaration = 56,        /* struct_declaration  */
+  YYSYMBOL_declarator = 57,                /* declarator  */
+  YYSYMBOL_direct_declarator = 58,         /* direct_declarator  */
+  YYSYMBOL_parameter_list = 59,            /* parameter_list  */
+  YYSYMBOL_parameter_declaration = 60,     /* parameter_declaration  */
+  YYSYMBOL_statement = 61,                 /* statement  */
+  YYSYMBOL_compound_statement = 62,        /* compound_statement  */
+  YYSYMBOL_open_accol = 63,                /* open_accol  */
+  YYSYMBOL_close_accol = 64,               /* close_accol  */
+  YYSYMBOL_declaration_list = 65,          /* declaration_list  */
+  YYSYMBOL_statement_list = 66,            /* statement_list  */
+  YYSYMBOL_expression_statement = 67,      /* expression_statement  */
+  YYSYMBOL_selection_statement = 68,       /* selection_statement  */
+  YYSYMBOL_iteration_statement = 69,       /* iteration_statement  */
+  YYSYMBOL_jump_statement = 70,            /* jump_statement  */
+  YYSYMBOL_program = 71,                   /* program  */
+  YYSYMBOL_external_declaration = 72,      /* external_declaration  */
+  YYSYMBOL_function_definition = 73        /* function_definition  */
 };
 typedef enum yysymbol_kind_t yysymbol_kind_t;
 
@@ -608,7 +613,7 @@ union yyalloc
 #define YYLAST   217
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  37
+#define YYNTOKENS  38
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  36
 /* YYNRULES -- Number of rules.  */
@@ -617,7 +622,7 @@ union yyalloc
 #define YYNSTATES  154
 
 /* YYMAXUTOK -- Last valid token kind.  */
-#define YYMAXUTOK   276
+#define YYMAXUTOK   277
 
 
 /* YYTRANSLATE(TOKEN-NUM) -- Symbol number corresponding to TOKEN-NUM
@@ -634,16 +639,16 @@ static const yytype_int8 yytranslate[] =
        0,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,    26,     2,
-      22,    23,    27,    30,    25,    28,    24,    29,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,    34,
-      31,    33,    32,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,    27,     2,
+      23,    24,    28,    31,    26,    29,    25,    30,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,    35,
+      32,    34,    33,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,    35,     2,    36,     2,     2,     2,     2,
+       2,     2,     2,    36,     2,    37,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -658,22 +663,22 @@ static const yytype_int8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
        5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
-      15,    16,    17,    18,    19,    20,    21
+      15,    16,    17,    18,    19,    20,    21,    22
 };
 
 #if YYDEBUG
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,    37,    37,    47,    50,    56,    59,    62,    65,    68,
-      74,    77,    83,    86,    89,    95,    96,    97,   101,   104,
-     111,   121,   124,   131,   141,   144,   151,   158,   165,   175,
-     178,   185,   195,   198,   208,   211,   221,   224,   234,   237,
-     243,   246,   252,   255,   258,   264,   267,   270,   276,   277,
-     281,   285,   288,   294,   297,   300,   303,   309,   310,   314,
-     318,   319,   320,   321,   322,   326,   327,   330,   333,   339,
-     347,   353,   354,   358,   359,   363,   364,   368,   369,   373,
-     374,   386,   387,   391,   392,   396,   397,   401
+       0,    50,    50,    63,    67,    73,    76,    79,    82,    85,
+      91,    94,   100,   103,   107,   113,   114,   115,   119,   122,
+     129,   139,   142,   149,   159,   162,   169,   176,   183,   193,
+     196,   203,   213,   216,   226,   229,   239,   242,   252,   255,
+     261,   264,   270,   273,   281,   287,   290,   293,   299,   300,
+     304,   308,   311,   317,   320,   323,   326,   332,   333,   337,
+     341,   342,   343,   344,   345,   349,   350,   353,   356,   362,
+     370,   376,   377,   381,   382,   386,   389,   393,   394,   398,
+     399,   411,   412,   416,   417,   421,   422,   426
 };
 #endif
 
@@ -692,20 +697,20 @@ static const char *const yytname[] =
   "\"end of file\"", "error", "\"invalid token\"", "IDENTIFIER",
   "CONSTANT", "SIZEOF", "PTR_OP", "LE_OP", "GE_OP", "EQ_OP", "NE_OP",
   "AND_OP", "OR_OP", "EXTERN", "INT", "VOID", "STRUCT", "IF", "ELSE",
-  "WHILE", "FOR", "RETURN", "'('", "')'", "'.'", "','", "'&'", "'*'",
-  "'-'", "'/'", "'+'", "'<'", "'>'", "'='", "';'", "'{'", "'}'", "$accept",
-  "primary_expression", "postfix_expression", "argument_expression_list",
-  "unary_expression", "unary_operator", "multiplicative_expression",
-  "additive_expression", "relational_expression", "equality_expression",
-  "logical_and_expression", "logical_or_expression", "expression",
-  "declaration", "declaration_specifiers", "type_specifier",
-  "struct_specifier", "struct_declaration_list", "struct_declaration",
-  "declarator", "direct_declarator", "parameter_list",
-  "parameter_declaration", "statement", "compound_statement", "open_accol",
-  "close_accol", "declaration_list", "statement_list",
-  "expression_statement", "selection_statement", "iteration_statement",
-  "jump_statement", "program", "external_declaration",
-  "function_definition", YY_NULLPTR
+  "WHILE", "FOR", "RETURN", "THEN", "'('", "')'", "'.'", "','", "'&'",
+  "'*'", "'-'", "'/'", "'+'", "'<'", "'>'", "'='", "';'", "'{'", "'}'",
+  "$accept", "primary_expression", "postfix_expression",
+  "argument_expression_list", "unary_expression", "unary_operator",
+  "multiplicative_expression", "additive_expression",
+  "relational_expression", "equality_expression", "logical_and_expression",
+  "logical_or_expression", "expression", "declaration",
+  "declaration_specifiers", "type_specifier", "struct_specifier",
+  "struct_declaration_list", "struct_declaration", "declarator",
+  "direct_declarator", "parameter_list", "parameter_declaration",
+  "statement", "compound_statement", "open_accol", "close_accol",
+  "declaration_list", "statement_list", "expression_statement",
+  "selection_statement", "iteration_statement", "jump_statement",
+  "program", "external_declaration", "function_definition", YY_NULLPTR
 };
 
 static const char *
@@ -715,7 +720,7 @@ yysymbol_name (yysymbol_kind_t yysymbol)
 }
 #endif
 
-#define YYPACT_NINF (-72)
+#define YYPACT_NINF (-71)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
@@ -729,22 +734,22 @@ yysymbol_name (yysymbol_kind_t yysymbol)
    STATE-NUM.  */
 static const yytype_int16 yypact[] =
 {
-     194,    71,   -72,   -72,    12,   -72,   163,   -72,   -20,   189,
-     -72,   -72,   -72,   -72,   -13,    71,   -72,   163,    66,   -17,
-       4,   -72,   -72,   -72,    71,   163,   102,   -72,    11,     4,
-     -72,   -72,   -72,    87,   183,   142,    91,   -72,   -72,   -72,
-     -72,   -72,    67,    16,    59,    83,   147,    67,   -72,   -72,
-     -72,   -72,   -72,   -72,     5,   106,    67,    -4,    47,   152,
-      42,   129,   133,   134,   -72,   163,   -72,   -72,   -72,    87,
-     107,   -72,   -72,   -72,   -72,   -72,   163,    55,   -72,   -72,
-     -72,   -72,    67,    67,   160,   -72,   136,   144,   168,    27,
-     169,    67,   -72,    67,    67,    67,    67,    67,    67,    67,
-      67,    67,    67,    67,    67,   -72,   143,   -72,   -72,   107,
-     -72,   -72,   -72,   -72,   194,   153,   156,   160,   -72,   -72,
-     -72,   -72,    73,   -72,   -72,   -72,   -72,   -72,   -72,    -4,
-      -4,    47,    47,    47,    47,   152,   152,    42,   129,   -72,
-     -72,   127,   127,    67,   -72,    67,   162,   -72,   170,   -72,
-     127,   127,   -72,   -72
+     168,   173,   -71,   -71,    10,   -71,   148,   -71,   -24,   180,
+     -71,   -71,   -71,   -71,    36,   173,   -71,   148,    15,    45,
+      -1,   -71,   -71,   -71,   173,   148,    72,   -71,    54,    -1,
+     -71,   -71,   -71,    87,   186,   103,    50,   -71,   -71,   -71,
+     -71,   -71,    66,    73,    75,    82,   150,    66,   -71,   -71,
+     -71,   -71,   -71,   -71,   136,    92,    66,   -13,    -6,    19,
+     111,   119,   135,   125,   -71,   148,   -71,   -71,   -71,    87,
+     108,   -71,   -71,   -71,   -71,   -71,   148,     8,   -71,   -71,
+     -71,   -71,    66,    66,   163,   -71,   134,   117,   167,    26,
+     169,    66,   -71,    66,    66,    66,    66,    66,    66,    66,
+      66,    66,    66,    66,    66,   -71,   139,   -71,   -71,   108,
+     -71,   -71,   -71,   -71,   168,   151,   183,   163,   -71,   -71,
+     -71,   -71,    51,   -71,   -71,   -71,   -71,   -71,   -71,   -13,
+     -13,    -6,    -6,    -6,    -6,    19,    19,   111,   119,   -71,
+     -71,   129,   129,    66,   -71,    66,   179,   -71,   184,   -71,
+     129,   129,   -71,   -71
 };
 
 /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -773,10 +778,10 @@ static const yytype_int8 yydefact[] =
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int16 yypgoto[] =
 {
-     -72,   -72,   -72,   -72,   -37,   -72,    24,   114,    35,    88,
-      96,   -72,   -46,   -27,   -30,     9,     7,   171,   -14,     3,
-     174,   -72,   101,   -68,   182,   -72,   -61,   -72,   148,   -71,
-     -72,   -72,   -72,   -72,   207,   -72
+     -71,   -71,   -71,   -71,   -37,   -71,    43,   106,    61,   109,
+     105,   -71,   -46,   -27,   -30,     9,     7,   187,   -14,     3,
+     195,   -71,   100,   -68,   196,   -71,   -61,   -71,   147,   -70,
+     -71,   -71,   -71,   -71,   208,   -71
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
@@ -794,89 +799,89 @@ static const yytype_int8 yydefgoto[] =
 static const yytype_uint8 yytable[] =
 {
       86,    87,   110,    65,    76,    81,    64,     8,   108,   111,
-      12,    88,    38,   117,    21,    14,     8,    30,    31,    92,
-      28,    38,    24,    93,    25,    94,    34,    89,    36,    90,
-      40,    41,    42,    25,    39,    25,   115,   116,    82,    65,
-       8,   110,   107,   123,    25,   125,   143,    15,   139,    47,
-     121,   101,   102,    48,    49,    50,   126,   127,   128,   128,
-     128,   128,   128,   128,   128,   128,   128,   128,   106,    16,
-      40,    41,    42,   146,   147,    95,     8,    96,   113,   112,
-     114,    83,   152,   153,    76,     2,     3,     4,    17,    47,
-      40,    41,    42,    48,    49,    50,   144,   148,   145,   149,
-       1,     2,     3,     4,    43,    84,    44,    45,    46,    47,
-      40,    41,    42,    48,    49,    50,     2,     3,     4,   129,
-     130,    51,    31,    52,    43,    80,    44,    45,    46,    47,
-      40,    41,    42,    48,    49,    50,   135,   136,    37,    91,
-     103,    51,    31,    52,    43,   104,    44,    45,    46,    47,
-      40,    41,    42,    48,    49,    50,     2,     3,     4,    97,
-      98,    51,    31,    40,    41,    42,    16,   119,   105,    47,
-     118,   120,   124,    48,    49,    50,   141,    30,    79,   142,
-     150,    85,    47,    99,   100,    17,    48,    49,    50,    22,
-      18,   137,    29,   151,    51,    35,     1,     2,     3,     4,
-     138,    32,     1,     2,     3,     4,    75,     1,     2,     3,
-       4,   131,   132,   133,   134,   140,    23,   109
+      12,    21,    38,    14,   117,    93,     8,    94,    16,    92,
+      28,    38,    34,    95,    25,    96,    97,    98,    36,    40,
+      41,    42,   113,    25,   114,    25,   115,   116,    17,    65,
+       8,   110,   107,   123,    25,   125,    15,   143,   139,    47,
+     121,    99,   100,    48,    49,    50,   126,   127,   128,   128,
+     128,   128,   128,   128,   128,   128,   128,   128,   106,    40,
+      41,    42,    24,   146,   147,   144,     8,   145,    39,   112,
+      30,    31,   152,   153,    76,    80,     2,     3,     4,    47,
+      40,    41,    42,    48,    49,    50,    82,   148,    83,   149,
+       1,     2,     3,     4,    43,    84,    44,    45,    46,    37,
+      47,    40,    41,    42,    48,    49,    50,     2,     3,     4,
+     101,   102,    51,    31,    52,    43,    91,    44,    45,    46,
+     103,    47,    40,    41,    42,    48,    49,    50,   129,   130,
+      79,   119,    88,    51,    31,    52,    43,   104,    44,    45,
+      46,    16,    47,    40,    41,    42,    48,    49,    50,    89,
+     105,    90,   135,   136,    51,    31,    40,    41,    42,   118,
+     120,    17,   124,    47,    30,   141,    18,    48,    49,    50,
+      22,     1,     2,     3,     4,    85,    47,     2,     3,     4,
+      48,    49,    50,     1,     2,     3,     4,   150,    51,     1,
+       2,     3,     4,   131,   132,   133,   134,   142,   151,   138,
+      75,    35,   137,    29,   140,    32,   109,    23
 };
 
 static const yytype_uint8 yycheck[] =
 {
       46,    47,    70,    33,    34,    42,    33,     0,    69,    70,
-       1,     6,    26,    84,    34,     3,     9,    34,    35,    56,
-      17,    35,    35,    27,    15,    29,    22,    22,    25,    24,
-       3,     4,     5,    24,    23,    26,    82,    83,    22,    69,
-      33,   109,    69,    89,    35,    91,   117,    35,   109,    22,
-      23,     9,    10,    26,    27,    28,    93,    94,    95,    96,
+       1,    35,    26,     3,    84,    28,     9,    30,     3,    56,
+      17,    35,    23,    29,    15,    31,     7,     8,    25,     3,
+       4,     5,    24,    24,    26,    26,    82,    83,    23,    69,
+      33,   109,    69,    89,    35,    91,    36,   117,   109,    23,
+      24,    32,    33,    27,    28,    29,    93,    94,    95,    96,
       97,    98,    99,   100,   101,   102,   103,   104,    65,     3,
-       3,     4,     5,   141,   142,    28,    69,    30,    23,    76,
-      25,    22,   150,   151,   114,    14,    15,    16,    22,    22,
-       3,     4,     5,    26,    27,    28,    23,   143,    25,   145,
-      13,    14,    15,    16,    17,    22,    19,    20,    21,    22,
-       3,     4,     5,    26,    27,    28,    14,    15,    16,    95,
-      96,    34,    35,    36,    17,    34,    19,    20,    21,    22,
-       3,     4,     5,    26,    27,    28,   101,   102,    36,    33,
-      11,    34,    35,    36,    17,    12,    19,    20,    21,    22,
-       3,     4,     5,    26,    27,    28,    14,    15,    16,     7,
-       8,    34,    35,     3,     4,     5,     3,    23,    34,    22,
-      34,     3,     3,    26,    27,    28,    23,    34,    36,    23,
-      18,    34,    22,    31,    32,    22,    26,    27,    28,     0,
-      27,   103,    18,    23,    34,    24,    13,    14,    15,    16,
-     104,    19,    13,    14,    15,    16,    23,    13,    14,    15,
-      16,    97,    98,    99,   100,   114,     9,    69
+       4,     5,    36,   141,   142,    24,    69,    26,    24,    76,
+      35,    36,   150,   151,   114,    35,    14,    15,    16,    23,
+       3,     4,     5,    27,    28,    29,    23,   143,    23,   145,
+      13,    14,    15,    16,    17,    23,    19,    20,    21,    37,
+      23,     3,     4,     5,    27,    28,    29,    14,    15,    16,
+       9,    10,    35,    36,    37,    17,    34,    19,    20,    21,
+      11,    23,     3,     4,     5,    27,    28,    29,    95,    96,
+      37,    24,     6,    35,    36,    37,    17,    12,    19,    20,
+      21,     3,    23,     3,     4,     5,    27,    28,    29,    23,
+      35,    25,   101,   102,    35,    36,     3,     4,     5,    35,
+       3,    23,     3,    23,    35,    24,    28,    27,    28,    29,
+       0,    13,    14,    15,    16,    35,    23,    14,    15,    16,
+      27,    28,    29,    13,    14,    15,    16,    18,    35,    13,
+      14,    15,    16,    97,    98,    99,   100,    24,    24,   104,
+      24,    24,   103,    18,   114,    19,    69,     9
 };
 
 /* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
    state STATE-NUM.  */
 static const yytype_int8 yystos[] =
 {
-       0,    13,    14,    15,    16,    50,    51,    52,    53,    70,
-      71,    72,    52,    53,     3,    35,     3,    22,    27,    56,
-      57,    34,     0,    71,    35,    52,    54,    55,    56,    57,
-      34,    35,    61,    62,    22,    54,    56,    36,    55,    23,
-       3,     4,     5,    17,    19,    20,    21,    22,    26,    27,
-      28,    34,    36,    38,    39,    41,    42,    43,    44,    45,
-      46,    47,    48,    49,    50,    51,    60,    61,    63,    64,
-      65,    66,    67,    68,    69,    23,    51,    58,    59,    36,
-      34,    41,    22,    22,    22,    34,    49,    49,     6,    22,
-      24,    33,    41,    27,    29,    28,    30,     7,     8,    31,
-      32,     9,    10,    11,    12,    34,    56,    50,    63,    65,
-      60,    63,    56,    23,    25,    49,    49,    66,    34,    23,
-       3,    23,    40,    49,     3,    49,    41,    41,    41,    43,
-      43,    44,    44,    44,    44,    45,    45,    46,    47,    63,
-      59,    23,    23,    66,    23,    25,    60,    60,    49,    49,
-      18,    23,    60,    60
+       0,    13,    14,    15,    16,    51,    52,    53,    54,    71,
+      72,    73,    53,    54,     3,    36,     3,    23,    28,    57,
+      58,    35,     0,    72,    36,    53,    55,    56,    57,    58,
+      35,    36,    62,    63,    23,    55,    57,    37,    56,    24,
+       3,     4,     5,    17,    19,    20,    21,    23,    27,    28,
+      29,    35,    37,    39,    40,    42,    43,    44,    45,    46,
+      47,    48,    49,    50,    51,    52,    61,    62,    64,    65,
+      66,    67,    68,    69,    70,    24,    52,    59,    60,    37,
+      35,    42,    23,    23,    23,    35,    50,    50,     6,    23,
+      25,    34,    42,    28,    30,    29,    31,     7,     8,    32,
+      33,     9,    10,    11,    12,    35,    57,    51,    64,    66,
+      61,    64,    57,    24,    26,    50,    50,    67,    35,    24,
+       3,    24,    41,    50,     3,    50,    42,    42,    42,    44,
+      44,    45,    45,    45,    45,    46,    46,    47,    48,    64,
+      60,    24,    24,    67,    24,    26,    61,    61,    50,    50,
+      18,    24,    61,    61
 };
 
 /* YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr1[] =
 {
-       0,    37,    38,    38,    38,    39,    39,    39,    39,    39,
-      40,    40,    41,    41,    41,    42,    42,    42,    43,    43,
-      43,    44,    44,    44,    45,    45,    45,    45,    45,    46,
-      46,    46,    47,    47,    48,    48,    49,    49,    50,    50,
-      51,    51,    52,    52,    52,    53,    53,    53,    54,    54,
-      55,    56,    56,    57,    57,    57,    57,    58,    58,    59,
-      60,    60,    60,    60,    60,    61,    61,    61,    61,    62,
-      63,    64,    64,    65,    65,    66,    66,    67,    67,    68,
-      68,    69,    69,    70,    70,    71,    71,    72
+       0,    38,    39,    39,    39,    40,    40,    40,    40,    40,
+      41,    41,    42,    42,    42,    43,    43,    43,    44,    44,
+      44,    45,    45,    45,    46,    46,    46,    46,    46,    47,
+      47,    47,    48,    48,    49,    49,    50,    50,    51,    51,
+      52,    52,    53,    53,    53,    54,    54,    54,    55,    55,
+      56,    57,    57,    58,    58,    58,    58,    59,    59,    60,
+      61,    61,    61,    61,    61,    62,    62,    62,    62,    63,
+      64,    65,    65,    66,    66,    67,    67,    68,    68,    69,
+      69,    70,    70,    71,    71,    72,    72,    73
 };
 
 /* YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.  */
@@ -1354,516 +1359,552 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* primary_expression: IDENTIFIER  */
-#line 37 "structfe.y"
+#line 50 "structfe.y"
                      {
+                printf("test1\n");
+
+                (yyval.elem)->code = (yyvsp[0].id);
                 /*
-                Symbole* sym = find_symbol(getTopTas(&tas), $1);
+                Symbole* sym = find_symbol(getTopTas(&tas), $1->type);
                 if (sym) {
                     $$ = sym->type;
                 } else {
-                    fprintf(stderr, "Erreur: Identifiant %s non déclaré à la ligne %d\n", $1, yylineno);
+                    fprintf(stderr, "Erreur: Identifiant %s non déclaré à la ligne %d\n", $1->type, yylineno);
                     YYERROR;
                 }*/
-        }
-#line 1369 "y.tab.c"
-    break;
-
-  case 3: /* primary_expression: CONSTANT  */
-#line 47 "structfe.y"
-                   {
-                (yyval.symtype) = TYPE_INT;
         }
 #line 1377 "y.tab.c"
     break;
 
-  case 4: /* primary_expression: '(' expression ')'  */
-#line 50 "structfe.y"
-                             {
-                (yyval.symtype) = (yyvsp[-1].symtype);
+  case 3: /* primary_expression: CONSTANT  */
+#line 63 "structfe.y"
+                   {
+                printf("test1\n");
+                (yyval.elem)->type = TYPE_INT;
         }
-#line 1385 "y.tab.c"
+#line 1386 "y.tab.c"
+    break;
+
+  case 4: /* primary_expression: '(' expression ')'  */
+#line 67 "structfe.y"
+                             {
+                (yyval.elem) = (yyvsp[-1].elem);
+        }
+#line 1394 "y.tab.c"
     break;
 
   case 5: /* postfix_expression: primary_expression  */
-#line 56 "structfe.y"
+#line 73 "structfe.y"
                              {
-                (yyval.symtype) = (yyvsp[0].symtype);
+                (yyval.elem) = (yyvsp[0].elem);
         }
-#line 1393 "y.tab.c"
+#line 1402 "y.tab.c"
     break;
 
   case 6: /* postfix_expression: postfix_expression '(' ')'  */
-#line 59 "structfe.y"
+#line 76 "structfe.y"
                                      {
-                (yyval.symtype) = (yyvsp[-2].symtype);
+                (yyval.elem) = (yyvsp[-2].elem);
         }
-#line 1401 "y.tab.c"
+#line 1410 "y.tab.c"
     break;
 
   case 7: /* postfix_expression: postfix_expression '(' argument_expression_list ')'  */
-#line 62 "structfe.y"
+#line 79 "structfe.y"
                                                               {
-                (yyval.symtype) = (yyvsp[-3].symtype);
+                (yyval.elem) = (yyvsp[-3].elem);
         }
-#line 1409 "y.tab.c"
+#line 1418 "y.tab.c"
     break;
 
   case 8: /* postfix_expression: postfix_expression '.' IDENTIFIER  */
-#line 65 "structfe.y"
+#line 82 "structfe.y"
                                             {
-                (yyval.symtype) = TYPE_INT;
+                (yyval.elem)->type=TYPE_INT;
         }
-#line 1417 "y.tab.c"
+#line 1426 "y.tab.c"
     break;
 
   case 9: /* postfix_expression: postfix_expression PTR_OP IDENTIFIER  */
-#line 68 "structfe.y"
+#line 85 "structfe.y"
                                                {
-                (yyval.symtype) = TYPE_INT;
+                (yyval.elem)->type=TYPE_INT;
         }
-#line 1425 "y.tab.c"
+#line 1434 "y.tab.c"
     break;
 
   case 10: /* argument_expression_list: expression  */
-#line 74 "structfe.y"
+#line 91 "structfe.y"
                      {
-                (yyval.symtype) = (yyvsp[0].symtype);
+                (yyval.elem) = (yyvsp[0].elem);
         }
-#line 1433 "y.tab.c"
+#line 1442 "y.tab.c"
     break;
 
   case 11: /* argument_expression_list: argument_expression_list ',' expression  */
-#line 77 "structfe.y"
+#line 94 "structfe.y"
                                                   {
-                (yyval.symtype) = (yyvsp[-2].symtype);
+                (yyval.elem) = (yyvsp[-2].elem);
         }
-#line 1441 "y.tab.c"
+#line 1450 "y.tab.c"
     break;
 
   case 12: /* unary_expression: postfix_expression  */
-#line 83 "structfe.y"
+#line 100 "structfe.y"
                              {
-                (yyval.symtype) = (yyvsp[0].symtype);
+                (yyval.elem) = (yyvsp[0].elem);
         }
-#line 1449 "y.tab.c"
+#line 1458 "y.tab.c"
     break;
 
   case 13: /* unary_expression: unary_operator unary_expression  */
-#line 86 "structfe.y"
+#line 103 "structfe.y"
                                           {
-                (yyval.symtype) = (yyvsp[0].symtype);
+                printf("test de unaryope:%s",(yyvsp[-1].id));
+                (yyval.elem) = (yyvsp[0].elem);
         }
-#line 1457 "y.tab.c"
+#line 1467 "y.tab.c"
     break;
 
   case 14: /* unary_expression: SIZEOF unary_expression  */
-#line 89 "structfe.y"
+#line 107 "structfe.y"
                                   {
-                (yyval.symtype) = TYPE_INT;
+                (yyval.elem)->type = TYPE_INT;
         }
-#line 1465 "y.tab.c"
+#line 1475 "y.tab.c"
+    break;
+
+  case 15: /* unary_operator: '&'  */
+#line 113 "structfe.y"
+             {(yyval.id) = "&";}
+#line 1481 "y.tab.c"
+    break;
+
+  case 16: /* unary_operator: '*'  */
+#line 114 "structfe.y"
+             {(yyval.id) = "*";}
+#line 1487 "y.tab.c"
+    break;
+
+  case 17: /* unary_operator: '-'  */
+#line 115 "structfe.y"
+             {(yyval.id) = "-";}
+#line 1493 "y.tab.c"
     break;
 
   case 18: /* multiplicative_expression: unary_expression  */
-#line 101 "structfe.y"
+#line 119 "structfe.y"
                            {
-                (yyval.symtype) = (yyvsp[0].symtype);
+                (yyval.elem) = (yyvsp[0].elem);
         }
-#line 1473 "y.tab.c"
+#line 1501 "y.tab.c"
     break;
 
   case 19: /* multiplicative_expression: multiplicative_expression '*' unary_expression  */
-#line 104 "structfe.y"
+#line 122 "structfe.y"
                                                          {
-                if ((yyvsp[-2].symtype) != TYPE_INT || (yyvsp[0].symtype) != TYPE_INT) {
+                if ((yyvsp[-2].elem)->type != TYPE_INT || (yyvsp[0].elem)->type != TYPE_INT) {
                     fprintf(stderr, "Erreur: Opération '*' entre types incompatibles à la ligne %d\n", yylineno);
                     YYERROR;
                 }
-                (yyval.symtype) = TYPE_INT;
+                (yyval.elem)->type = TYPE_INT;
         }
-#line 1485 "y.tab.c"
+#line 1513 "y.tab.c"
     break;
 
   case 20: /* multiplicative_expression: multiplicative_expression '/' unary_expression  */
-#line 111 "structfe.y"
+#line 129 "structfe.y"
                                                          {
-                if ((yyvsp[-2].symtype) != TYPE_INT || (yyvsp[0].symtype) != TYPE_INT) {
+                if ((yyvsp[-2].elem)->type != TYPE_INT || (yyvsp[0].elem)->type != TYPE_INT) {
                     fprintf(stderr, "Erreur: Opération '/' entre types incompatibles à la ligne %d\n", yylineno);
                     YYERROR;
                 }
-                (yyval.symtype) = TYPE_INT;
+                (yyval.elem)->type = TYPE_INT;
         }
-#line 1497 "y.tab.c"
+#line 1525 "y.tab.c"
     break;
 
   case 21: /* additive_expression: multiplicative_expression  */
-#line 121 "structfe.y"
+#line 139 "structfe.y"
                                     {
-                (yyval.symtype) = (yyvsp[0].symtype);
+                (yyval.elem) = (yyvsp[0].elem);
         }
-#line 1505 "y.tab.c"
+#line 1533 "y.tab.c"
     break;
 
   case 22: /* additive_expression: additive_expression '+' multiplicative_expression  */
-#line 124 "structfe.y"
+#line 142 "structfe.y"
                                                             {
-                if ((yyvsp[-2].symtype) != TYPE_INT || (yyvsp[0].symtype) != TYPE_INT) {
+                if ((yyvsp[-2].elem)->type != TYPE_INT || (yyvsp[0].elem)->type != TYPE_INT) {
                     fprintf(stderr, "Erreur: Opération '+' entre types incompatibles à la ligne %d\n", yylineno);
                     YYERROR;
                 }
-                (yyval.symtype) = TYPE_INT;
+                (yyval.elem)->type = TYPE_INT;
         }
-#line 1517 "y.tab.c"
+#line 1545 "y.tab.c"
     break;
 
   case 23: /* additive_expression: additive_expression '-' multiplicative_expression  */
-#line 131 "structfe.y"
+#line 149 "structfe.y"
                                                             {
-                if ((yyvsp[-2].symtype) != TYPE_INT || (yyvsp[0].symtype) != TYPE_INT) {
+                if ((yyvsp[-2].elem)->type != TYPE_INT || (yyvsp[0].elem)->type != TYPE_INT) {
                     fprintf(stderr, "Erreur: Opération '-' entre types incompatibles à la ligne %d\n", yylineno);
                     YYERROR;
                 }
-                (yyval.symtype) = TYPE_INT;
+                (yyval.elem)->type = TYPE_INT;
         }
-#line 1529 "y.tab.c"
+#line 1557 "y.tab.c"
     break;
 
   case 24: /* relational_expression: additive_expression  */
-#line 141 "structfe.y"
+#line 159 "structfe.y"
                               {
-                (yyval.symtype) = (yyvsp[0].symtype);
+                (yyval.elem) = (yyvsp[0].elem);
         }
-#line 1537 "y.tab.c"
+#line 1565 "y.tab.c"
     break;
 
   case 25: /* relational_expression: relational_expression '<' additive_expression  */
-#line 144 "structfe.y"
+#line 162 "structfe.y"
                                                         {
-                if ((yyvsp[-2].symtype) != TYPE_INT || (yyvsp[0].symtype) != TYPE_INT) {
+                if ((yyvsp[-2].elem)->type != TYPE_INT || (yyvsp[0].elem)->type != TYPE_INT) {
                     fprintf(stderr, "Erreur: Opération '<' entre types incompatibles à la ligne %d\n", yylineno);
                     YYERROR;
                 }
-                (yyval.symtype) = TYPE_INT;
+                (yyval.elem)->type = TYPE_INT;
         }
-#line 1549 "y.tab.c"
+#line 1577 "y.tab.c"
     break;
 
   case 26: /* relational_expression: relational_expression '>' additive_expression  */
-#line 151 "structfe.y"
+#line 169 "structfe.y"
                                                         {
-                if ((yyvsp[-2].symtype) != TYPE_INT || (yyvsp[0].symtype) != TYPE_INT) {
+                if ((yyvsp[-2].elem)->type != TYPE_INT || (yyvsp[0].elem)->type != TYPE_INT) {
                     fprintf(stderr, "Erreur: Opération '>' entre types incompatibles à la ligne %d\n", yylineno);
                     YYERROR;
                 }
-                (yyval.symtype) = TYPE_INT;
+                (yyval.elem)->type = TYPE_INT;
         }
-#line 1561 "y.tab.c"
+#line 1589 "y.tab.c"
     break;
 
   case 27: /* relational_expression: relational_expression LE_OP additive_expression  */
-#line 158 "structfe.y"
+#line 176 "structfe.y"
                                                           {
-                if ((yyvsp[-2].symtype) != TYPE_INT || (yyvsp[0].symtype) != TYPE_INT) {
+                if ((yyvsp[-2].elem)->type != TYPE_INT || (yyvsp[0].elem)->type != TYPE_INT) {
                     fprintf(stderr, "Erreur: Opération '<=' entre types incompatibles à la ligne %d\n", yylineno);
                     YYERROR;
                 }
-                (yyval.symtype) = TYPE_INT;
+                (yyval.elem)->type = TYPE_INT;
         }
-#line 1573 "y.tab.c"
+#line 1601 "y.tab.c"
     break;
 
   case 28: /* relational_expression: relational_expression GE_OP additive_expression  */
-#line 165 "structfe.y"
+#line 183 "structfe.y"
                                                           {
-                if ((yyvsp[-2].symtype) != TYPE_INT || (yyvsp[0].symtype) != TYPE_INT) {
+                if ((yyvsp[-2].elem)->type != TYPE_INT || (yyvsp[0].elem)->type != TYPE_INT) {
                     fprintf(stderr, "Erreur: Opération '>=' entre types incompatibles à la ligne %d\n", yylineno);
                     YYERROR;
                 }
-                (yyval.symtype) = TYPE_INT;
+                (yyval.elem)->type = TYPE_INT;
         }
-#line 1585 "y.tab.c"
+#line 1613 "y.tab.c"
     break;
 
   case 29: /* equality_expression: relational_expression  */
-#line 175 "structfe.y"
+#line 193 "structfe.y"
                                 {
-                (yyval.symtype) = (yyvsp[0].symtype);
+                (yyval.elem) = (yyvsp[0].elem);
         }
-#line 1593 "y.tab.c"
+#line 1621 "y.tab.c"
     break;
 
   case 30: /* equality_expression: equality_expression EQ_OP relational_expression  */
-#line 178 "structfe.y"
+#line 196 "structfe.y"
                                                           {
-                if ((yyvsp[-2].symtype) != TYPE_INT || (yyvsp[0].symtype) != TYPE_INT) {
+                if ((yyvsp[-2].elem)->type != TYPE_INT || (yyvsp[0].elem)->type != TYPE_INT) {
                     fprintf(stderr, "Erreur: Opération '==' entre types incompatibles à la ligne %d\n", yylineno);
                     YYERROR;
                 }
-                (yyval.symtype) = TYPE_INT;
+                (yyval.elem)->type = TYPE_INT;
         }
-#line 1605 "y.tab.c"
+#line 1633 "y.tab.c"
     break;
 
   case 31: /* equality_expression: equality_expression NE_OP relational_expression  */
-#line 185 "structfe.y"
+#line 203 "structfe.y"
                                                           {
-                if ((yyvsp[-2].symtype) != TYPE_INT || (yyvsp[0].symtype) != TYPE_INT) {
+                if ((yyvsp[-2].elem)->type != TYPE_INT || (yyvsp[0].elem)->type != TYPE_INT) {
                     fprintf(stderr, "Erreur: Opération '!=' entre types incompatibles à la ligne %d\n", yylineno);
                     YYERROR;
                 }
-                (yyval.symtype) = TYPE_INT;
-        }
-#line 1617 "y.tab.c"
-    break;
-
-  case 32: /* logical_and_expression: equality_expression  */
-#line 195 "structfe.y"
-                              {
-                (yyval.symtype) = (yyvsp[0].symtype);
-        }
-#line 1625 "y.tab.c"
-    break;
-
-  case 33: /* logical_and_expression: logical_and_expression AND_OP equality_expression  */
-#line 198 "structfe.y"
-                                                            {
-                if ((yyvsp[-2].symtype) != TYPE_INT || (yyvsp[0].symtype) != TYPE_INT) {
-                    fprintf(stderr, "Erreur: Opération '&&' entre types incompatibles à la ligne %d\n", yylineno);
-                    YYERROR;
-                }
-                (yyval.symtype) = TYPE_INT;
-        }
-#line 1637 "y.tab.c"
-    break;
-
-  case 34: /* logical_or_expression: logical_and_expression  */
-#line 208 "structfe.y"
-                                 {
-                (yyval.symtype) = (yyvsp[0].symtype);
+                (yyval.elem)->type = TYPE_INT;
         }
 #line 1645 "y.tab.c"
     break;
 
-  case 35: /* logical_or_expression: logical_or_expression OR_OP logical_and_expression  */
-#line 211 "structfe.y"
-                                                             {
-                if                 ((yyvsp[-2].symtype) != TYPE_INT || (yyvsp[0].symtype) != TYPE_INT) {
-                    fprintf(stderr, "Erreur: Opération '||' entre types incompatibles à la ligne %d\n", yylineno);
-                    YYERROR;
-                }
-                (yyval.symtype) = TYPE_INT;
+  case 32: /* logical_and_expression: equality_expression  */
+#line 213 "structfe.y"
+                              {
+                (yyval.elem) = (yyvsp[0].elem);
         }
-#line 1657 "y.tab.c"
+#line 1653 "y.tab.c"
     break;
 
-  case 36: /* expression: logical_or_expression  */
-#line 221 "structfe.y"
-                                {
-                (yyval.symtype) = (yyvsp[0].symtype);
+  case 33: /* logical_and_expression: logical_and_expression AND_OP equality_expression  */
+#line 216 "structfe.y"
+                                                            {
+                if ((yyvsp[-2].elem)->type != TYPE_INT || (yyvsp[0].elem)->type != TYPE_INT) {
+                    fprintf(stderr, "Erreur: Opération '&&' entre types incompatibles à la ligne %d\n", yylineno);
+                    YYERROR;
+                }
+                (yyval.elem)->type = TYPE_INT;
         }
 #line 1665 "y.tab.c"
     break;
 
-  case 37: /* expression: unary_expression '=' expression  */
-#line 224 "structfe.y"
-                                          {
-                if ((yyvsp[-2].symtype) != TYPE_INT || (yyvsp[0].symtype) != TYPE_INT) {
-                    fprintf(stderr, "Erreur: Assignation entre types incompatibles à la ligne %d\n", yylineno);
-                    YYERROR;
-                }
-                (yyval.symtype) = (yyvsp[-2].symtype);
+  case 34: /* logical_or_expression: logical_and_expression  */
+#line 226 "structfe.y"
+                                 {
+                (yyval.elem) = (yyvsp[0].elem);
         }
-#line 1677 "y.tab.c"
+#line 1673 "y.tab.c"
     break;
 
-  case 38: /* declaration: declaration_specifiers declarator ';'  */
-#line 234 "structfe.y"
-                                                {
-                insert_symbol_toptas(tas, (yyvsp[-1].id), (yyvsp[-2].symtype));
+  case 35: /* logical_or_expression: logical_or_expression OR_OP logical_and_expression  */
+#line 229 "structfe.y"
+                                                             {
+                if((yyvsp[-2].elem)->type != TYPE_INT || (yyvsp[0].elem)->type != TYPE_INT) {
+                    fprintf(stderr, "Erreur: Opération '||' entre types incompatibles à la ligne %d\n", yylineno);
+                    YYERROR;
+                }
+                (yyval.elem)->type = TYPE_INT;
         }
 #line 1685 "y.tab.c"
     break;
 
-  case 39: /* declaration: struct_specifier ';'  */
-#line 237 "structfe.y"
-                               {
-                // À implémenter si nécessaire
+  case 36: /* expression: logical_or_expression  */
+#line 239 "structfe.y"
+                                {
+                (yyval.elem) = (yyvsp[0].elem);
         }
 #line 1693 "y.tab.c"
     break;
 
-  case 40: /* declaration_specifiers: EXTERN type_specifier  */
-#line 243 "structfe.y"
-                                {
-                (yyval.symtype) = (yyvsp[0].symtype);
+  case 37: /* expression: unary_expression '=' expression  */
+#line 242 "structfe.y"
+                                          {
+                /*if ($1->type != TYPE_INT || $3->type != TYPE_INT) {
+                    fprintf(stderr, "Erreur: Assignation entre types incompatibles à la ligne %d\n", yylineno);
+                    YYERROR;
+                }*/
+                (yyval.elem) = (yyvsp[-2].elem);
         }
-#line 1701 "y.tab.c"
+#line 1705 "y.tab.c"
+    break;
+
+  case 38: /* declaration: declaration_specifiers declarator ';'  */
+#line 252 "structfe.y"
+                                                {
+                insert_symbol_toptas(tas, (yyvsp[-1].id), (yyvsp[-2].elem)->type);
+        }
+#line 1713 "y.tab.c"
+    break;
+
+  case 39: /* declaration: struct_specifier ';'  */
+#line 255 "structfe.y"
+                               {
+                // À implémenter si nécessaire
+        }
+#line 1721 "y.tab.c"
+    break;
+
+  case 40: /* declaration_specifiers: EXTERN type_specifier  */
+#line 261 "structfe.y"
+                                {
+                (yyval.elem) = (yyvsp[0].elem);
+        }
+#line 1729 "y.tab.c"
     break;
 
   case 41: /* declaration_specifiers: type_specifier  */
-#line 246 "structfe.y"
+#line 264 "structfe.y"
                          {
-                (yyval.symtype) = (yyvsp[0].symtype);
+                (yyval.elem) = (yyvsp[0].elem);
         }
-#line 1709 "y.tab.c"
+#line 1737 "y.tab.c"
     break;
 
   case 42: /* type_specifier: VOID  */
-#line 252 "structfe.y"
+#line 270 "structfe.y"
                {
-                (yyval.symtype) = TYPE_VOID;
+                (yyval.elem)->type = TYPE_VOID;
         }
-#line 1717 "y.tab.c"
+#line 1745 "y.tab.c"
     break;
 
   case 43: /* type_specifier: INT  */
-#line 255 "structfe.y"
+#line 273 "structfe.y"
               {
-                (yyval.symtype) = TYPE_INT;
+                printf("test122\n");
+                Element * e = malloc(sizeof(Element));
+                e->type = TYPE_INT;
+                printf("test1\n");
+                (yyval.elem) = e;
+                printf("C'est bon\n");
         }
-#line 1725 "y.tab.c"
+#line 1758 "y.tab.c"
     break;
 
   case 44: /* type_specifier: struct_specifier  */
-#line 258 "structfe.y"
+#line 281 "structfe.y"
                            {
-                (yyval.symtype) = TYPE_STRUCT;
+                (yyval.elem)->type = TYPE_STRUCT;
         }
-#line 1733 "y.tab.c"
+#line 1766 "y.tab.c"
     break;
 
   case 45: /* struct_specifier: STRUCT IDENTIFIER '{' struct_declaration_list '}'  */
-#line 264 "structfe.y"
+#line 287 "structfe.y"
                                                             {
-                (yyval.symtype) = TYPE_STRUCT;
+                (yyval.elem)->type = TYPE_STRUCT;
         }
-#line 1741 "y.tab.c"
+#line 1774 "y.tab.c"
     break;
 
   case 46: /* struct_specifier: STRUCT '{' struct_declaration_list '}'  */
-#line 267 "structfe.y"
+#line 290 "structfe.y"
                                                  {
-                (yyval.symtype) = TYPE_STRUCT;
+                (yyval.elem)->type = TYPE_STRUCT;
         }
-#line 1749 "y.tab.c"
+#line 1782 "y.tab.c"
     break;
 
   case 47: /* struct_specifier: STRUCT IDENTIFIER  */
-#line 270 "structfe.y"
+#line 293 "structfe.y"
                             {
-                (yyval.symtype) = TYPE_STRUCT;
+                (yyval.elem)->type = TYPE_STRUCT;
         }
-#line 1757 "y.tab.c"
+#line 1790 "y.tab.c"
     break;
 
   case 51: /* declarator: '*' direct_declarator  */
-#line 285 "structfe.y"
+#line 308 "structfe.y"
                                 {
                 (yyval.id) = (yyvsp[0].id);
         }
-#line 1765 "y.tab.c"
+#line 1798 "y.tab.c"
     break;
 
   case 52: /* declarator: direct_declarator  */
-#line 288 "structfe.y"
+#line 311 "structfe.y"
                             {
                 (yyval.id) = (yyvsp[0].id);
         }
-#line 1773 "y.tab.c"
+#line 1806 "y.tab.c"
     break;
 
   case 53: /* direct_declarator: IDENTIFIER  */
-#line 294 "structfe.y"
+#line 317 "structfe.y"
                      {
                 (yyval.id) = (yyvsp[0].id);
         }
-#line 1781 "y.tab.c"
+#line 1814 "y.tab.c"
     break;
 
   case 54: /* direct_declarator: '(' declarator ')'  */
-#line 297 "structfe.y"
+#line 320 "structfe.y"
                              {
                 (yyval.id) = (yyvsp[-1].id);
         }
-#line 1789 "y.tab.c"
+#line 1822 "y.tab.c"
     break;
 
   case 55: /* direct_declarator: direct_declarator '(' parameter_list ')'  */
-#line 300 "structfe.y"
+#line 323 "structfe.y"
                                                    {
                 (yyval.id) = (yyvsp[-3].id);
         }
-#line 1797 "y.tab.c"
+#line 1830 "y.tab.c"
     break;
 
   case 56: /* direct_declarator: direct_declarator '(' ')'  */
-#line 303 "structfe.y"
+#line 326 "structfe.y"
                                     {
                 (yyval.id) = (yyvsp[-2].id);
         }
-#line 1805 "y.tab.c"
+#line 1838 "y.tab.c"
     break;
 
   case 66: /* compound_statement: open_accol statement_list close_accol  */
-#line 327 "structfe.y"
+#line 350 "structfe.y"
                                                {
                 printf("DANS LE YACC:on decale\n");
         }
-#line 1813 "y.tab.c"
+#line 1846 "y.tab.c"
     break;
 
   case 67: /* compound_statement: open_accol declaration_list close_accol  */
-#line 330 "structfe.y"
+#line 353 "structfe.y"
                                                  {
                 printf("DANS LE YACC:on decale2\n");
         }
-#line 1821 "y.tab.c"
+#line 1854 "y.tab.c"
     break;
 
   case 68: /* compound_statement: open_accol declaration_list statement_list close_accol  */
-#line 333 "structfe.y"
+#line 356 "structfe.y"
                                                                 {
                 printf("DANS LE YACC:on decale3\n");
         }
-#line 1829 "y.tab.c"
+#line 1862 "y.tab.c"
     break;
 
   case 69: /* open_accol: '{'  */
-#line 339 "structfe.y"
+#line 362 "structfe.y"
             {   
                 printf("DANS LE YACC:ICI LA OP8U");
                 expandTas(&tas);
                 printf("DANS LE YACC:VAL DE TAILLE TAS:%d",tas.length);
                 printf("DANS LE YACC:ouverture\n\n");
         }
-#line 1840 "y.tab.c"
+#line 1873 "y.tab.c"
     break;
 
   case 70: /* close_accol: '}'  */
-#line 347 "structfe.y"
+#line 370 "structfe.y"
             {
                 printf("DANS LE YACC:MAIS NON");
                 //popTas(&tas);
         }
-#line 1849 "y.tab.c"
+#line 1882 "y.tab.c"
+    break;
+
+  case 75: /* expression_statement: ';'  */
+#line 386 "structfe.y"
+             {
+                (yyval.elem)=(yyval.elem);
+        }
+#line 1890 "y.tab.c"
     break;
 
   case 80: /* iteration_statement: FOR '(' expression_statement expression_statement expression ')' statement  */
-#line 374 "structfe.y"
+#line 399 "structfe.y"
                                                                                     {
-                printf("Code 3adrs:%s\n","3");
+                printf("Code 3adrs:%s\n","");
                 printf("Code 3adrs:%s\n","goto condX");
                 printf("Code 3adrs:%s\n","corpX:");
                 printf("Code 3adrs:%s\n","7");
                 printf("Code 3adrs:%s\n","5");
                 printf("Code 3adrs:%s\n","condX:");
-                printf("Code 3adrs:if(%s) goto corpX\n","4");
+                printf("Code 3adrs:if(%s) goto corpX\n","$4");
         }
-#line 1863 "y.tab.c"
+#line 1904 "y.tab.c"
     break;
 
 
-#line 1867 "y.tab.c"
+#line 1908 "y.tab.c"
 
       default: break;
     }
@@ -2056,7 +2097,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 404 "structfe.y"
+#line 429 "structfe.y"
 
 void yyerror(const char *msg) {
     fprintf(stderr, "Erreur de syntaxe : %s à la ligne: %d ???\n", msg, yylineno);

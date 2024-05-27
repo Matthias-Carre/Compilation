@@ -6,6 +6,7 @@
 
 extern int yylineno;
 void yyerror(const char *msg);
+int yylex(void);
 
 
 //extern int yylval; // Définition de yylval
@@ -16,37 +17,52 @@ void yyerror(const char *msg);
     int intval;
     char* id;
     SymboleType symtype;
-    struct Symbole* symptr;
-    struct Node* nnode;
-    struct LinkedList* ll;
-    struct Element elem;
+    Symbole* symptr;
+    Node* nnode;
+    LinkedList* ll;
+    Element* elem;
 }
 
 %token <id> IDENTIFIER CONSTANT
-%token SIZEOF PTR_OP LE_OP GE_OP EQ_OP NE_OP
-%token AND_OP OR_OP EXTERN INT VOID STRUCT IF ELSE WHILE FOR RETURN
-%type <symtype> type_specifier declaration_specifiers struct_specifier additive_expression multiplicative_expression primary_expression expression argument_expression_list
-%type <symtype> logical_or_expression logical_and_expression equality_expression relational_expression unary_expression postfix_expression 
+//%token SIZEOF PTR_OP LE_OP GE_OP EQ_OP NE_OP
+//%token AND_OP OR_OP EXTERN INT VOID STRUCT IF ELSE WHILE FOR RETURN
+//%type <symtype> type_specifier declaration_specifiers struct_specifier additive_expression multiplicative_expression primary_expression expression argument_expression_list
+//%type <symtype> logical_or_expression logical_and_expression equality_expression relational_expression unary_expression postfix_expression 
 %type <id> declarator direct_declarator
-//%type <symptr> iteration_statement expression_statement statement
 
+
+%token <elem> SIZEOF PTR_OP LE_OP GE_OP EQ_OP NE_OP
+%token <elem> AND_OP OR_OP EXTERN INT VOID STRUCT IF ELSE WHILE FOR RETURN
+
+%type <elem> type_specifier declaration_specifiers struct_specifier additive_expression multiplicative_expression primary_expression expression argument_expression_list
+%type <elem> logical_or_expression logical_and_expression equality_expression relational_expression unary_expression postfix_expression
+%type <elem> open_accol close_accol 
+%type <elem> iteration_statement expression_statement statement compound_statement selection_statement jump_statement
+%type <id> unary_operator
+%nonassoc THEN
+%nonassoc ELSE
 %start program
+
 
 %%
 
 primary_expression
         : IDENTIFIER {
+                printf("test1\n");
+
+                $$->code = $1;
                 /*
-                Symbole* sym = find_symbol(getTopTas(&tas), $1);
+                Symbole* sym = find_symbol(getTopTas(&tas), $1->type);
                 if (sym) {
                     $$ = sym->type;
                 } else {
-                    fprintf(stderr, "Erreur: Identifiant %s non déclaré à la ligne %d\n", $1, yylineno);
+                    fprintf(stderr, "Erreur: Identifiant %s non déclaré à la ligne %d\n", $1->type, yylineno);
                     YYERROR;
                 }*/
         }
         | CONSTANT {
-                $$ = TYPE_INT;
+                printf("test1\n");
+                $$->type = TYPE_INT;
         }
         | '(' expression ')' {
                 $$ = $2;
@@ -64,10 +80,10 @@ postfix_expression
                 $$ = $1;
         }
         | postfix_expression '.' IDENTIFIER {
-                $$ = TYPE_INT;
+                $$->type=TYPE_INT;
         }
         | postfix_expression PTR_OP IDENTIFIER {
-                $$ = TYPE_INT;
+                $$->type=TYPE_INT;
         }
         ;
 
@@ -85,17 +101,18 @@ unary_expression
                 $$ = $1;
         }
         | unary_operator unary_expression {
+                printf("test de unaryope:%s",$1);
                 $$ = $2;
         }
         | SIZEOF unary_expression {
-                $$ = TYPE_INT;
+                $$->type = TYPE_INT;
         }
         ;
 
 unary_operator
-        : '&'
-        | '*'
-        | '-'
+        : '&'{$$ = "&";}
+        | '*'{$$ = "*";}
+        | '-'{$$ = "-";}
         ;
 
 multiplicative_expression
@@ -103,18 +120,18 @@ multiplicative_expression
                 $$ = $1;
         }
         | multiplicative_expression '*' unary_expression {
-                if ($1 != TYPE_INT || $3 != TYPE_INT) {
+                if ($1->type != TYPE_INT || $3->type != TYPE_INT) {
                     fprintf(stderr, "Erreur: Opération '*' entre types incompatibles à la ligne %d\n", yylineno);
                     YYERROR;
                 }
-                $$ = TYPE_INT;
+                $$->type = TYPE_INT;
         }
         | multiplicative_expression '/' unary_expression {
-                if ($1 != TYPE_INT || $3 != TYPE_INT) {
+                if ($1->type != TYPE_INT || $3->type != TYPE_INT) {
                     fprintf(stderr, "Erreur: Opération '/' entre types incompatibles à la ligne %d\n", yylineno);
                     YYERROR;
                 }
-                $$ = TYPE_INT;
+                $$->type = TYPE_INT;
         }
         ;
 
@@ -123,18 +140,18 @@ additive_expression
                 $$ = $1;
         }
         | additive_expression '+' multiplicative_expression {
-                if ($1 != TYPE_INT || $3 != TYPE_INT) {
+                if ($1->type != TYPE_INT || $3->type != TYPE_INT) {
                     fprintf(stderr, "Erreur: Opération '+' entre types incompatibles à la ligne %d\n", yylineno);
                     YYERROR;
                 }
-                $$ = TYPE_INT;
+                $$->type = TYPE_INT;
         }
         | additive_expression '-' multiplicative_expression {
-                if ($1 != TYPE_INT || $3 != TYPE_INT) {
+                if ($1->type != TYPE_INT || $3->type != TYPE_INT) {
                     fprintf(stderr, "Erreur: Opération '-' entre types incompatibles à la ligne %d\n", yylineno);
                     YYERROR;
                 }
-                $$ = TYPE_INT;
+                $$->type = TYPE_INT;
         }
         ;
 
@@ -143,32 +160,32 @@ relational_expression
                 $$ = $1;
         }
         | relational_expression '<' additive_expression {
-                if ($1 != TYPE_INT || $3 != TYPE_INT) {
+                if ($1->type != TYPE_INT || $3->type != TYPE_INT) {
                     fprintf(stderr, "Erreur: Opération '<' entre types incompatibles à la ligne %d\n", yylineno);
                     YYERROR;
                 }
-                $$ = TYPE_INT;
+                $$->type = TYPE_INT;
         }
         | relational_expression '>' additive_expression {
-                if ($1 != TYPE_INT || $3 != TYPE_INT) {
+                if ($1->type != TYPE_INT || $3->type != TYPE_INT) {
                     fprintf(stderr, "Erreur: Opération '>' entre types incompatibles à la ligne %d\n", yylineno);
                     YYERROR;
                 }
-                $$ = TYPE_INT;
+                $$->type = TYPE_INT;
         }
         | relational_expression LE_OP additive_expression {
-                if ($1 != TYPE_INT || $3 != TYPE_INT) {
+                if ($1->type != TYPE_INT || $3->type != TYPE_INT) {
                     fprintf(stderr, "Erreur: Opération '<=' entre types incompatibles à la ligne %d\n", yylineno);
                     YYERROR;
                 }
-                $$ = TYPE_INT;
+                $$->type = TYPE_INT;
         }
         | relational_expression GE_OP additive_expression {
-                if ($1 != TYPE_INT || $3 != TYPE_INT) {
+                if ($1->type != TYPE_INT || $3->type != TYPE_INT) {
                     fprintf(stderr, "Erreur: Opération '>=' entre types incompatibles à la ligne %d\n", yylineno);
                     YYERROR;
                 }
-                $$ = TYPE_INT;
+                $$->type = TYPE_INT;
         }
         ;
 
@@ -177,18 +194,18 @@ equality_expression
                 $$ = $1;
         }
         | equality_expression EQ_OP relational_expression {
-                if ($1 != TYPE_INT || $3 != TYPE_INT) {
+                if ($1->type != TYPE_INT || $3->type != TYPE_INT) {
                     fprintf(stderr, "Erreur: Opération '==' entre types incompatibles à la ligne %d\n", yylineno);
                     YYERROR;
                 }
-                $$ = TYPE_INT;
+                $$->type = TYPE_INT;
         }
         | equality_expression NE_OP relational_expression {
-                if ($1 != TYPE_INT || $3 != TYPE_INT) {
+                if ($1->type != TYPE_INT || $3->type != TYPE_INT) {
                     fprintf(stderr, "Erreur: Opération '!=' entre types incompatibles à la ligne %d\n", yylineno);
                     YYERROR;
                 }
-                $$ = TYPE_INT;
+                $$->type = TYPE_INT;
         }
         ;
 
@@ -197,11 +214,11 @@ logical_and_expression
                 $$ = $1;
         }
         | logical_and_expression AND_OP equality_expression {
-                if ($1 != TYPE_INT || $3 != TYPE_INT) {
+                if ($1->type != TYPE_INT || $3->type != TYPE_INT) {
                     fprintf(stderr, "Erreur: Opération '&&' entre types incompatibles à la ligne %d\n", yylineno);
                     YYERROR;
                 }
-                $$ = TYPE_INT;
+                $$->type = TYPE_INT;
         }
         ;
 
@@ -210,11 +227,11 @@ logical_or_expression
                 $$ = $1;
         }
         | logical_or_expression OR_OP logical_and_expression {
-                if                 ($1 != TYPE_INT || $3 != TYPE_INT) {
+                if($1->type != TYPE_INT || $3->type != TYPE_INT) {
                     fprintf(stderr, "Erreur: Opération '||' entre types incompatibles à la ligne %d\n", yylineno);
                     YYERROR;
                 }
-                $$ = TYPE_INT;
+                $$->type = TYPE_INT;
         }
         ;
 
@@ -223,17 +240,17 @@ expression
                 $$ = $1;
         }
         | unary_expression '=' expression {
-                if ($1 != TYPE_INT || $3 != TYPE_INT) {
+                /*if ($1->type != TYPE_INT || $3->type != TYPE_INT) {
                     fprintf(stderr, "Erreur: Assignation entre types incompatibles à la ligne %d\n", yylineno);
                     YYERROR;
-                }
+                }*/
                 $$ = $1;
         }
         ;
 
 declaration
         : declaration_specifiers declarator ';' {
-                insert_symbol_toptas(tas, $2, $1);
+                insert_symbol_toptas(tas, $2, $1->type);
         }
         | struct_specifier ';' {
                 // À implémenter si nécessaire
@@ -251,25 +268,30 @@ declaration_specifiers
 
 type_specifier
         : VOID {
-                $$ = TYPE_VOID;
+                $$->type = TYPE_VOID;
         }
         | INT {
-                $$ = TYPE_INT;
+                printf("test122\n");
+                Element * e = malloc(sizeof(Element));
+                e->type = TYPE_INT;
+                printf("test1\n");
+                $$ = e;
+                printf("C'est bon\n");
         }
         | struct_specifier {
-                $$ = TYPE_STRUCT;
+                $$->type = TYPE_STRUCT;
         }
         ;
 
 struct_specifier
         : STRUCT IDENTIFIER '{' struct_declaration_list '}' {
-                $$ = TYPE_STRUCT;
+                $$->type = TYPE_STRUCT;
         }
         | STRUCT '{' struct_declaration_list '}' {
-                $$ = TYPE_STRUCT;
+                $$->type = TYPE_STRUCT;
         }
         | STRUCT IDENTIFIER {
-                $$ = TYPE_STRUCT;
+                $$->type = TYPE_STRUCT;
         }
         ;
 
@@ -361,12 +383,14 @@ statement_list
         ;
 
 expression_statement
-        : ';'
+        : ';'{
+                $$=$$;
+        }
         | expression ';'
         ;
 
 selection_statement
-        : IF '(' expression ')' statement
+        : IF '(' expression ')' statement %prec THEN
         | IF '(' expression ')' statement ELSE statement
         ;
 
