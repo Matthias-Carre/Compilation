@@ -138,6 +138,7 @@ multiplicative_expression
                     YYERROR;
                 }
                 $$->type = TYPE_INT;
+                $$->code = concat($1->code,concat("*",$3->code));
         }
         | multiplicative_expression '/' unary_expression {
                 if ($1->type != TYPE_INT || $3->type != TYPE_INT) {
@@ -145,6 +146,7 @@ multiplicative_expression
                     YYERROR;
                 }
                 $$->type = TYPE_INT;
+                $$->code = concat($1->code,concat("/",$3->code));
         }
         ;
 
