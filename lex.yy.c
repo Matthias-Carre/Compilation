@@ -932,23 +932,23 @@ case 30:
 /* rule 30 can match eol */
 YY_RULE_SETUP
 #line 59 "ANSI-proj.l"
-{printf("commentaire\n");}
+{}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
 #line 60 "ANSI-proj.l"
-{printf("const\n");/*yylval.id=strdup(yytext)*/; return CONSTANT ;}
+{yylval.code=strdup(yytext); return CONSTANT ;}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
 #line 61 "ANSI-proj.l"
-{yylval.id = strdup(yytext);printf("Lex ident\n"); return IDENTIFIER ;}
+{yylval.id = strdup(yytext); return IDENTIFIER ;}
 	YY_BREAK
 case 33:
 /* rule 33 can match eol */
 YY_RULE_SETUP
 #line 62 "ANSI-proj.l"
-{printf("Ligne act: %d\n",yylineno++);}
+{/*printf("Ligne act: %d\n",*/yylineno++;}
 	YY_BREAK
 case 34:
 YY_RULE_SETUP

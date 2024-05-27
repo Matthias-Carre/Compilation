@@ -56,10 +56,10 @@ L	 [A-Za-z]
 
 
 
-"/*"([^*]|\*+[^*/])*\*+"/"			 {printf("commentaire\n");}
-{C}+	 	 		 {printf("const\n");/*yylval.id=strdup(yytext)*/; return CONSTANT ;}
-{L}({L}|{C}|"_")*	 {yylval.id = strdup(yytext);printf("Lex ident\n"); return IDENTIFIER ;}
-\n					 {printf("Ligne act: %d\n",yylineno++);}
+"/*"([^*]|\*+[^*/])*\*+"/"			 {}
+{C}+	 	 		 {yylval.code=strdup(yytext); return CONSTANT ;}
+{L}({L}|{C}|"_")*	 {yylval.id = strdup(yytext); return IDENTIFIER ;}
+\n					 {/*printf("Ligne act: %d\n",*/yylineno++;}
 [ \t\r\v\f]+ 	 	 ;
 
 .	 {fprintf (stderr,"erreur lexicale %c à la ligne %d .\n",yytext[0], yylineno);}

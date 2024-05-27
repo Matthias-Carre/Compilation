@@ -53,12 +53,9 @@ int yylex(void);
 
 primary_expression
         : IDENTIFIER {
-                printf("test1\n");
-                printf("indentifi");
-
                 Element * e = malloc(sizeof(Element));
                 e->type=TYPE_INT;
-                e->code="";
+                e->code=$1;
                 $$=e;
                 /*
                 Symbole* sym = find_symbol(getTopTas(&tas), $1->type);
@@ -70,10 +67,8 @@ primary_expression
                 }*/
         }
         | CONSTANT {
-                printf("OUIIII\n");
                 Element * e = malloc(sizeof(Element));
                 e->type = TYPE_INT;
-                printf("yacc L76:%s\n",$1);
                 e->code = $1;
                 $$=e;
         }
@@ -93,8 +88,6 @@ postfix_expression
                 $$ = $1;
         }
         | postfix_expression '.' IDENTIFIER {
-                printf("ycc ident\n");
-                printf("ycc valeur ident L99:%s\n",$3);
                 $$->type=TYPE_INT;
         }
         | postfix_expression PTR_OP IDENTIFIER {
@@ -116,7 +109,7 @@ unary_expression
                 $$ = $1;
         }
         | unary_operator unary_expression {
-                printf("test de unaryope:%s",$1);
+
                 $$ = $2;
         }
         | SIZEOF unary_expression {
@@ -266,7 +259,7 @@ expression
 
 declaration
         : declaration_specifiers declarator ';' {
-                printf("yacc L270:%s %s\n",$1->code, $2->code );
+                printf("Yacc code 3adres:%s %s;\n",$1->code,$2->code);
                 insert_symbol_toptas(tas, $2->code, $1->type);
         }
         | struct_specifier ';' {
@@ -347,8 +340,6 @@ direct_declarator
         : IDENTIFIER {
                 Element * e = malloc(sizeof(Element));
                 e->type=TYPE_INT;
-
-                printf("yacc 352: val de $1:%s\n",$1);
   
                 e->code=$1;
 
@@ -385,27 +376,20 @@ statement
 compound_statement
         : open_accol close_accol
         | open_accol statement_list close_accol{
-                printf("DANS LE YACC:on decale\n");
         }
         | open_accol declaration_list close_accol{
-                printf("DANS LE YACC:on decale2\n");
         }
         | open_accol declaration_list statement_list close_accol{
-                printf("DANS LE YACC:on decale3\n");
         }
         ;
 
 open_accol
         :'{'{   
-                printf("DANS LE YACC:ICI LA OP8U");
-                expandTas(&tas);
-                printf("DANS LE YACC:VAL DE TAILLE TAS:%d",tas.length);
-                printf("DANS LE YACC:ouverture\n\n");
-        }
+                //printf("DANS LE YACC:ICI LA OP8U");
+                expandTas(&tas);        }
 
 close_accol
         :'}'{
-                printf("DANS LE YACC:MAIS NON");
                 //popTas(&tas);
         }
 
@@ -434,13 +418,13 @@ selection_statement
 iteration_statement
         : WHILE '(' expression ')' statement
         | FOR '(' expression_statement expression_statement expression ')' statement{
-                printf("Code 3adrs:%s\n","");
+                /*printf("Code 3adrs:%s\n","");
                 printf("Code 3adrs:%s\n","goto condX");
                 printf("Code 3adrs:%s\n","corpX:");
                 printf("Code 3adrs:%s\n","7");
                 printf("Code 3adrs:%s\n","5");
                 printf("Code 3adrs:%s\n","condX:");
-                printf("Code 3adrs:if(%s) goto corpX\n","$4");
+                printf("Code 3adrs:if(%s) goto corpX\n","$4");*/
         }
         ;
 
