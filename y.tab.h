@@ -54,25 +54,25 @@ extern int yydebug;
     YYEOF = 0,                     /* "end of file"  */
     YYerror = 256,                 /* error  */
     YYUNDEF = 257,                 /* "invalid token"  */
-    IDENTIFIER = 258,              /* IDENTIFIER  */
-    CONSTANT = 259,                /* CONSTANT  */
-    SIZEOF = 260,                  /* SIZEOF  */
-    PTR_OP = 261,                  /* PTR_OP  */
-    LE_OP = 262,                   /* LE_OP  */
-    GE_OP = 263,                   /* GE_OP  */
-    EQ_OP = 264,                   /* EQ_OP  */
-    NE_OP = 265,                   /* NE_OP  */
-    AND_OP = 266,                  /* AND_OP  */
-    OR_OP = 267,                   /* OR_OP  */
-    EXTERN = 268,                  /* EXTERN  */
-    INT = 269,                     /* INT  */
-    VOID = 270,                    /* VOID  */
-    STRUCT = 271,                  /* STRUCT  */
-    IF = 272,                      /* IF  */
-    ELSE = 273,                    /* ELSE  */
-    WHILE = 274,                   /* WHILE  */
-    FOR = 275,                     /* FOR  */
-    RETURN = 276,                  /* RETURN  */
+    SIZEOF = 258,                  /* SIZEOF  */
+    PTR_OP = 259,                  /* PTR_OP  */
+    LE_OP = 260,                   /* LE_OP  */
+    GE_OP = 261,                   /* GE_OP  */
+    EQ_OP = 262,                   /* EQ_OP  */
+    NE_OP = 263,                   /* NE_OP  */
+    AND_OP = 264,                  /* AND_OP  */
+    OR_OP = 265,                   /* OR_OP  */
+    EXTERN = 266,                  /* EXTERN  */
+    INT = 267,                     /* INT  */
+    VOID = 268,                    /* VOID  */
+    STRUCT = 269,                  /* STRUCT  */
+    IF = 270,                      /* IF  */
+    ELSE = 271,                    /* ELSE  */
+    WHILE = 272,                   /* WHILE  */
+    FOR = 273,                     /* FOR  */
+    RETURN = 274,                  /* RETURN  */
+    CONSTANT = 275,                /* CONSTANT  */
+    IDENTIFIER = 276,              /* IDENTIFIER  */
     THEN = 277                     /* THEN  */
   };
   typedef enum yytokentype yytoken_kind_t;
@@ -82,25 +82,25 @@ extern int yydebug;
 #define YYEOF 0
 #define YYerror 256
 #define YYUNDEF 257
-#define IDENTIFIER 258
-#define CONSTANT 259
-#define SIZEOF 260
-#define PTR_OP 261
-#define LE_OP 262
-#define GE_OP 263
-#define EQ_OP 264
-#define NE_OP 265
-#define AND_OP 266
-#define OR_OP 267
-#define EXTERN 268
-#define INT 269
-#define VOID 270
-#define STRUCT 271
-#define IF 272
-#define ELSE 273
-#define WHILE 274
-#define FOR 275
-#define RETURN 276
+#define SIZEOF 258
+#define PTR_OP 259
+#define LE_OP 260
+#define GE_OP 261
+#define EQ_OP 262
+#define NE_OP 263
+#define AND_OP 264
+#define OR_OP 265
+#define EXTERN 266
+#define INT 267
+#define VOID 268
+#define STRUCT 269
+#define IF 270
+#define ELSE 271
+#define WHILE 272
+#define FOR 273
+#define RETURN 274
+#define CONSTANT 275
+#define IDENTIFIER 276
 #define THEN 277
 
 /* Value type.  */
@@ -109,15 +109,19 @@ union YYSTYPE
 {
 #line 16 "structfe.y"
 
-    int intval;
-    char* id;
-    SymboleType symtype;
-    Symbole* symptr;
-    Node* nnode;
-    LinkedList* ll;
-    Element* elem;
+        int integer;
+        char * code;
+        char * str;
+        char * varname;
+        int intval;
+        char* id;
+        SymboleType symtype;
+        Symbole* symptr;
+        Node* nnode;
+        LinkedList* ll;
+        Element* elem;
 
-#line 121 "y.tab.h"
+#line 125 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

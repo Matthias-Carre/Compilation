@@ -937,12 +937,12 @@ YY_RULE_SETUP
 case 31:
 YY_RULE_SETUP
 #line 60 "ANSI-proj.l"
-{printf("const\n");yylval.id=strdup(yytext); return CONSTANT ;}
+{printf("const\n");/*yylval.id=strdup(yytext)*/; return CONSTANT ;}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
 #line 61 "ANSI-proj.l"
-{printf("val\n");yylval.id=strdup(yytext);  return IDENTIFIER ;}
+{printf("test lex:%s,et yytext:\n",yylval);yylval = strdup(yytext);printf("lex"); return IDENTIFIER ;}
 	YY_BREAK
 case 33:
 /* rule 33 can match eol */
@@ -1972,15 +1972,16 @@ void yyfree (void * ptr )
 
 #line 67 "ANSI-proj.l"
 
+
 /*
 int main(){
 	int token_courant=yylex();
 	//printf("Codes des tokens retournés par yylex: ");
 	do {
-		/printf("%d ", token_courant);
+		printf("%d ", token_courant);
 		token_courant=yylex();
 	}while (token_courant !=TOKEN_EOF);
 	return(0);
-}
-*/
+}*/
+
 

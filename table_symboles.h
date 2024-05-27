@@ -18,6 +18,7 @@ typedef enum {
 typedef struct{
     SymboleType type;
     char * code;
+    char * namevar;
 }Element;
 
 typedef struct {

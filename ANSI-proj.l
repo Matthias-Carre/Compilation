@@ -57,22 +57,23 @@ L	 [A-Za-z]
 
 
 "/*"([^*]|\*+[^*/])*\*+"/"			 {printf("commentaire\n");}
-{C}+	 	 		 {printf("const\n");yylval.id=strdup(yytext); return CONSTANT ;}
-{L}({L}|{C}|"_")*	 {printf("val\n");yylval.id=strdup(yytext);  return IDENTIFIER ;}
+{C}+	 	 		 {printf("const\n");/*yylval.id=strdup(yytext)*/; return CONSTANT ;}
+{L}({L}|{C}|"_")*	 {printf("test lex:%s,et yytext:\n",yylval);yylval = strdup(yytext);printf("lex"); return IDENTIFIER ;}
 \n					 {printf("Ligne act: %d\n",yylineno++);}
 [ \t\r\v\f]+ 	 	 ;
 
 .	 {fprintf (stderr,"erreur lexicale %c à la ligne %d .\n",yytext[0], yylineno);}
 
 %%
+
 /*
 int main(){
 	int token_courant=yylex();
 	//printf("Codes des tokens retournés par yylex: ");
 	do {
-		/printf("%d ", token_courant);
+		printf("%d ", token_courant);
 		token_courant=yylex();
 	}while (token_courant !=TOKEN_EOF);
 	return(0);
-}
-*/
+}*/
+

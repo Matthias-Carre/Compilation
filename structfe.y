@@ -14,31 +14,36 @@ int yylex(void);
 %}
 
 %union {
-    int intval;
-    char* id;
-    SymboleType symtype;
-    Symbole* symptr;
-    Node* nnode;
-    LinkedList* ll;
-    Element* elem;
+        int integer;
+        char * code;
+        char * str;
+        char * varname;
+        int intval;
+        char* id;
+        SymboleType symtype;
+        Symbole* symptr;
+        Node* nnode;
+        LinkedList* ll;
+        Element* elem;
 }
 
-%token <id> IDENTIFIER CONSTANT
+//%token <id> IDENTIFIER CONSTANT
 //%token SIZEOF PTR_OP LE_OP GE_OP EQ_OP NE_OP
 //%token AND_OP OR_OP EXTERN INT VOID STRUCT IF ELSE WHILE FOR RETURN
 //%type <symtype> type_specifier declaration_specifiers struct_specifier additive_expression multiplicative_expression primary_expression expression argument_expression_list
 //%type <symtype> logical_or_expression logical_and_expression equality_expression relational_expression unary_expression postfix_expression 
-%type <id> declarator direct_declarator
+//%type <id> declarator direct_declarator
 
-
-%token <elem> SIZEOF PTR_OP LE_OP GE_OP EQ_OP NE_OP
+%token <elem> SIZEOF PTR_OP LE_OP GE_OP EQ_OP NE_OP 
 %token <elem> AND_OP OR_OP EXTERN INT VOID STRUCT IF ELSE WHILE FOR RETURN
+%token <integer> CONSTANT
+%token <elem> IDENTIFIER
 
 %type <elem> type_specifier declaration_specifiers struct_specifier additive_expression multiplicative_expression primary_expression expression argument_expression_list
 %type <elem> logical_or_expression logical_and_expression equality_expression relational_expression unary_expression postfix_expression
-%type <elem> open_accol close_accol 
+%type <elem> open_accol close_accol declarator direct_declarator
 %type <elem> iteration_statement expression_statement statement compound_statement selection_statement jump_statement
-%type <id> unary_operator
+%type <id> unary_operator 
 %nonassoc THEN
 %nonassoc ELSE
 %start program
@@ -49,8 +54,12 @@ int yylex(void);
 primary_expression
         : IDENTIFIER {
                 printf("test1\n");
+                printf("indentifi");
 
-                $$->code = $1;
+                Element * e = malloc(sizeof(Element));
+                e->type=TYPE_INT;
+                e->code="";
+                $$=e;
                 /*
                 Symbole* sym = find_symbol(getTopTas(&tas), $1->type);
                 if (sym) {
@@ -61,8 +70,14 @@ primary_expression
                 }*/
         }
         | CONSTANT {
-                printf("test1\n");
-                $$->type = TYPE_INT;
+                printf("OUIIII\n");
+                Element * e = malloc(sizeof(Element));
+                e->type=TYPE_INT;
+                char * tmp;
+                sprintf(tmp,"$i",$1);
+                e->code=strdup(tmp);
+                free(tmp);
+                $$=e;
         }
         | '(' expression ')' {
                 $$ = $2;
@@ -250,7 +265,8 @@ expression
 
 declaration
         : declaration_specifiers declarator ';' {
-                insert_symbol_toptas(tas, $2, $1->type);
+                
+                insert_symbol_toptas(tas, $2->code, $1->type);
         }
         | struct_specifier ';' {
                 // À implémenter si nécessaire
@@ -268,12 +284,16 @@ declaration_specifiers
 
 type_specifier
         : VOID {
-                $$->type = TYPE_VOID;
+                Element * e = malloc(sizeof(Element));
+                e->type=TYPE_INT;
+                e->code="void";
+                $$=e;
         }
         | INT {
                 printf("test122\n");
                 Element * e = malloc(sizeof(Element));
                 e->type = TYPE_INT;
+                e->code = "int";
                 printf("test1\n");
                 $$ = e;
                 printf("C'est bon\n");
@@ -285,13 +305,22 @@ type_specifier
 
 struct_specifier
         : STRUCT IDENTIFIER '{' struct_declaration_list '}' {
-                $$->type = TYPE_STRUCT;
+                Element * e = malloc(sizeof(Element));
+                e->type=TYPE_STRUCT;
+                e->code="";
+                $$=e;
         }
         | STRUCT '{' struct_declaration_list '}' {
-                $$->type = TYPE_STRUCT;
+                Element * e = malloc(sizeof(Element));
+                e->type=TYPE_STRUCT;
+                e->code="";
+                $$=e;
         }
         | STRUCT IDENTIFIER {
-                $$->type = TYPE_STRUCT;
+                Element * e = malloc(sizeof(Element));
+                e->type=TYPE_STRUCT;
+                e->code="";
+                $$=e;
         }
         ;
 
@@ -301,7 +330,9 @@ struct_declaration_list
         ;
 
 struct_declaration
-        : type_specifier declarator ';'
+        : type_specifier declarator ';'{
+                printf("code3adrs:~%s %s\n",$1->code,$2->code);
+        }
         ;
 
 declarator
@@ -315,7 +346,17 @@ declarator
 
 direct_declarator
         : IDENTIFIER {
-                $$ = $1;
+                printf("yacc decla");
+                Element * e = malloc(sizeof(Element));
+                e->type=TYPE_INT;
+
+                char * tmp;
+                sprintf(tmp,"$i",$1);
+                e->code=strdup(tmp);
+                free(tmp);
+
+                e->code=tmp;
+                $$=e;
         }
         | '(' declarator ')' {
                 $$ = $2;
