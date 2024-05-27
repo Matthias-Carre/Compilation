@@ -15,7 +15,10 @@ typedef enum {
     TYPE_STRUCT
 } SymboleType;
 
-extern const char* TypesNames[];
+typedef struct{
+    SymboleType type;
+    char * code;
+}Element;
 
 typedef struct {
     char* name;

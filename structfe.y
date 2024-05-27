@@ -7,8 +7,8 @@
 extern int yylineno;
 void yyerror(const char *msg);
 
-const char* TypesNames[] = {"TYPE_ERROR", "TYPE_INT", "TYPE_VOID", "TYPE_STRUCT"};
-extern int yylval; // Définition de yylval
+
+//extern int yylval; // Définition de yylval
 
 %}
 
@@ -19,6 +19,7 @@ extern int yylval; // Définition de yylval
     struct Symbole* symptr;
     struct Node* nnode;
     struct LinkedList* ll;
+    struct Element elem;
 }
 
 %token <id> IDENTIFIER CONSTANT
@@ -27,6 +28,7 @@ extern int yylval; // Définition de yylval
 %type <symtype> type_specifier declaration_specifiers struct_specifier additive_expression multiplicative_expression primary_expression expression argument_expression_list
 %type <symtype> logical_or_expression logical_and_expression equality_expression relational_expression unary_expression postfix_expression 
 %type <id> declarator direct_declarator
+//%type <symptr> iteration_statement expression_statement statement
 
 %start program
 
@@ -34,13 +36,14 @@ extern int yylval; // Définition de yylval
 
 primary_expression
         : IDENTIFIER {
+                /*
                 Symbole* sym = find_symbol(getTopTas(&tas), $1);
                 if (sym) {
                     $$ = sym->type;
                 } else {
                     fprintf(stderr, "Erreur: Identifiant %s non déclaré à la ligne %d\n", $1, yylineno);
                     YYERROR;
-                }
+                }*/
         }
         | CONSTANT {
                 $$ = TYPE_INT;
@@ -321,11 +324,31 @@ statement
         ;
 
 compound_statement
-        : '{' '}'
-        | '{' statement_list '}'
-        | '{' declaration_list '}'
-        | '{' declaration_list statement_list '}'
+        : open_accol close_accol
+        | open_accol statement_list close_accol{
+                printf("DANS LE YACC:on decale\n");
+        }
+        | open_accol declaration_list close_accol{
+                printf("DANS LE YACC:on decale2\n");
+        }
+        | open_accol declaration_list statement_list close_accol{
+                printf("DANS LE YACC:on decale3\n");
+        }
         ;
+
+open_accol
+        :'{'{   
+                printf("DANS LE YACC:ICI LA OP8U");
+                expandTas(&tas);
+                printf("DANS LE YACC:VAL DE TAILLE TAS:%d",tas.length);
+                printf("DANS LE YACC:ouverture\n\n");
+        }
+
+close_accol
+        :'}'{
+                printf("DANS LE YACC:MAIS NON");
+                //popTas(&tas);
+        }
 
 declaration_list
         : declaration
@@ -349,7 +372,15 @@ selection_statement
 
 iteration_statement
         : WHILE '(' expression ')' statement
-        | FOR '(' expression_statement expression_statement expression ')' statement
+        | FOR '(' expression_statement expression_statement expression ')' statement{
+                printf("Code 3adrs:%s\n","");
+                printf("Code 3adrs:%s\n","goto condX");
+                printf("Code 3adrs:%s\n","corpX:");
+                printf("Code 3adrs:%s\n","7");
+                printf("Code 3adrs:%s\n","5");
+                printf("Code 3adrs:%s\n","condX:");
+                printf("Code 3adrs:if(%s) goto corpX\n","$4");
+        }
         ;
 
 jump_statement

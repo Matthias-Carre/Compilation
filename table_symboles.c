@@ -1,5 +1,6 @@
 #include "table_symboles.h"
 
+const char * typesNamesChar[]={"INT","VOID"};
 LinkedList symbol_table[SIZE];
 Tas tas;
 
@@ -54,7 +55,7 @@ void addinTas(Tas* t, LinkedList* ts) {
     if (t->length < MAX) {
         t->list[t->length] = ts;
         t->length++;
-        print_symbol_table(t->list[t->length - 1]);
+        //print_symbol_table(t->list[t->length - 1]);
 
     } else {
         //tas plein
@@ -105,22 +106,13 @@ Symbole* find_symbol(LinkedList* table, char* name) {
 
 void insert_symbol(LinkedList* table, char* name, SymboleType type) {
     int index = fonction_hash(name);
-    printf("apres hash\n");
+
     Node* new_node = (Node*)malloc(sizeof(Node));
-    printf("apres maloc\n");
     new_node->symbole.name = strdup(name);
-    printf("apres strdup\n");
     new_node->symbole.type = type;
-    printf("apres 1\n");
-    printf("Test des Var:\n");
-    printf("%s\n",new_node->symbole.name);
-    printf("index:%d\n",table);
     new_node->next = table[index].head;
-    printf("apres 2\n");
     table[index].head = new_node;
-    printf("apres 3\n");
     table[index].length++;
-    printf("apres 4\n");
 }
 void add_symbol(LinkedList* tab,char* name,SymboleType st){
     if(find_symbol(tab,name)==NULL){
