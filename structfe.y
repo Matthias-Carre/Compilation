@@ -1,4 +1,4 @@
-
+//lex ANSI-proj.l && yacc -d structfe.y && gcc lex.yy.c y.tab.c table_symboles.c -o sortie
 %{
 #include "table_symboles.h"
 #include <stdio.h>
