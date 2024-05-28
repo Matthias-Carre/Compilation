@@ -688,8 +688,8 @@ static const yytype_int16 yyrline[] =
      345,   349,   355,   361,   368,   375,   381,   387,   396,   397,
      401,   407,   411,   417,   424,   427,   431,   440,   444,   451,
      458,   459,   460,   461,   462,   466,   467,   469,   471,   476,
-     484,   492,   493,   497,   498,   502,   505,   509,   510,   528,
-     529,   541,   546,   554,   555,   559,   560,   564
+     484,   492,   493,   497,   498,   502,   505,   509,   510,   549,
+     550,   562,   567,   575,   576,   580,   581,   585
 };
 #endif
 
@@ -1428,7 +1428,7 @@ yyreduce:
 #line 97 "structfe.y"
                                                               {
 
-                //printf("Yacc code 3adrs:%s(%s)\n",$1->code,$3->code);
+                ////printf("Yacc code 3adrs:%s(%s)\n",$1->code,$3->code);
 
                 char* ligne=concat((yyvsp[-3].elem)->code,concat("(",concat((yyvsp[-1].elem)->code,")")));
                 addline(fc,ligne);
@@ -1549,7 +1549,7 @@ yyreduce:
                 valtmp++;
                 char* var=concat("_t",chiffre);
                 
-                printf("Yacc code 3adrs:%s = %s * %s\n",var,(yyvsp[-2].elem)->code,(yyvsp[0].elem)->code);
+                //printf("Yacc code 3adrs:%s = %s * %s\n",var,$1->code,$3->code);
                 char* ligne=concat(var,concat(" = ",concat((yyvsp[-2].elem)->code,concat(" * ",(yyvsp[0].elem)->code))));
                 addline(fc,ligne);
                 (yyval.elem)->code = var;
@@ -1570,7 +1570,7 @@ yyreduce:
                 valtmp++;
                 char* var=concat("_t",chiffre);
                 
-                printf("Yacc code 3adrs:%s = %s / %s\n",var,(yyvsp[-2].elem)->code,(yyvsp[0].elem)->code);
+                //printf("Yacc code 3adrs:%s = %s / %s\n",var,$1->code,$3->code);
 
                 char* ligne=concat(var,concat(" = ",concat((yyvsp[-2].elem)->code,concat(" / ",(yyvsp[0].elem)->code))));
                 addline(fc,ligne);
@@ -1600,7 +1600,7 @@ yyreduce:
                 valtmp++;
                 char* var=concat("_t",chiffre);
                 
-                printf("Yacc code 3adrs:%s = %s + %s\n",var,(yyvsp[-2].elem)->code,(yyvsp[0].elem)->code);
+                //printf("Yacc code 3adrs:%s = %s + %s\n",var,$1->code,$3->code);
                 char* ligne = concat(var,concat(" = ",concat((yyvsp[-2].elem)->code,concat(" + ",(yyvsp[0].elem)->code))));
                 addline(fc,ligne);
                 (yyval.elem)->code = var;
@@ -1622,7 +1622,7 @@ yyreduce:
                 valtmp++;
                 char* var=concat("_t",chiffre);
                 
-                printf("Yacc code 3adrs:%s = %s - %s\n",var,(yyvsp[-2].elem)->code,(yyvsp[0].elem)->code);
+                //printf("Yacc code 3adrs:%s = %s - %s\n",var,$1->code,$3->code);
                 char* ligne=concat(var,concat(" = ",concat((yyvsp[-2].elem)->code,concat(" - ",(yyvsp[0].elem)->code))));
                 addline(fc,ligne);
                 (yyval.elem)->code = var;
@@ -1774,7 +1774,7 @@ yyreduce:
                     fprintf(stderr, "Erreur: Assignation entre types incompatibles à la ligne %d\n", yylineno);
                     YYERROR;
                 }
-                printf("yacc code 3adrs:%s = %s;\n",(yyvsp[-2].elem)->code,(yyvsp[0].elem)->code);
+                //printf("Yacc code 3adrs:%s = %s;\n",$1->code,$3->code);
                 char* ligne=concat((yyvsp[-2].elem)->code,concat(" = ",(yyvsp[0].elem)->code));
                 addline(fc,ligne);
                 (yyval.elem) = (yyvsp[-2].elem);
@@ -1785,7 +1785,7 @@ yyreduce:
   case 38: /* declaration: declaration_specifiers declarator ';'  */
 #line 333 "structfe.y"
                                                 {
-                printf("yacc code 3adrs:%s %s;\n",(yyvsp[-2].elem)->code,(yyvsp[-1].elem)->code);
+                //printf("Yacc code 3adrs:%s %s;\n",$1->code,$2->code);
                 char* ligne=concat((yyvsp[-2].elem)->code,concat(" ",(yyvsp[-1].elem)->code));
                 addline(fc,ligne);
                 insert_symbol_toptas(tas, (yyvsp[-1].elem)->code, (yyvsp[-2].elem)->type);
@@ -1940,7 +1940,7 @@ yyreduce:
   case 56: /* direct_declarator: direct_declarator '(' ')'  */
 #line 431 "structfe.y"
                                     {
-                printf("yacc code 3adrs:%s %s()\n",typesNames[(yyvsp[-2].elem)->type],(yyvsp[-2].elem)->code);
+                //printf("Yacc code 3adrs:%s %s()\n",typesNames[$1->type],$1->code);
                 char* ligne=concat(typesNames[(yyvsp[-2].elem)->type],concat(" ",concat((yyvsp[-2].elem)->code,"()")));
                 addline(fc,ligne);
                 (yyval.elem) = (yyvsp[-2].elem);
@@ -1999,7 +1999,7 @@ yyreduce:
   case 69: /* open_accol: '{'  */
 #line 476 "structfe.y"
             {   
-                printf("Yacc code 3adrs:{\n");
+                //printf("Yacc code 3adrs:{\n");
                 char* ligne="{";
                 addline(fc,ligne);
                 expandTas(&tas);        
@@ -2010,7 +2010,7 @@ yyreduce:
   case 70: /* close_accol: '}'  */
 #line 484 "structfe.y"
             {
-                printf("Yacc code 3adrs:}\n");
+                //printf("Yacc code 3adrs:}\n");
                 char* ligne="}";
                 addline(fc,ligne);
                 popTas(&tas);
@@ -2035,19 +2035,40 @@ yyreduce:
                 char* finif =increm(&fin,"fin");
                 //printf("Yacc L488 cond:%s\n",cond);
 
-                printf("Yacc code 3adrs:goto %s\n",concat(condif,":"));
+                char* ligne=concat("goto ",concat(condif,":"));
+                setlignenplushaut(fc,ligne,2);
+
+
                 printf("Yacc code 3adrs:%s\n",concat(corpif,":"));
-                printf("Yacc code 3adrs:code de:%s\n",(yyvsp[-2].elem)->code);
+                ligne=concat(corpif,":");
+                setlignenplushaut(fc,ligne,2);
+
+                
+                //printf("Yacc code 3adrs:code de:%s\n",$5->code);
+                //ligne=concat("CODE:",$5->code);
+                //addline(fc,ligne);
+
                 printf("Yacc code 3adrs:goto %s\n",finif);
+                ligne=concat("goto ",finif);
+                setlignenplushaut(fc,ligne,1);
+
                 printf("Yacc code 3adrs:%s\n",concat(condif,":"));
+                ligne=concat(condif,":");
+                setlignenplushaut(fc,ligne,1);
+
                 printf("Yacc code 3adrs:if(%s) goto %s:\n",(yyvsp[-4].elem)->code,corpif);
+                ligne=concat("if(",concat((yyvsp[-4].elem)->code,concat(") goto ",concat(corpif,":"))));
+                setlignenplushaut(fc,ligne,1);
+
                 printf("Yacc code 3adrs:%s\n\n",concat(finif,":"));
+                ligne=concat(finif,":\n\n");
+                addline(fc,ligne);
         }
-#line 2047 "y.tab.c"
+#line 2068 "y.tab.c"
     break;
 
   case 80: /* iteration_statement: FOR '(' expression_statement expression_statement expression ')' statement  */
-#line 529 "structfe.y"
+#line 550 "structfe.y"
                                                                                     {
                 /*printf("Code 3adrs:%s\n","");
                //printf("Code 3adrs:%s\n","goto condX");
@@ -2057,39 +2078,39 @@ yyreduce:
                //printf("Code 3adrs:%s\n","condX:");
                //printf("Code 3adrs:if(%s) goto corpX\n","$4");*/
         }
-#line 2061 "y.tab.c"
+#line 2082 "y.tab.c"
     break;
 
   case 81: /* jump_statement: RETURN ';'  */
-#line 541 "structfe.y"
+#line 562 "structfe.y"
                     {
-                printf("yacc code 3adrs:return;\n");
+                //printf("Yacc code 3adrs:return;\n");
                 char* ligne="return;";
                 addline(fc,ligne);
         }
-#line 2071 "y.tab.c"
+#line 2092 "y.tab.c"
     break;
 
   case 82: /* jump_statement: RETURN expression ';'  */
-#line 546 "structfe.y"
+#line 567 "structfe.y"
                                {
-                printf("yacc code 3adrs:return %s;\n",(yyvsp[-1].elem)->code);
+                //printf("Yacc code 3adrs:return %s;\n",$2->code);
                 char* ligne=concat("return ",concat((yyvsp[-1].elem)->code,";"));
                 addline(fc,ligne);
         }
-#line 2081 "y.tab.c"
+#line 2102 "y.tab.c"
     break;
 
   case 87: /* function_definition: declaration_specifiers declarator compound_statement  */
-#line 564 "structfe.y"
+#line 585 "structfe.y"
                                                               {
                 printf("Yacc518\n");
         }
-#line 2089 "y.tab.c"
+#line 2110 "y.tab.c"
     break;
 
 
-#line 2093 "y.tab.c"
+#line 2114 "y.tab.c"
 
       default: break;
     }
@@ -2282,7 +2303,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 569 "structfe.y"
+#line 590 "structfe.y"
 
 void yyerror(const char *msg) {
     fprintf(stderr, "Erreur de syntaxe : %s à la ligne: %d ???\n", msg, yylineno);

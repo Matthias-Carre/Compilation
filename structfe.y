@@ -96,7 +96,7 @@ postfix_expression
         }
         | postfix_expression '(' argument_expression_list ')' {
 
-                //printf("Yacc code 3adrs:%s(%s)\n",$1->code,$3->code);
+                ////printf("Yacc code 3adrs:%s(%s)\n",$1->code,$3->code);
 
                 char* ligne=concat($1->code,concat("(",concat($3->code,")")));
                 addline(fc,ligne);
@@ -169,7 +169,7 @@ multiplicative_expression
                 valtmp++;
                 char* var=concat("_t",chiffre);
                 
-                printf("Yacc code 3adrs:%s = %s * %s\n",var,$1->code,$3->code);
+                //printf("Yacc code 3adrs:%s = %s * %s\n",var,$1->code,$3->code);
                 char* ligne=concat(var,concat(" = ",concat($1->code,concat(" * ",$3->code))));
                 addline(fc,ligne);
                 $$->code = var;
@@ -185,7 +185,7 @@ multiplicative_expression
                 valtmp++;
                 char* var=concat("_t",chiffre);
                 
-                printf("Yacc code 3adrs:%s = %s / %s\n",var,$1->code,$3->code);
+                //printf("Yacc code 3adrs:%s = %s / %s\n",var,$1->code,$3->code);
 
                 char* ligne=concat(var,concat(" = ",concat($1->code,concat(" / ",$3->code))));
                 addline(fc,ligne);
@@ -208,7 +208,7 @@ additive_expression
                 valtmp++;
                 char* var=concat("_t",chiffre);
                 
-                printf("Yacc code 3adrs:%s = %s + %s\n",var,$1->code,$3->code);
+                //printf("Yacc code 3adrs:%s = %s + %s\n",var,$1->code,$3->code);
                 char* ligne = concat(var,concat(" = ",concat($1->code,concat(" + ",$3->code))));
                 addline(fc,ligne);
                 $$->code = var;
@@ -225,7 +225,7 @@ additive_expression
                 valtmp++;
                 char* var=concat("_t",chiffre);
                 
-                printf("Yacc code 3adrs:%s = %s - %s\n",var,$1->code,$3->code);
+                //printf("Yacc code 3adrs:%s = %s - %s\n",var,$1->code,$3->code);
                 char* ligne=concat(var,concat(" = ",concat($1->code,concat(" - ",$3->code))));
                 addline(fc,ligne);
                 $$->code = var;
@@ -322,7 +322,7 @@ expression
                     fprintf(stderr, "Erreur: Assignation entre types incompatibles à la ligne %d\n", yylineno);
                     YYERROR;
                 }
-                printf("yacc code 3adrs:%s = %s;\n",$1->code,$3->code);
+                //printf("Yacc code 3adrs:%s = %s;\n",$1->code,$3->code);
                 char* ligne=concat($1->code,concat(" = ",$3->code));
                 addline(fc,ligne);
                 $$ = $1;
@@ -331,7 +331,7 @@ expression
 
 declaration
         : declaration_specifiers declarator ';' {
-                printf("yacc code 3adrs:%s %s;\n",$1->code,$2->code);
+                //printf("Yacc code 3adrs:%s %s;\n",$1->code,$2->code);
                 char* ligne=concat($1->code,concat(" ",$2->code));
                 addline(fc,ligne);
                 insert_symbol_toptas(tas, $2->code, $1->type);
@@ -429,7 +429,7 @@ direct_declarator
                 $$->code=concat($1->code,concat("(",concat($3->code,")")));
         }
         | direct_declarator '(' ')' {
-                printf("yacc code 3adrs:%s %s()\n",typesNames[$1->type],$1->code);
+                //printf("Yacc code 3adrs:%s %s()\n",typesNames[$1->type],$1->code);
                 char* ligne=concat(typesNames[$1->type],concat(" ",concat($1->code,"()")));
                 addline(fc,ligne);
                 $$ = $1;
@@ -474,7 +474,7 @@ compound_statement
 
 open_accol
         :'{'{   
-                printf("Yacc code 3adrs:{\n");
+                //printf("Yacc code 3adrs:{\n");
                 char* ligne="{";
                 addline(fc,ligne);
                 expandTas(&tas);        
@@ -482,7 +482,7 @@ open_accol
 
 close_accol
         :'}'{
-                printf("Yacc code 3adrs:}\n");
+                //printf("Yacc code 3adrs:}\n");
                 char* ligne="}";
                 addline(fc,ligne);
                 popTas(&tas);
@@ -514,13 +514,34 @@ selection_statement
                 char* finif =increm(&fin,"fin");
                 //printf("Yacc L488 cond:%s\n",cond);
 
-                printf("Yacc code 3adrs:goto %s\n",concat(condif,":"));
+                char* ligne=concat("goto ",concat(condif,":"));
+                setlignenplushaut(fc,ligne,2);
+
+
                 printf("Yacc code 3adrs:%s\n",concat(corpif,":"));
-                printf("Yacc code 3adrs:code de:%s\n",$5->code);
+                ligne=concat(corpif,":");
+                setlignenplushaut(fc,ligne,2);
+
+                
+                //printf("Yacc code 3adrs:code de:%s\n",$5->code);
+                //ligne=concat("CODE:",$5->code);
+                //addline(fc,ligne);
+
                 printf("Yacc code 3adrs:goto %s\n",finif);
+                ligne=concat("goto ",finif);
+                setlignenplushaut(fc,ligne,1);
+
                 printf("Yacc code 3adrs:%s\n",concat(condif,":"));
+                ligne=concat(condif,":");
+                setlignenplushaut(fc,ligne,1);
+
                 printf("Yacc code 3adrs:if(%s) goto %s:\n",$3->code,corpif);
+                ligne=concat("if(",concat($3->code,concat(") goto ",concat(corpif,":"))));
+                setlignenplushaut(fc,ligne,1);
+
                 printf("Yacc code 3adrs:%s\n\n",concat(finif,":"));
+                ligne=concat(finif,":\n\n");
+                addline(fc,ligne);
         }
         ;
 
@@ -539,12 +560,12 @@ iteration_statement
 
 jump_statement
         : RETURN ';'{
-                printf("yacc code 3adrs:return;\n");
+                //printf("Yacc code 3adrs:return;\n");
                 char* ligne="return;";
                 addline(fc,ligne);
         }
         | RETURN expression ';'{
-                printf("yacc code 3adrs:return %s;\n",$2->code);
+                //printf("Yacc code 3adrs:return %s;\n",$2->code);
                 char* ligne=concat("return ",concat($2->code,";"));
                 addline(fc,ligne);
         }

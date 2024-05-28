@@ -3,7 +3,7 @@
 
 typedef struct Filechar{
     int nbrlignes;
-    char* tab[200];
+    char* tab[1000];
 }Filechar;
 
 void printtablignes(Filechar* t);
