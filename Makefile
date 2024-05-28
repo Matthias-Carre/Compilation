@@ -1,4 +1,4 @@
-TARGET = sortie
+TARGET = intermediaire.c
 
 SRCS = lex.yy.c y.tab.c table_symboles.c filegestion.c
 

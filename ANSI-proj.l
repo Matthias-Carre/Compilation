@@ -52,7 +52,7 @@ L	 [A-Za-z]
 "="			{return '=';}
 "&"			{return '&';}
 ","			{return ',';}
-"->"		{}//return PTR;}
+"->"		{return PTR;}
 
 "/*"([^*]|\*+[^*/])*\*+"/"			{}//skip des commentaires entre balise
 "//".*"\n"							{yylineno++;}//skip des commentaires sur tout la ligne

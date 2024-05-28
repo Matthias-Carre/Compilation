@@ -2,11 +2,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+extern int yylineno;
 
-void yyerror(const char *msg) {
-    fprintf(stderr, "Erreur de syntaxe : %s\n", msg);
-}
-
+int yylex(void);
+void yyerror(const char *msg);
 int yylex(void);
 %}
 
@@ -21,7 +20,9 @@ int yylex(void);
 %%
 
 primary_expression
-    : IDENTIFIER
+    : IDENTIFIER{
+        printf("Ident L24\n");
+    }
     | CONSTANT
     ;
 
@@ -80,7 +81,10 @@ expression
     ;
 
 declaration
-    : declaration_specifiers declarator ';'
+    : declaration_specifiers declarator ';'{
+        printf("declaration l85\n");
+    }
+    | declaration_specifiers declarator
     ;
 
 declaration_specifiers
@@ -90,7 +94,9 @@ declaration_specifiers
 
 type_specifier
     : VOID
-    | INT
+    | INT{
+        printf("yacc L98\n");
+    }
     ;
 
 declarator
@@ -99,7 +105,10 @@ declarator
     ;
 
 direct_declarator
-    : IDENTIFIER
+    : IDENTIFIER{
+        printf("ident\n");
+
+    }
     | direct_declarator '(' parameter_list ')'
     | direct_declarator '(' ')'
     ;
@@ -139,7 +148,10 @@ statement_list
     ;
 
 labeled_statement
-    : IDENTIFIER ':' statement
+    : IDENTIFIER ':' statement{
+        printf("ident\n");
+
+    }
     ;
 
 expression_statement
@@ -148,13 +160,17 @@ expression_statement
     ;
 
 selection_statement
-    : IF '(' equality_expression ')' GOTO IDENTIFIER ';'
+    : IF '(' equality_expression ')' GOTO IDENTIFIER ';'{
+        printf("ICILA\n");
+    }
     ;
 
 jump_statement
     : RETURN ';'
     | RETURN expression ';'
-    | GOTO IDENTIFIER ';'
+    | GOTO IDENTIFIER ';'{
+        printf("ICILA\n");
+    }
     ;
 
 external_declaration
@@ -168,7 +184,13 @@ function_definition
 
 %%
 
+void yyerror(const char *msg) {
+    fprintf(stderr, "Erreur de syntaxe : %s à la ligne: %d ???\n", msg, yylineno);
+}
+
+
 int main() {
+    printf("ICI");
     yyparse();
     return 0;
 }
@@ -176,4 +198,3 @@ int main() {
 int yywrap(void) {
     return 1;
 }
-
