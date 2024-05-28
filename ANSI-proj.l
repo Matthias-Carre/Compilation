@@ -1,4 +1,4 @@
-%option noyywrap
+%option noyywrap noinput nounput
 %{
  #include <stdio.h>
  #include <stdlib.h>
@@ -14,7 +14,6 @@
 
 C	 [0-9]
 L	 [A-Za-z]
-
 
 %%
 
@@ -54,9 +53,6 @@ L	 [A-Za-z]
 "&"			{return '&';}
 ","			{return ',';}
 
-
-
-
 "/*"([^*]|\*+[^*/])*\*+"/"			{}//skip des commentaires entre balise
 "//".*"\n"							{yylineno++;}//skip des commentaires sur tout la ligne
 {C}+	 	 		 				{yylval.code=strdup(yytext); return CONSTANT ;}
@@ -78,4 +74,3 @@ int main(){
 	}while (token_courant !=TOKEN_EOF);
 	return(0);
 }*/
-
