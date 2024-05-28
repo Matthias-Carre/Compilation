@@ -12,7 +12,7 @@ void addline(Filechar* f,char* chaine){
     }
 void setinfile(Filechar* fc,char* namefileout){
     FILE *fichier;
-    const char *fichierout = "out.txt";
+    const char *fichierout = namefileout;
     fichier=fopen(fichierout,"w");
 
     for(int i=0;i<fc->nbrlignes;i++){

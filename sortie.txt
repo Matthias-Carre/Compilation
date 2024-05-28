@@ -1,0 +1,34 @@
+extern int printd(int i)
+int main()
+{
+int i
+int j
+i = 45000
+_t0 = 123 * -1
+j = _t0
+_t1 = i - j
+printd(_t1)
+_t2 = 45000 - j
+printd(_t2)
+_t3 = i - 123
+printd(_t3)
+_t4 = 45000 - 123
+printd(_t4)
+_t5 = j + 0
+_t6 = i - _t5
+printd(_t6)
+_t7 = i + 0
+_t8 = _t7 - j
+printd(_t8)
+_t9 = i + 0
+_t10 = j + 0
+_t11 = _t9 - _t10
+printd(_t11)
+_t12 = i + 0
+_t13 = _t12 - 123
+printd(_t13)
+_t14 = j + 0
+_t15 = 45000 - _t14
+printd(_t15)
+return 0;
+}

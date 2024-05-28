@@ -652,11 +652,18 @@ void yyerror(const char *msg) {
 }
 
 int main(int argc, char *argv[]) {
+        char* filename;
     if (argc < 2) {
-        fprintf(stderr, "Usage: %s <input file>\n", argv[0]);
+        fprintf(stderr," Usage:%s <input file> (-o <name file output>)\n", argv[0]);
         return 1;
     }
-
+        if(argc == 4){
+                if(strcmp(argv[2],"-o")==0){
+                        filename=argv[3];
+                }
+        }else{
+                fprintf(stderr," Usage:%s <input file> (-o <name file output>)\n", argv[0]);
+        }
     FILE *file = fopen(argv[1], "r");
     if (!file) {
         perror("Error opening file");
@@ -675,7 +682,7 @@ int main(int argc, char *argv[]) {
     addinTas(&tas, symbol_table);
     yyparse();
     fclose(file);
-    setinfile(fc, "");
+    setinfile(fc, filename);
 
     return 0;
 }
