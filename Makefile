@@ -1,6 +1,6 @@
 TARGET = sortie
 
-SRCS = lex.yy.c y.tab.c table_symboles.c
+SRCS = lex.yy.c y.tab.c table_symboles.c filegestion.c
 
 CFLAGS = -Wall -Wno-implicit-function-declaration
 LDFLAGS = -lfl
@@ -23,7 +23,10 @@ y.tab.c y.tab.h: structfe.y
 table_symboles.o: table_symboles.c table_symboles.h
 	$(CC) $(CFLAGS) -c table_symboles.c
 
+filegestion.o: filegestion.c filegestion.h
+	$(CC) $(CFLAGS) -c filegestion.c
+
 clean:
-	rm -f $(TARGET) lex.yy.c y.tab.c y.tab.h table_symboles.o
+	rm -f $(TARGET) lex.yy.c y.tab.c y.tab.h table_symboles.o filegestion.o
 
 .PHONY: all clean
