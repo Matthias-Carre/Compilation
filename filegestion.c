@@ -1,7 +1,4 @@
-
-#include <filegestion.h>
-
-
+#include "filegestion.h"
 
 void printtablignes(Filechar* t){
     for(int i=0;i<(t->nbrlignes);i++){

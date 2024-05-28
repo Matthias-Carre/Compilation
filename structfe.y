@@ -1,9 +1,10 @@
-//lex ANSI-proj.l && yacc -d structfe.y && gcc lex.yy.c y.tab.c table_symboles.c -o sortie
+//lex ANSI-proj.l && yacc -d structfe.y && gcc lex.yy.c y.tab.c table_symboles.c filegestion.c -o sortie
 %{
 #include "table_symboles.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "filegestion.h"
 
 extern int yylineno;
 void yyerror(const char *msg);

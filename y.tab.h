@@ -107,7 +107,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 21 "structfe.y"
+#line 22 "structfe.y"
 
         int integer;
         char * code;
