@@ -52,11 +52,13 @@ L	 [A-Za-z]
 "<"			{return '<';}
 "="			{return '=';}
 "&"			{return '&';}
+","			{return ',';}
 
 
 
 
-"/*"([^*]|\*+[^*/])*\*+"/"			{}
+"/*"([^*]|\*+[^*/])*\*+"/"			{}//skip des commentaires entre balise
+"//".*"\n"							{yylineno++;}//skip des commentaires sur tout la ligne
 {C}+	 	 		 				{yylval.code=strdup(yytext); return CONSTANT ;}
 {L}({L}|{C}|"_")*	 				{yylval.code = strdup(yytext); return IDENTIFIER ;}
 \n					 				{/*printf("Ligne act: %d\n",*/yylineno++;}
