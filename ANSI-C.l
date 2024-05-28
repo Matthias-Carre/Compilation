@@ -3,13 +3,8 @@
 #include "y.tab.h"
 %}
 
-D                       [0-9]
-L                       [a-zA-Z_]
-H                       [a-fA-F0-9]
-E                       [Ee][+-]?{D}+
-FS                      (f|F|l|L)
-IS                      (u|U|l|L)*
-
+C	 [0-9]
+L	 [A-Za-z]
 /* Définition des règles */
 
 %%  
@@ -20,16 +15,8 @@ IS                      (u|U|l|L)*
 "return"                { return RETURN; }
 "void"                  { return VOID; }
 
-{L}({L}|{D})*           { return IDENTIFIER; }
-
-0[xX]{H}+{IS}?          { return CONSTANT; }
-0{D}+{IS}?              { return CONSTANT; }
-{D}+{IS}?               { return CONSTANT; }
-L?'(\\.|[^\\'])+'       { return CONSTANT; }
-
-{D}+{E}{FS}?            { return CONSTANT; }
-{D}*"."{D}+({E})?{FS}?  { return CONSTANT; }
-{D}+"."{D}*({E})?{FS}?  { return CONSTANT; }
+{C}+	 	 		 				{return CONSTANT ;}
+{L}({L}|{C}|"_")*	 				{return IDENTIFIER ;}
 
 L?\"(\\.|[^\\"])*\"     { return CONSTANT; }
 
