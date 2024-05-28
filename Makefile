@@ -1,6 +1,6 @@
-TARGET = strucit-backend
+TARGET = sortie
 
-SRCS = strucit-backend.c lex.yy.c y.tab.c table_symboles.c
+SRCS = lex.yy.c y.tab.c table_symboles.c
 
 CFLAGS = -Wall -Wno-implicit-function-declaration
 LDFLAGS = -lfl
@@ -14,11 +14,11 @@ all: $(TARGET)
 $(TARGET): $(SRCS)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
-lex.yy.c: ANSI-C.l y.tab.h
-	$(LEX) $^
+lex.yy.c: ANSI-proj.l y.tab.h
+	$(LEX) ANSI-proj.l
 
-y.tab.c y.tab.h: structbe.y
-	$(YACC) -d $^
+y.tab.c y.tab.h: structfe.y
+	$(YACC) -d structfe.y
 
 table_symboles.o: table_symboles.c table_symboles.h
 	$(CC) $(CFLAGS) -c table_symboles.c
