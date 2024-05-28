@@ -23,7 +23,7 @@ void setinfile(Filechar* fc,char* namefileout){
     fclose(fichier);
 }
 void setlignenplushaut(Filechar* fc,char* ligne,int n){
-    char* tmp;
+    
     int taille=fc->nbrlignes;
     for(int i=0;i<n;i++){
         fc->tab[taille-i]=fc->tab[taille-i-1];

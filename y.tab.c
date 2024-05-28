@@ -1480,7 +1480,7 @@ yyreduce:
   case 13: /* unary_expression: unary_operator unary_expression  */
 #line 126 "structfe.y"
                                           {
-                if((yyvsp[-1].id)=="-"){
+                if(strcmp((yyvsp[-1].id),"-")==0){
                         char chiffre[20];
                         sprintf(chiffre,"%d",valtmp);
                         valtmp++;

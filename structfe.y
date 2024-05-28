@@ -124,7 +124,7 @@ unary_expression
                 $$ = $1;
         }
         | unary_operator unary_expression {
-                if($1=="-"){
+                if(strcmp($1,"-")==0){
                         char chiffre[20];
                         sprintf(chiffre,"%d",valtmp);
                         valtmp++;
