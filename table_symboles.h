@@ -65,5 +65,6 @@ void popTas(Tas* t);
 LinkedList * getTopTas(Tas *t);
 void initialize_tas(Tas* t);
 char* concat(char * a,char * b);
+char* increm(int* c,char* name);
 
 #endif

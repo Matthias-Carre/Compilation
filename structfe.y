@@ -11,6 +11,9 @@ int yylex(void);
 char * typesNames[]={"error","int","void","struct"};
 
 int valtmp;
+int cond;
+int corp;
+int fin;
 //extern int yylval; // Définition de yylval
 
 %}
@@ -200,6 +203,7 @@ additive_expression
                     YYERROR;
                 }
                 $$->type = TYPE_INT;
+
                 char chiffre[20];
                 sprintf(chiffre,"%d",valtmp);
                 valtmp++;
@@ -220,6 +224,7 @@ relational_expression
                     YYERROR;
                 }
                 $$->type = TYPE_INT;
+                $$->code=concat($1->code,concat("<",$3->code));
         }
         | relational_expression '>' additive_expression {
                 if ($1->type != TYPE_INT || $3->type != TYPE_INT) {
@@ -402,7 +407,7 @@ direct_declarator
                 $$->code=concat($1->code,concat("(",concat($3->code,")")));
         }
         | direct_declarator '(' ')' {
-                printf("yacc code 3adrs:%s %s(){\n",typesNames[$1->type],$1->code);
+                printf("yacc code 3adrs:%s %s()\n",typesNames[$1->type],$1->code);
                 $$ = $1;
         }
         ;
@@ -445,7 +450,7 @@ compound_statement
 
 open_accol
         :'{'{   
-                //printf("DANS LE YACC:ICI LA OP8U");
+                printf("Yacc code 3adrs:{\n");
                 expandTas(&tas);        
         }
 
@@ -474,7 +479,21 @@ expression_statement
 
 selection_statement
         : IF '(' expression ')' statement %prec THEN
-        | IF '(' expression ')' statement ELSE statement
+        | IF '(' expression ')' statement ELSE statement{
+                
+                char* condif =increm(&cond,"cond");
+                char* corpif =increm(&corp,"corp");
+                char* finif =increm(&fin,"fin");
+                //printf("Yacc L488 cond:%s\n",cond);
+
+                printf("Yacc code 3adrs:goto %s\n",concat(condif,":"));
+                printf("Yacc code 3adrs:%s\n",concat(corpif,":"));
+                printf("Yacc code 3adrs:code de:%s\n",$5->code);
+                printf("Yacc code 3adrs:goto %s\n",finif);
+                printf("Yacc code 3adrs:%s\n",concat(condif,":"));
+                printf("Yacc code 3adrs:if(%s) goto %s:\n",$3->code,corpif);
+                printf("Yacc code 3adrs:%s\n\n",concat(finif,":"));
+        }
         ;
 
 iteration_statement
@@ -511,6 +530,7 @@ external_declaration
 
 function_definition
         : declaration_specifiers declarator compound_statement{
+                printf("Yacc518\n");
         }
         ;
 
@@ -521,6 +541,9 @@ void yyerror(const char *msg) {
 
 int main() {
         valtmp=0;
+        cond=0;
+        corp=0;
+        fin=0;
         initialize_tas(&tas);
         initialize_table(symbol_table);
         addinTas(&tas, symbol_table);

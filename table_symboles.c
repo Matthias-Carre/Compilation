@@ -211,3 +211,9 @@ char* concat(char * a,char * b){
 
     return res;
 }
+char* increm(int *c,char* name){
+    char chiffre[20];
+    sprintf(chiffre,"%d",*c);
+    (*c)++;
+    return concat(name,chiffre);
+}
