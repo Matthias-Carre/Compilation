@@ -43,7 +43,7 @@ int fin;
 //%type <symtype> logical_or_expression logical_and_expression equality_expression relational_expression unary_expression postfix_expression 
 //%type <id> declarator direct_declarator
 
-%token <elem> SIZEOF PTR_OP LE_OP GE_OP EQ_OP NE_OP 
+%token <elem> SIZEOF PTR_OP LE_OP GE_OP EQ_OP NE_OP PTR
 %token <elem> AND_OP OR_OP EXTERN INT VOID STRUCT IF ELSE WHILE FOR RETURN
 //%token <integer> CONSTANT
 //%token <elem> IDENTIFIER
@@ -251,6 +251,7 @@ relational_expression
                     YYERROR;
                 }
                 $$->type = TYPE_INT;
+                $$->code = concat($1->code,concat(" > ",$3->code));
         }
         | relational_expression LE_OP additive_expression {
                 if ($1->type != TYPE_INT || $3->type != TYPE_INT) {
@@ -258,6 +259,7 @@ relational_expression
                     YYERROR;
                 }
                 $$->type = TYPE_INT;
+                $$->code = concat($1->code,concat(" <= ",$3->code));
         }
         | relational_expression GE_OP additive_expression {
                 if ($1->type != TYPE_INT || $3->type != TYPE_INT) {
@@ -265,6 +267,7 @@ relational_expression
                     YYERROR;
                 }
                 $$->type = TYPE_INT;
+                $$->code = concat($1->code,concat(" >= ",$3->code));
         }
         ;
 
@@ -278,6 +281,7 @@ equality_expression
                     YYERROR;
                 }
                 $$->type = TYPE_INT;
+                $$->code = concat($1->code,concat(" == ",$3->code));
         }
         | equality_expression NE_OP relational_expression {
                 if ($1->type != TYPE_INT || $3->type != TYPE_INT) {
@@ -285,6 +289,7 @@ equality_expression
                     YYERROR;
                 }
                 $$->type = TYPE_INT;
+                $$->code = concat($1->code,concat(" != ",$3->code));
         }
         ;
 
@@ -507,12 +512,34 @@ expression_statement
         ;
 
 selection_statement
-        : IF '(' expression ')' statement %prec THEN
-        | IF '(' expression ')' statement ELSE statement{
-                
+        : IF '(' expression ')' statement %prec THEN{
+
+        
                 char* condif =increm(&cond,"cond");
                 char* corpif =increm(&corp,"corp");
-                char* finif =increm(&fin,"fin");
+                //printf("Yacc L488 cond:%s\n",cond);
+
+                char* ligne=concat("goto ",concat(condif,":"));
+                setlignenplushaut(fc,ligne,2);
+
+                printf("Yacc code 3adrs:%s\n",concat(corpif,":"));
+                ligne=concat(corpif,":");
+                setlignenplushaut(fc,ligne,2);
+
+                printf("Yacc code 3adrs:%s\n",concat(condif,":"));
+                ligne=concat(condif,":");
+                setlignenplushaut(fc,ligne,1);
+
+                printf("Yacc code 3adrs:if(%s) goto %s:\n",$3->code,corpif);
+                ligne=concat("if(",concat($3->code,concat(") goto ",concat(corpif,":"))));
+                setlignenplushaut(fc,ligne,1);
+
+        }
+        | IF '(' expression ')' statement ELSE statement{
+                
+                char* condif =increm(&cond,"cond_");
+                char* corpif =increm(&corp,"corp_");
+                char* finif =increm(&fin,"fin_");
                 //printf("Yacc L488 cond:%s\n",cond);
 
                 char* ligne=concat("goto ",concat(condif,":"));
@@ -549,25 +576,39 @@ selection_statement
 iteration_statement
         : WHILE '(' expression ')' statement{
                 char* ligne;
-                char* condwhile=increm(&cond,"cond");
-                char* corpwhile=increm(&corp,"corp");
+                char* condwhile=increm(&cond,"cond_");
+                char* corpwhile=increm(&corp,"corp_");
 
-                addline(fc,"WHILE:");
                 ligne=concat("goto ",concat(condwhile,":"));
-                addline(fc,ligne);
+                setlignenplushaut(fc,ligne,4);
                 
                 ligne=concat(corpwhile,":");
-                addline(fc,ligne);
+                setlignenplushaut(fc,ligne,4);
 
                 ligne=concat(condwhile,":");
-                addline(fc,ligne);
+                setlignenplushaut(fc,ligne,2);
 
                 ligne=concat("if(",concat($3->code,concat(") goto",corpwhile)));
-                addline(fc,ligne);
+                setlignenplushaut(fc,ligne,1);
                 addline(fc,"\n");
         }
         | FOR '(' expression_statement expression_statement expression ')' statement{
-                /*printf("Code 3adrs:%s\n","");
+                char* ligne;
+                char* condfor=increm(&cond,"cond_");
+                char* corpfor=increm(&corp,"corp_");
+
+                ligne=concat("goto ",concat(condfor,":"));
+                setlignenplushaut(fc,ligne,4);
+
+                ligne=concat(corpfor,":");
+                setlignenplushaut(fc,ligne,4);
+
+                ligne=concat(condfor,":");
+                setlignenplushaut(fc,ligne,0);
+
+                ligne=concat("if(",concat($4->code,concat(") goto ",corpfor)));
+                setlignenplushaut(fc,ligne,0);
+               /*printf("Code 3adrs:%s\n","");
                //printf("Code 3adrs:%s\n","goto condX");
                //printf("Code 3adrs:%s\n","corpX:");
                //printf("Code 3adrs:%s\n","7");
@@ -634,7 +675,7 @@ int main(int argc, char *argv[]) {
     addinTas(&tas, symbol_table);
     yyparse();
     fclose(file);
-    setinfile(fc, "you");
+    setinfile(fc, "");
 
     return 0;
 }

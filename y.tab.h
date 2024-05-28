@@ -62,18 +62,19 @@ extern int yydebug;
     GE_OP = 263,                   /* GE_OP  */
     EQ_OP = 264,                   /* EQ_OP  */
     NE_OP = 265,                   /* NE_OP  */
-    AND_OP = 266,                  /* AND_OP  */
-    OR_OP = 267,                   /* OR_OP  */
-    EXTERN = 268,                  /* EXTERN  */
-    INT = 269,                     /* INT  */
-    VOID = 270,                    /* VOID  */
-    STRUCT = 271,                  /* STRUCT  */
-    IF = 272,                      /* IF  */
-    ELSE = 273,                    /* ELSE  */
-    WHILE = 274,                   /* WHILE  */
-    FOR = 275,                     /* FOR  */
-    RETURN = 276,                  /* RETURN  */
-    THEN = 277                     /* THEN  */
+    PTR = 266,                     /* PTR  */
+    AND_OP = 267,                  /* AND_OP  */
+    OR_OP = 268,                   /* OR_OP  */
+    EXTERN = 269,                  /* EXTERN  */
+    INT = 270,                     /* INT  */
+    VOID = 271,                    /* VOID  */
+    STRUCT = 272,                  /* STRUCT  */
+    IF = 273,                      /* IF  */
+    ELSE = 274,                    /* ELSE  */
+    WHILE = 275,                   /* WHILE  */
+    FOR = 276,                     /* FOR  */
+    RETURN = 277,                  /* RETURN  */
+    THEN = 278                     /* THEN  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -90,24 +91,25 @@ extern int yydebug;
 #define GE_OP 263
 #define EQ_OP 264
 #define NE_OP 265
-#define AND_OP 266
-#define OR_OP 267
-#define EXTERN 268
-#define INT 269
-#define VOID 270
-#define STRUCT 271
-#define IF 272
-#define ELSE 273
-#define WHILE 274
-#define FOR 275
-#define RETURN 276
-#define THEN 277
+#define PTR 266
+#define AND_OP 267
+#define OR_OP 268
+#define EXTERN 269
+#define INT 270
+#define VOID 271
+#define STRUCT 272
+#define IF 273
+#define ELSE 274
+#define WHILE 275
+#define FOR 276
+#define RETURN 277
+#define THEN 278
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 24 "structfe.y"
+#line 25 "structfe.y"
 
         int integer;
         char * code;
@@ -121,7 +123,7 @@ union YYSTYPE
         LinkedList* ll;
         Element* elem;
 
-#line 125 "y.tab.h"
+#line 127 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
