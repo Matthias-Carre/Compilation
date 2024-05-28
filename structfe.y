@@ -11,6 +11,8 @@ void yyerror(const char *msg);
 int yylex(void);
 char * typesNames[]={"error","int","void","struct"};
 
+Filechar* fc;
+
 int valtmp;
 int cond;
 int corp;
@@ -94,7 +96,10 @@ postfix_expression
         }
         | postfix_expression '(' argument_expression_list ')' {
 
-                printf("Yacc code 3adrs:%s(%s)\n",$1->code,$3->code);
+                //printf("Yacc code 3adrs:%s(%s)\n",$1->code,$3->code);
+
+                char* ligne=concat($1->code,concat("(",concat($3->code,")")));
+                addline(fc,ligne);
                 $$ = $1;
         }
         | postfix_expression '.' IDENTIFIER {
@@ -125,7 +130,10 @@ unary_expression
                         valtmp++;
                         char* var=concat("_t",chiffre);
                         
-                        printf("Yacc code 3adrs:%s = %s * -1\n",var,$2->code);
+                        //printf("Yacc code 3adrs:%s = %s * -1\n",var,$2->code);
+                        
+                        char* ligne=concat(var,concat(" = ",concat($2->code," * -1")));
+                        addline(fc,ligne);
                         $$=$2;
                         $$->code = var;
                 }else{
@@ -162,6 +170,8 @@ multiplicative_expression
                 char* var=concat("_t",chiffre);
                 
                 printf("Yacc code 3adrs:%s = %s * %s\n",var,$1->code,$3->code);
+                char* ligne=concat(var,concat(" = ",concat($1->code,concat(" * ",$3->code))));
+                addline(fc,ligne);
                 $$->code = var;
         }
         | multiplicative_expression '/' unary_expression {
@@ -176,6 +186,9 @@ multiplicative_expression
                 char* var=concat("_t",chiffre);
                 
                 printf("Yacc code 3adrs:%s = %s / %s\n",var,$1->code,$3->code);
+
+                char* ligne=concat(var,concat(" = ",concat($1->code,concat(" / ",$3->code))));
+                addline(fc,ligne);
                 $$->code = var;
         }
         ;
@@ -196,6 +209,8 @@ additive_expression
                 char* var=concat("_t",chiffre);
                 
                 printf("Yacc code 3adrs:%s = %s + %s\n",var,$1->code,$3->code);
+                char* ligne = concat(var,concat(" = ",concat($1->code,concat(" + ",$3->code))));
+                addline(fc,ligne);
                 $$->code = var;
         }
         | additive_expression '-' multiplicative_expression {
@@ -211,6 +226,8 @@ additive_expression
                 char* var=concat("_t",chiffre);
                 
                 printf("Yacc code 3adrs:%s = %s - %s\n",var,$1->code,$3->code);
+                char* ligne=concat(var,concat(" = ",concat($1->code,concat(" - ",$3->code))));
+                addline(fc,ligne);
                 $$->code = var;
         }
         ;
@@ -306,13 +323,17 @@ expression
                     YYERROR;
                 }
                 printf("yacc code 3adrs:%s = %s;\n",$1->code,$3->code);
+                char* ligne=concat($1->code,concat(" = ",$3->code));
+                addline(fc,ligne);
                 $$ = $1;
         }
         ;
 
 declaration
         : declaration_specifiers declarator ';' {
-               printf("yacc code 3adrs:%s %s;\n",$1->code,$2->code);
+                printf("yacc code 3adrs:%s %s;\n",$1->code,$2->code);
+                char* ligne=concat($1->code,concat(" ",$2->code));
+                addline(fc,ligne);
                 insert_symbol_toptas(tas, $2->code, $1->type);
         }
         | struct_specifier ';' {
@@ -409,6 +430,8 @@ direct_declarator
         }
         | direct_declarator '(' ')' {
                 printf("yacc code 3adrs:%s %s()\n",typesNames[$1->type],$1->code);
+                char* ligne=concat(typesNames[$1->type],concat(" ",concat($1->code,"()")));
+                addline(fc,ligne);
                 $$ = $1;
         }
         ;
@@ -452,12 +475,16 @@ compound_statement
 open_accol
         :'{'{   
                 printf("Yacc code 3adrs:{\n");
+                char* ligne="{";
+                addline(fc,ligne);
                 expandTas(&tas);        
         }
 
 close_accol
         :'}'{
                 printf("Yacc code 3adrs:}\n");
+                char* ligne="}";
+                addline(fc,ligne);
                 popTas(&tas);
         }
 
@@ -512,10 +539,14 @@ iteration_statement
 
 jump_statement
         : RETURN ';'{
-               printf("yacc code 3adrs:return;\n");
+                printf("yacc code 3adrs:return;\n");
+                char* ligne="return;";
+                addline(fc,ligne);
         }
         | RETURN expression ';'{
-               printf("yacc code 3adrs:return %s;\n",$2->code);
+                printf("yacc code 3adrs:return %s;\n",$2->code);
+                char* ligne=concat("return ",concat($2->code,";"));
+                addline(fc,ligne);
         }
         ;
 
@@ -541,14 +572,21 @@ void yyerror(const char *msg) {
 }
 
 int main() {
+
         valtmp=0;
         cond=0;
         corp=0;
         fin=0;
+        fc=malloc(sizeof(Filechar));
+
         initialize_tas(&tas);
+
         initialize_table(symbol_table);
         addinTas(&tas, symbol_table);
+        
+
 
         yyparse();
+        setinfile(fc,"you");
         return 0;
         }

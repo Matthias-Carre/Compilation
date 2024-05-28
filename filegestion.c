@@ -9,8 +9,7 @@ void addline(Filechar* f,char* chaine){
     
     f->tab[(f->nbrlignes)]=chaine;
     f->nbrlignes++;
-    printf("valTEST:%s ET %s\n",f->tab[f->nbrlignes],chaine);
-}
+    }
 void setinfile(Filechar* fc,char* namefileout){
     FILE *fichier;
     const char *fichierout = "out.txt";
@@ -20,8 +19,6 @@ void setinfile(Filechar* fc,char* namefileout){
         fprintf(fichier,fc->tab[i]);
         fprintf(fichier,"\n");
     }
-    fprintf(fichier,"Test");
-    fprintf(fichier,"ezihfeiz");
 
     fclose(fichier);
 }
