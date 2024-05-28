@@ -663,6 +663,7 @@ int main(int argc, char *argv[]) {
                 }
         }else{
                 fprintf(stderr," Usage:%s <input file> (-o <name file output>)\n", argv[0]);
+                return 1;
         }
     FILE *file = fopen(argv[1], "r");
     if (!file) {
