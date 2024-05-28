@@ -7,6 +7,7 @@
 #include "filegestion.h"
 
 extern int yylineno;
+extern FILE *yyin;
 void yyerror(const char *msg);
 int yylex(void);
 char * typesNames[]={"error","int","void","struct"};
@@ -15,7 +16,7 @@ Filechar* fc;
 
 int valtmp;
 int cond;
-int corp;
+int corp;   
 int fin;
 //extern int yylval; // Définition de yylval
 
@@ -601,7 +602,6 @@ external_declaration
 
 function_definition
         : declaration_specifiers declarator compound_statement{
-                printf("Yacc518\n");
         }
         ;
 
@@ -610,21 +610,31 @@ void yyerror(const char *msg) {
     fprintf(stderr, "Erreur de syntaxe : %s à la ligne: %d ???\n", msg, yylineno);
 }
 
-int main(int argc,char* argv[]) {
+int main(int argc, char *argv[]) {
+    if (argc < 2) {
+        fprintf(stderr, "Usage: %s <input file>\n", argv[0]);
+        return 1;
+    }
 
+    FILE *file = fopen(argv[1], "r");
+    if (!file) {
+        perror("Error opening file");
+        return 1;
+    }
 
-        valtmp=0;
-        cond=0;
-        corp=0;
-        fin=0;
-        fc=malloc(sizeof(Filechar));
+    yyin = file;
+    valtmp = 0;
+    cond = 0;
+    corp = 0;
+    fin = 0;
+    fc = malloc(sizeof(Filechar));
 
-        initialize_tas(&tas);
-        initialize_table(symbol_table);
-        addinTas(&tas, symbol_table);
+    initialize_tas(&tas);
+    initialize_table(symbol_table);
+    addinTas(&tas, symbol_table);
+    yyparse();
+    fclose(file);
+    setinfile(fc, "you");
 
-        
-        yyparse();
-        setinfile(fc,"you");
-        return 0;
-        }
+    return 0;
+}
