@@ -689,7 +689,7 @@ static const yytype_int16 yyrline[] =
      401,   407,   411,   417,   424,   427,   431,   440,   444,   451,
      458,   459,   460,   461,   462,   466,   467,   469,   471,   476,
      484,   492,   493,   497,   498,   502,   505,   509,   510,   549,
-     550,   562,   567,   575,   576,   580,   581,   585
+     568,   580,   585,   593,   594,   598,   599,   603
 };
 #endif
 
@@ -2067,8 +2067,32 @@ yyreduce:
 #line 2068 "y.tab.c"
     break;
 
+  case 79: /* iteration_statement: WHILE '(' expression ')' statement  */
+#line 549 "structfe.y"
+                                            {
+                char* ligne;
+                char* condwhile=increm(&cond,"cond");
+                char* corpwhile=increm(&corp,"corp");
+
+                addline(fc,"WHILE:");
+                ligne=concat("goto ",concat(condwhile,":"));
+                addline(fc,ligne);
+                
+                ligne=concat(corpwhile,":");
+                addline(fc,ligne);
+
+                ligne=concat(condwhile,":");
+                addline(fc,ligne);
+
+                ligne=concat("if(",concat((yyvsp[-2].elem)->code,concat(") goto",corpwhile)));
+                addline(fc,ligne);
+                addline(fc,"\n");
+        }
+#line 2092 "y.tab.c"
+    break;
+
   case 80: /* iteration_statement: FOR '(' expression_statement expression_statement expression ')' statement  */
-#line 550 "structfe.y"
+#line 568 "structfe.y"
                                                                                     {
                 /*printf("Code 3adrs:%s\n","");
                //printf("Code 3adrs:%s\n","goto condX");
@@ -2078,39 +2102,39 @@ yyreduce:
                //printf("Code 3adrs:%s\n","condX:");
                //printf("Code 3adrs:if(%s) goto corpX\n","$4");*/
         }
-#line 2082 "y.tab.c"
+#line 2106 "y.tab.c"
     break;
 
   case 81: /* jump_statement: RETURN ';'  */
-#line 562 "structfe.y"
+#line 580 "structfe.y"
                     {
                 //printf("Yacc code 3adrs:return;\n");
                 char* ligne="return;";
                 addline(fc,ligne);
         }
-#line 2092 "y.tab.c"
+#line 2116 "y.tab.c"
     break;
 
   case 82: /* jump_statement: RETURN expression ';'  */
-#line 567 "structfe.y"
+#line 585 "structfe.y"
                                {
                 //printf("Yacc code 3adrs:return %s;\n",$2->code);
                 char* ligne=concat("return ",concat((yyvsp[-1].elem)->code,";"));
                 addline(fc,ligne);
         }
-#line 2102 "y.tab.c"
+#line 2126 "y.tab.c"
     break;
 
   case 87: /* function_definition: declaration_specifiers declarator compound_statement  */
-#line 585 "structfe.y"
+#line 603 "structfe.y"
                                                               {
                 printf("Yacc518\n");
         }
-#line 2110 "y.tab.c"
+#line 2134 "y.tab.c"
     break;
 
 
-#line 2114 "y.tab.c"
+#line 2138 "y.tab.c"
 
       default: break;
     }
@@ -2303,7 +2327,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 590 "structfe.y"
+#line 608 "structfe.y"
 
 void yyerror(const char *msg) {
     fprintf(stderr, "Erreur de syntaxe : %s à la ligne: %d ???\n", msg, yylineno);

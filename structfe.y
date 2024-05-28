@@ -546,7 +546,25 @@ selection_statement
         ;
 
 iteration_statement
-        : WHILE '(' expression ')' statement
+        : WHILE '(' expression ')' statement{
+                char* ligne;
+                char* condwhile=increm(&cond,"cond");
+                char* corpwhile=increm(&corp,"corp");
+
+                addline(fc,"WHILE:");
+                ligne=concat("goto ",concat(condwhile,":"));
+                addline(fc,ligne);
+                
+                ligne=concat(corpwhile,":");
+                addline(fc,ligne);
+
+                ligne=concat(condwhile,":");
+                addline(fc,ligne);
+
+                ligne=concat("if(",concat($3->code,concat(") goto",corpwhile)));
+                addline(fc,ligne);
+                addline(fc,"\n");
+        }
         | FOR '(' expression_statement expression_statement expression ')' statement{
                 /*printf("Code 3adrs:%s\n","");
                //printf("Code 3adrs:%s\n","goto condX");
