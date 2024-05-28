@@ -6,6 +6,8 @@
 void yyerror(const char *msg) {
     fprintf(stderr, "Erreur de syntaxe : %s\n", msg);
 }
+
+int yylex(void);
 %}
 
 %token IDENTIFIER CONSTANT 
@@ -170,3 +172,8 @@ int main() {
     yyparse();
     return 0;
 }
+
+int yywrap(void) {
+    return 1;
+}
+
