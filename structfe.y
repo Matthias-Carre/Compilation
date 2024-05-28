@@ -571,7 +571,8 @@ void yyerror(const char *msg) {
     fprintf(stderr, "Erreur de syntaxe : %s à la ligne: %d ???\n", msg, yylineno);
 }
 
-int main() {
+int main(int argc,char* argv[]) {
+
 
         valtmp=0;
         cond=0;
@@ -580,12 +581,10 @@ int main() {
         fc=malloc(sizeof(Filechar));
 
         initialize_tas(&tas);
-
         initialize_table(symbol_table);
         addinTas(&tas, symbol_table);
+
         
-
-
         yyparse();
         setinfile(fc,"you");
         return 0;
